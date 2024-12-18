@@ -1,21 +1,37 @@
 import React from "react";
-import Hero from "./components/Hero/Hero";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MainLayout from "./components/Layouts/MainLayout";
+import AuthLayout from "./components/Layouts/AuthLayout";
+import Home from "./components/Home/Home";
 import Services from "./components/Services/Services";
-import VideoSection from "./components/VideoSection/VideoSection";
-import ErasmusProjects from "./components/ErasmusProjects/ErasmusProjects";
-import SpecialEvents from "./components/SpecialEvents/SpecialEvents";
-import Footer from "./components/Footer/Footer";
+import AboutUs from "./components/AboutUs/AboutUs";
+import OurTeam from "./components/OurTeam/OurTeam";
+import ContactUs from "./components/ContactUs/ContactUs";
+import Login from "./components/Auth/Login";
+import ParentDashboard from "./parent/components/Dashboard/ParentDashboard";
+import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
+import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
 
 const App = () => {
   return (
-    <main className="overflow-x-hidden bg-white text-dark">
-      <Hero />
-      <Services />
-      <VideoSection />
-      <ErasmusProjects />
-      <SpecialEvents />
-      <Footer />
-    </main>
+    <Router>
+      <Routes>
+        {/* Layout cu Navbar */}
+        <Route path="/" element={<MainLayout><Home /></MainLayout>} />
+        <Route path="/services" element={<MainLayout><Services /></MainLayout>} />
+        <Route path="/about-us" element={<MainLayout><AboutUs /></MainLayout>} />
+        <Route path="/our-team" element={<MainLayout><OurTeam /></MainLayout>} />
+        <Route path="/contact-us" element={<MainLayout><ContactUs /></MainLayout>} />
+
+        {/* Layout fără Navbar */}
+        <Route path="/login" element={<AuthLayout><Login /></AuthLayout>} />
+
+        {/* Rute pentru fiecare tip de utilizator */}
+        <Route path="/parent" element={<ParentDashboard />} />
+        <Route path="/stud" element={<StudentDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </Router>
   );
 };
 

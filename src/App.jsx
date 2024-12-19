@@ -11,6 +11,8 @@ import Login from "./components/Auth/Login";
 import ParentDashboard from "./parent/components/Dashboard/ParentDashboard";
 import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
 import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
+import StudentProfile from "./stud/components/Profile/StudentProfile";
+import StudentCalendar from "./stud/components/Calendar/StudentCalendar";
 
 const App = () => {
   return (
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="/parent" element={<ParentDashboard />} />
         <Route path="/stud" element={<StudentDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/stud/profile" element={<StudentProfile />} />
+        <Route path="/stud/calendar" element={<StudentCalendar />} />
       </Routes>
     </Router>
   );

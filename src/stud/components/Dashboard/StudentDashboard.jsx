@@ -183,10 +183,10 @@ const StudentDashboard = () => {
           <ul className="space-y-2">
             {[
               { icon: FaHome, label: "Home", path: "/" },
-              { icon: FaUserCircle, label: "My Profile", path: "/profile" },
+              { icon: FaUserCircle, label: "My Profile", path: "/stud/profile" },
               { icon: FaChartLine, label: "Grades", path: "/grades" },
               { icon: FaClipboardList, label: "Assignments", path: "/assignments" },
-              { icon: FaCalendarAlt, label: "Calendar", path: "/calendar" },
+              { icon: FaCalendarAlt, label: "Calendar", path: "/stud/calendar" },
               { icon: FaUtensils, label: "Food", path: "/food" },
               { icon: FaRobot, label: "Ask Schoolie", path: "/ask-schoolie" }
             ].map(({ icon: Icon, label, path }) => (

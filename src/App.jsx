@@ -13,6 +13,10 @@ import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
 import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
 import StudentProfile from "./stud/components/Profile/StudentProfile";
 import StudentCalendar from "./stud/components/Calendar/StudentCalendar";
+import AdminUserCreator from "./admin/components/Creation/AdminUserCreator";
+import AdminClassCreator from "./admin/components/Creation/AdminClassCreator,";
+import AdminTeacherCreator from "./admin/components/Creation/AdminTeacherCreator";
+import AdminScheduleCreator from "./admin/components/Creation/AdminScheduleCreator";
 
 const App = () => {
   return (
@@ -34,6 +38,10 @@ const App = () => {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/stud/profile" element={<StudentProfile />} />
         <Route path="/stud/calendar" element={<StudentCalendar />} />
+        <Route path="/admin/create-student" element={<AdminUserCreator />} />
+        <Route path="/admin/create-class" element={<AdminClassCreator />} />
+        <Route path="/admin/create-teacher" element={<AdminTeacherCreator />} />
+        <Route path="/admin/create-schedule" element={<AdminScheduleCreator />} />
       </Routes>
     </Router>
   );

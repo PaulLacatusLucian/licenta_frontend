@@ -1,111 +1,81 @@
-import React, { useState } from "react";
-import axios from "../../axiosConfig";
+import React from "react";
+import { IoMdMenu } from "react-icons/io";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 
-/**
- * Component for displaying the login form and handling its functionality.
- * @returns {JSX.Element} The Login component.
- */
-function Login() {
-    const [formData, setFormData] = useState({
-        username: "",
-        password: "",
-    });
-    const [errorMessage, setErrorMessage] = useState("");
-    const navigate = useNavigate();
+const NavbarMenu = [
+  {
+    id: 1,
+    title: "Home",
+    path: "/",
+  },
+  {
+    id: 2,
+    title: "Services",
+    link: "#",
+  },
+  {
+    id: 3,
+    title: "About Us",
+    link: "#",
+  },
+  {
+    id: 4,
+    title: "Our Team",
+    link: "#",
+  },
+  {
+    id: 5,
+    title: "Contact Us",
+    link: "#",
+  },
+];
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+const Navbar = () => {
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            // Send login request
-            const response = await axios.post("/users/login", formData);
-            const userId = response.data.id;
-            const username = response.data.username;
-
-            // Save user data in cookies (optional)
-            Cookies.set("userId", userId, { expires: 1 / 8 }); // 3 hours
-            Cookies.set("username", username, { expires: 1 / 8 });
-
-            // Determine redirection based on username suffix
-            if (username.endsWith(".parent")) {
-                navigate("/parent");
-            } else if (username.endsWith(".stud")) {
-                navigate("/stud");
-            } else if (username.endsWith(".admin")) {
-                navigate("/admin");
-            } else {
-                throw new Error("Invalid username type");
-            }
-        } catch (error) {
-            console.error("Login error:", error);
-            const errorMessage =
-                error.response?.data?.message || "An error occurred during login.";
-            setErrorMessage(errorMessage);
-        }
-    };
-
-    return (
-        <div className="min-h-screen bg-gray-100 flex justify-center items-center">
-            <div className="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4">
-                <h2 className="text-2xl font-semibold mb-6">Login</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="username"
-                        >
-                            Username
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="username"
-                            type="text"
-                            placeholder="Username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="password"
-                        >
-                            Password
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="password"
-                            type="password"
-                            placeholder="Password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    {errorMessage && (
-                        <div className="text-red-500 mb-4">{errorMessage}</div>
-                    )}
-                    <div className="flex items-center justify-between">
-                        <button
-                            className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            type="submit"
-                        >
-                            Login
-                        </button>
-                    </div>
-                </form>
-            </div>
+  return (
+    <nav className="relative z-20">
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="container py-10 flex justify-between items-center"
+      >
+        {/* Logo section */}
+        <div>
+          <h1 className="font-bold text-2xl">
+            Liceul Teoretic German "Johann Ettinger"
+          </h1>
         </div>
-    );
-}
+        {/* Menu section */}
+        <div className="hidden lg:block">
+          <ul className="flex items-center gap-3">
+            {NavbarMenu.map((menu) => (
+              <li key={menu.id}>
+                <a
+                  href={menu.path}
+                  className="inline-block py-2 px-3 hover:text-secondary relative group"
+                >
+                  <div className="w-2 h-2 bg-secondary absolute mt-4 rounded-full left-1/2 -translate-x-1/2 top-1/2 bottom-0 group-hover:block hidden"></div>
+                  {menu.title}
+                </a>
+              </li>
+            ))}
+            <button
+              className="primary-btn"
+              onClick={() => navigate("/login")}
+            >
+              Sign In
+            </button>
+          </ul>
+        </div>
+        {/* Mobile Hamburger menu section */}
+        <div className="lg:hidden">
+          <IoMdMenu className="text-4xl" />
+        </div>
+      </motion.div>
+    </nav>
+  );
+};
 
-export default Login;
+export default Navbar;

@@ -26,6 +26,13 @@ const AdminDashboard = () => {
       icon: School,
       path: '/admin/create-class',
       bgColor: 'bg-purple-500'
+    },
+    {
+      title: 'Creează Orar',
+      description: 'Creează orarul pentru fiecare clasa',
+      icon: School,
+      path: '/admin/class-schedule',
+      bgColor: 'bg-purple-500'
     }
   ];
 

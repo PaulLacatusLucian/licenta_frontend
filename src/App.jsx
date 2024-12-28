@@ -16,7 +16,8 @@ import StudentCalendar from "./stud/components/Calendar/StudentCalendar";
 import AdminUserCreator from "./admin/components/Creation/AdminUserCreator";
 import AdminClassCreator from "./admin/components/Creation/AdminClassCreator,";
 import AdminTeacherCreator from "./admin/components/Creation/AdminTeacherCreator";
-import AdminScheduleCreator from "./admin/components/Creation/AdminScheduleCreator";
+import AdminScheduleCreator from "./admin/components/Creation/Schdule/AdminScheduleCreator";
+import ClassScheduleCalendar from "./admin/components/Creation/Schdule/ClassScheduleCalendar";
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/admin/create-class" element={<AdminClassCreator />} />
         <Route path="/admin/create-teacher" element={<AdminTeacherCreator />} />
         <Route path="/admin/create-schedule" element={<AdminScheduleCreator />} />
+        <Route path="/admin/class-schedule" element={<ClassScheduleCalendar />} />
       </Routes>
     </Router>
   );

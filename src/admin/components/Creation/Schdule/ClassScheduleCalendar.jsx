@@ -3,20 +3,22 @@ import axios from "../../../../axiosConfig";
 import CreateSchedule from "./AdminScheduleCreator";
 
 const ClassScheduleCalendar = () => {
-  const [classes, setClasses] = useState([]);
-  const [selectedClass, setSelectedClass] = useState("");
-  const [selectedClassName, setSelectedClassName] = useState("");
-  const [classSchedule, setClassSchedule] = useState([]);
-  const [scheduleModal, setScheduleModal] = useState({ open: false, day: "", time: "" });
+  const [classes, setClasses] = useState([]); // List of all classes
+  const [selectedClass, setSelectedClass] = useState(""); // ID of the selected class
+  const [selectedClassName, setSelectedClassName] = useState(""); // Name of the selected class
+  const [classSchedule, setClassSchedule] = useState([]); // Schedule of the selected class
+  const [scheduleModal, setScheduleModal] = useState({ open: false, day: "", time: "" }); // Modal state
 
+  // Fetch the list of classes
   useEffect(() => {
     const fetchClasses = async () => {
       try {
         const response = await axios.get("/classes");
         setClasses(response.data);
         if (response.data.length > 0) {
-          setSelectedClass(response.data[0].id);
+          setSelectedClass(response.data[0].id); // Select the first class by default
           setSelectedClassName(response.data[0].name);
+          fetchClassSchedule(response.data[0].id); // Set the schedule for the first class
         }
       } catch (error) {
         console.error("Error fetching classes:", error);
@@ -26,25 +28,33 @@ const ClassScheduleCalendar = () => {
     fetchClasses();
   }, []);
 
-  const fetchClassSchedule = async () => {
-    if (selectedClass) {
-      try {
-        const response = await axios.get(`/schedules?classId=${selectedClass}`);
-        setClassSchedule(response.data);
-      } catch (error) {
-        console.error("Error fetching class schedule:", error);
-      }
+  // Fetch the schedule for a specific class
+  const fetchClassSchedule = async (classId) => {
+    try {
+      const response = await axios.get(`/classes/${classId}`);
+      setClassSchedule(response.data.schedules || []); // Update the schedule with fetched data
+    } catch (error) {
+      console.error("Error fetching class schedule:", error);
     }
   };
 
-  useEffect(() => {
-    fetchClassSchedule();
-  }, [selectedClass]);
+  // Handle class change from dropdown
+  const handleClassChange = (e) => {
+    const classId = parseInt(e.target.value);
+    setSelectedClass(classId);
+    const selected = classes.find((cls) => cls.id === classId);
+    if (selected) {
+      setSelectedClassName(selected.name);
+      fetchClassSchedule(classId); // Update the schedule for the selected class
+    }
+  };
 
+  // Handle slot click to open the modal
   const handleSlotClick = (day, time) => {
     setScheduleModal({ open: true, day, time });
   };
 
+  // Close the modal
   const closeScheduleModal = () => {
     setScheduleModal({ open: false, day: "", time: "" });
   };
@@ -52,16 +62,13 @@ const ClassScheduleCalendar = () => {
   return (
     <div className="min-h-screen bg-gray-50/50 p-4">
       <div className="max-w-5xl mx-auto">
+        {/* Header with class dropdown */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl font-semibold text-gray-900">Orarul Clasei</h1>
           <div className="relative">
             <select
               value={selectedClass}
-              onChange={(e) => {
-                setSelectedClass(e.target.value);
-                const selected = classes.find((cls) => cls.id === parseInt(e.target.value));
-                setSelectedClassName(selected ? selected.name : "");
-              }}
+              onChange={handleClassChange}
               className="h-9 rounded-md border bg-white px-3 text-sm shadow-sm focus:outline-none"
             >
               {classes.map((cls) => (
@@ -73,6 +80,7 @@ const ClassScheduleCalendar = () => {
           </div>
         </div>
 
+        {/* Schedule Table */}
         <table className="w-full bg-white border rounded-lg shadow-md">
           <thead>
             <tr className="bg-gray-100">
@@ -106,7 +114,7 @@ const ClassScheduleCalendar = () => {
                     >
                       <span className="text-sm text-gray-700">
                         {scheduleForSlot
-                          ? `${scheduleForSlot.subjects} - ${scheduleForSlot.teacher?.name || "Unknown Teacher"}`
+                          ? `${scheduleForSlot.subjects.join(", ")} - ${scheduleForSlot.teacher?.name || "Unknown Teacher"}`
                           : timeSlot}
                       </span>
                     </td>
@@ -117,6 +125,7 @@ const ClassScheduleCalendar = () => {
           </tbody>
         </table>
 
+        {/* Schedule Modal */}
         {scheduleModal.open && (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 z-50">
             <div className="relative bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
@@ -126,7 +135,7 @@ const ClassScheduleCalendar = () => {
                 selectedClass={selectedClass}
                 selectedClassName={selectedClassName}
                 onClose={closeScheduleModal}
-                onScheduleCreated={fetchClassSchedule} // Sync the calendar after schedule creation
+                onScheduleCreated={() => fetchClassSchedule(selectedClass)} // Sync after schedule creation
               />
             </div>
           </div>

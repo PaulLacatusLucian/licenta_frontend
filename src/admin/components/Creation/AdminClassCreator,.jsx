@@ -1,8 +1,11 @@
-import React from 'react';
-import { Users, School, BookOpen } from 'lucide-react';
-import axios from '../../../axiosConfig';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Users, School, BookOpen, ArrowLeft } from "lucide-react";
+import axios from "../../../axiosConfig";
 
 const CreateClass = () => {
+  const navigate = useNavigate(); // Hook for navigation
+
   const [formData, setFormData] = React.useState({
     name: "",
     classTeacherId: "",
@@ -77,16 +80,24 @@ const CreateClass = () => {
   return (
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg border shadow-sm">
-        <div className="p-6 pb-4 border-b">
-          <h2 className="text-lg font-semibold">Creează o Clasă</h2>
+        <div className="p-6 pb-4 border-b flex items-center">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate("/admin")}
+            className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Înapoi
+          </button>
+          <h2 className="text-lg font-semibold ml-auto">Creează o Clasă</h2>
         </div>
 
         <div className="p-6">
           {message && (
             <div
               className={`mb-6 px-4 py-3 rounded-lg text-sm ${
-                message.type === "success" 
-                  ? "bg-green-50/50 text-green-600 border border-green-200" 
+                message.type === "success"
+                  ? "bg-green-50/50 text-green-600 border border-green-200"
                   : "bg-red-50/50 text-red-600 border border-red-200"
               }`}
             >
@@ -96,9 +107,7 @@ const CreateClass = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">
-                Nume Clasă
-              </label>
+              <label className="text-sm font-medium text-gray-900">Nume Clasă</label>
               <div className="relative">
                 <School className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
@@ -114,9 +123,7 @@ const CreateClass = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">
-                Profesor Diriginte
-              </label>
+              <label className="text-sm font-medium text-gray-900">Profesor Diriginte</label>
               <div className="relative">
                 <Users className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <select
@@ -137,9 +144,7 @@ const CreateClass = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">
-                Specializare
-              </label>
+              <label className="text-sm font-medium text-gray-900">Specializare</label>
               <div className="relative">
                 <BookOpen className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <select

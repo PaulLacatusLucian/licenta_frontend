@@ -29,9 +29,18 @@ const StudentDashboard = () => {
           axios.get(`/api/students/${userId}/upcoming-classes`),
         ]);
 
-        setStudentData(studentResponse.data || null);
+        const fetchedStudentData = studentResponse.data || null;
+        const fetchedUpcomingClasses = classesResponse.data || [];
+
+        // Fallback la schedules dacă upcomingClasses este gol
+        if (fetchedUpcomingClasses.length === 0 && fetchedStudentData?.studentClass?.schedules) {
+          setUpcomingClasses(fetchedStudentData.studentClass.schedules);
+        } else {
+          setUpcomingClasses(fetchedUpcomingClasses);
+        }
+
+        setStudentData(fetchedStudentData);
         setAbsences(absencesResponse.data || { total: 0 });
-        setUpcomingClasses(classesResponse.data || []);
         setError(null);
       } catch (error) {
         console.error("Error fetching student data:", error);
@@ -47,24 +56,7 @@ const StudentDashboard = () => {
     fetchStudentData();
   }, [userId, navigate]);
 
-  // Loading state handler
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-light">
-        <div className="text-xl text-dark">Loading...</div>
-      </div>
-    );
-  }
-
-  // Error state handler
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-light">
-        <div className="text-xl text-red-500">{error}</div>
-      </div>
-    );
-  }
-
+  // Funcții auxiliare
   const getAbsenceEmoji = (absenceCount) => {
     if (absenceCount <= 3) {
       return "😄 Great job attending classes!";
@@ -85,6 +77,7 @@ const StudentDashboard = () => {
     }
   };
 
+  // Render principal
   const renderHomeContent = () => (
     <div className="grid grid-cols-2 gap-6">
       {/* Welcome Card */}
@@ -105,13 +98,13 @@ const StudentDashboard = () => {
           <div className="flex justify-between items-center">
             <div>
               <p className="font-semibold text-dark">Total Absences</p>
-              <p className={`text-2xl font-bold ${getAbsenceEmojiColor(absences || 0)}`}>
-                {absences ?? "No data"}
+              <p className={`text-2xl font-bold ${getAbsenceEmojiColor(absences?.total || 0)}`}>
+                {absences?.total || "No data"}
               </p>
             </div>
             <div className="text-right">
-              <p className={`text-xl ${getAbsenceEmojiColor(absences || 0)}`}>
-                {getAbsenceEmoji(absences || 0)}
+              <p className={`text-xl ${getAbsenceEmojiColor(absences?.total || 0)}`}>
+                {getAbsenceEmoji(absences?.total || 0)}
               </p>
             </div>
           </div>
@@ -130,12 +123,18 @@ const StudentDashboard = () => {
               <div key={index} className="border-b pb-3 last:border-b-0">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-semibold text-dark">{classItem.subject || "Unknown Subject"}</p>
-                    <p className="text-dark2 text-sm">with {classItem.teacher || "Unknown Teacher"}</p>
+                    <p className="font-semibold text-dark">
+                      {classItem.subjects?.join(", ") || "Unknown Subject"}
+                    </p>
+                    <p className="text-dark2 text-sm">
+                      with {classItem.teacher?.name || "Unknown Teacher"}
+                    </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-dark font-medium">{classItem.time || "No time"}</p>
-                    <p className="text-dark2 text-xs">{classItem.room || "No room"}</p>
+                    <p className="text-dark font-medium">
+                      {classItem.startTime} - {classItem.endTime}
+                    </p>
+                    <p className="text-dark2 text-xs">{classItem.scheduleDay || "No day"}</p>
                   </div>
                 </div>
               </div>
@@ -166,6 +165,7 @@ const StudentDashboard = () => {
     </div>
   );
 
+  // Layout principal
   return (
     <div className="flex min-h-screen bg-light">
       {/* Sidebar with navigation options */}

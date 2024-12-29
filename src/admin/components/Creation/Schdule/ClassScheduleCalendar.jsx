@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../../../../axiosConfig";
 import CreateSchedule from "./AdminScheduleCreator";
+import { ArrowLeft } from "lucide-react";
 
 const ClassScheduleCalendar = () => {
   const [classes, setClasses] = useState([]); // List of all classes
@@ -8,6 +10,7 @@ const ClassScheduleCalendar = () => {
   const [selectedClassName, setSelectedClassName] = useState(""); // Name of the selected class
   const [classSchedule, setClassSchedule] = useState([]); // Schedule of the selected class
   const [scheduleModal, setScheduleModal] = useState({ open: false, day: "", time: "" }); // Modal state
+  const navigate = useNavigate(); // Navigation hook for redirect
 
   // Fetch the list of classes
   useEffect(() => {
@@ -62,9 +65,15 @@ const ClassScheduleCalendar = () => {
   return (
     <div className="min-h-screen bg-gray-50/50 p-4">
       <div className="max-w-5xl mx-auto">
-        {/* Header with class dropdown */}
+        {/* Header with Back button and class dropdown */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-semibold text-gray-900">Orarul Clasei</h1>
+          <button
+            onClick={() => navigate("/admin")}
+            className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Înapoi
+          </button>
           <div className="relative">
             <select
               value={selectedClass}
@@ -114,7 +123,9 @@ const ClassScheduleCalendar = () => {
                     >
                       <span className="text-sm text-gray-700">
                         {scheduleForSlot
-                          ? `${scheduleForSlot.subjects.join(", ")} - ${scheduleForSlot.teacher?.name || "Unknown Teacher"}`
+                          ? `${scheduleForSlot.subjects.join(", ")} - ${
+                              scheduleForSlot.teacher?.name || "Unknown Teacher"
+                            }`
                           : timeSlot}
                       </span>
                     </td>

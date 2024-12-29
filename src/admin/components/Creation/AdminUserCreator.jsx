@@ -1,8 +1,11 @@
-import React from 'react';
-import { User, Users, Mail, Phone, Lock, GraduationCap } from 'lucide-react';
-import axios from '../../../axiosConfig';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { User, Users, Mail, Phone, Lock, GraduationCap, ArrowLeft } from "lucide-react";
+import axios from "../../../axiosConfig";
 
 const AdminUserCreator = () => {
+  const navigate = useNavigate(); // Hook for navigation
+
   const [formData, setFormData] = React.useState({
     studentName: "",
     studentUsername: "",
@@ -110,8 +113,16 @@ const AdminUserCreator = () => {
   return (
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl bg-white rounded-lg border shadow-sm">
-        <div className="p-6 pb-4 border-b">
-          <h2 className="text-lg font-semibold">Creează utilizatori</h2>
+        <div className="p-6 pb-4 border-b flex items-center">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate("/admin")}
+            className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Înapoi
+          </button>
+          <h2 className="text-lg font-semibold ml-auto">Creează utilizatori</h2>
         </div>
 
         <div className="p-6">

@@ -13,11 +13,20 @@ import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
 import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
 import StudentProfile from "./stud/components/Profile/StudentProfile";
 import StudentCalendar from "./stud/components/Calendar/StudentCalendar";
-import AdminUserCreator from "./admin/components/Creation/AdminUserCreator";
-import AdminClassCreator from "./admin/components/Creation/AdminClassCreator,";
-import AdminTeacherCreator from "./admin/components/Creation/AdminTeacherCreator";
+import AdminUserCreator from "./admin/components/Student_Parent/AdminUserCreator";
+import AdminClassCreator from "./admin/components/Class/AdminClassCreator,";
+import AdminTeacherCreator from "./admin/components/Teachers/AdminTeacherCreator";
 import AdminScheduleCreator from "./admin/components/Creation/Schdule/AdminScheduleCreator";
 import ClassScheduleCalendar from "./admin/components/Creation/Schdule/ClassScheduleCalendar";
+import AdminDeleteTeacher from "./admin/components/Teachers/AdminDeleteTeacher";
+import AdminTeacherEdit from "./admin/components/Teachers/AdminTeacherEdit";
+import AdminTeacherView from "./admin/components/Teachers/AdminTeacherView";
+import AdminClassesView from "./admin/components/Class/AdminClassView";
+import AdminClassEdit from "./admin/components/Class/AdminClassEdit";
+import AdminStudentView from "./admin/components/Student_Parent/AdminStudentView";
+import AdminParentView from "./admin/components/Student_Parent/AdminParentView";
+import AdminParentEdit from "./admin/components/Student_Parent/AdminParentEdit";
+import AdminParentDelete from "./admin/components/Student_Parent/AdminParentDelete";
 
 const App = () => {
   return (
@@ -44,6 +53,15 @@ const App = () => {
         <Route path="/admin/create-teacher" element={<AdminTeacherCreator />} />
         <Route path="/admin/create-schedule" element={<AdminScheduleCreator />} />
         <Route path="/admin/class-schedule" element={<ClassScheduleCalendar />} />
+        <Route path="/admin/teachers/" element={<AdminTeacherView />} />
+        <Route path="/admin/teachers/edit/:id" element={<AdminTeacherEdit />} />
+        <Route path="/admin/teachers/delete/:id" element={<AdminDeleteTeacher />} />
+        <Route path="/admin/classes/" element={<AdminClassesView />} />
+        <Route path="/admin/classes/edit/:id" element={<AdminClassEdit />} />
+        <Route path="/admin/students/" element={<AdminStudentView />} />
+        <Route path="/admin/parents/" element={<AdminParentView />} /> 
+        <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />     
+        <Route path="/admin/parents/delete/:id" element={<AdminParentDelete />} />
       </Routes>
     </Router>
   );

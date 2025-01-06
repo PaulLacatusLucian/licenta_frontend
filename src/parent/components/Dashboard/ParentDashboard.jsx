@@ -17,6 +17,7 @@ import {
   FaEnvelope,
   FaHandHoldingMedical
 } from "react-icons/fa";
+import ChildProfile from "../ChildProfile/ChildProfile"; // Profilul copilului
 import ParentTimetable from "../Calendar/ParentTimetable"; // Noul calendar pentru părinți
 
 const ParentDashboard = () => {
@@ -185,7 +186,7 @@ const ParentDashboard = () => {
             className={studentData.studentClass.name}
           />
         )}
-        {activeView === "profile" && <p>Child's Profile coming soon...</p>}
+        {activeView === "profile" && studentData && <ChildProfile studentData={studentData} />}
         {activeView === "report" && <p>Academic Report coming soon...</p>}
         {activeView === "meetings" && <p>Teacher Meetings coming soon...</p>}
       </div>

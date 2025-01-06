@@ -112,38 +112,39 @@ const StudentDashboard = () => {
       </div>
 
       {/* Upcoming Classes Section */}
-      <div className="bg-white p-6 rounded-xl shadow-md">
-        <div className="flex items-center mb-4">
-          <FaCalendarAlt className="text-2xl text-primary mr-3" />
-          <h4 className="text-xl font-semibold text-dark">Upcoming Classes</h4>
+<div className="bg-white p-6 rounded-xl shadow-md">
+  <div className="flex items-center mb-4">
+    <FaCalendarAlt className="text-2xl text-primary mr-3" />
+    <h4 className="text-xl font-semibold text-dark">Upcoming Classes</h4>
+  </div>
+  <div className="space-y-4">
+    {upcomingClasses.length > 0 ? (
+      upcomingClasses.slice(0, 3).map((classItem, index) => (
+        <div key={index} className="border-b pb-3 last:border-b-0">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="font-semibold text-dark">
+                {classItem.subjects?.join(", ") || "Unknown Subject"}
+              </p>
+              <p className="text-dark2 text-sm">
+                with {classItem.teacher?.name || "Unknown Teacher"}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-dark font-medium">
+                {classItem.startTime} - {classItem.endTime}
+              </p>
+              <p className="text-dark2 text-xs">{classItem.scheduleDay || "No day"}</p>
+            </div>
+          </div>
         </div>
-        <div className="space-y-4">
-          {upcomingClasses.length > 0 ? (
-            upcomingClasses.map((classItem, index) => (
-              <div key={index} className="border-b pb-3 last:border-b-0">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-semibold text-dark">
-                      {classItem.subjects?.join(", ") || "Unknown Subject"}
-                    </p>
-                    <p className="text-dark2 text-sm">
-                      with {classItem.teacher?.name || "Unknown Teacher"}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-dark font-medium">
-                      {classItem.startTime} - {classItem.endTime}
-                    </p>
-                    <p className="text-dark2 text-xs">{classItem.scheduleDay || "No day"}</p>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-dark2">No upcoming classes</p>
-          )}
-        </div>
-      </div>
+      ))
+    ) : (
+      <p className="text-dark2">No upcoming classes</p>
+    )}
+  </div>
+</div>
+
 
       {/* Ask Schoolie Section */}
       <div className="bg-white p-6 rounded-xl shadow-md">

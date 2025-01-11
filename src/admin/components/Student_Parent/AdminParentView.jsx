@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Trash, Pencil } from "lucide-react";
+import { Search, Trash, Pencil, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
 
 const ViewParents = () => {
@@ -50,7 +50,16 @@ const ViewParents = () => {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold">Lista Părinți</h2>
+        <div className="flex items-center">
+          <button
+            onClick={() => navigate("/admin")}
+            className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Înapoi
+          </button>
+          <h2 className="text-lg font-semibold ml-auto">Lista Părinți</h2>
+        </div>
       </div>
 
       {error && (

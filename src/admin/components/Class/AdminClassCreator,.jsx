@@ -46,7 +46,7 @@ const CreateClass = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.specialization || !formData.classTeacherId) {
       setMessage({
         type: "error",
@@ -54,14 +54,17 @@ const CreateClass = () => {
       });
       return;
     }
-
+  
     try {
-      const response = await axios.post("/classes", {
-        name: formData.name,
-        classTeacher: teachers.find((t) => t.id === parseInt(formData.classTeacherId))?.name,
-        specialization: formData.specialization,
-      });
-
+      // Trimitere cerere POST cu `teacherId` ca request parameter
+      const response = await axios.post(
+        `/classes?teacherId=${formData.classTeacherId}`,
+        {
+          name: formData.name,
+          specialization: formData.specialization,
+        }
+      );
+  
       setMessage({ type: "success", text: "Clasa a fost creată cu succes!" });
       setFormData({
         name: "",
@@ -76,6 +79,8 @@ const CreateClass = () => {
       });
     }
   };
+  
+  
 
   return (
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">

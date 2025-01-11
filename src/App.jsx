@@ -1,19 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MainLayout from "./components/Layouts/MainLayout";
-import AuthLayout from "./components/Layouts/AuthLayout";
-import Home from "./components/Home/Home";
-import Services from "./components/Services/Services";
-import AboutUs from "./components/AboutUs/AboutUs";
-import OurTeam from "./components/OurTeam/OurTeam";
-import ContactUs from "./components/ContactUs/ContactUs";
-import Login from "./components/Auth/Login";
+import MainLayout from "./homepage/Layouts/MainLayout";
+import AuthLayout from "./homepage/Layouts/AuthLayout";
+import Home from "./homepage/Home/Home";
+import Services from "./homepage/Services/Services";
+import AboutUs from "./homepage/AboutUs/AboutUs";
+import OurTeam from "./homepage/OurTeam/OurTeam";
+import ContactUs from "./homepage/ContactUs/ContactUs";
+import Login from "./homepage/Auth/Login";
 import ParentDashboard from "./parent/components/Dashboard/ParentDashboard";
 import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
 import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
 import StudentProfile from "./stud/components/Profile/StudentProfile";
 import StudentCalendar from "./stud/components/Calendar/StudentCalendar";
-import AdminUserCreator from "./admin/components/Student_Parent/AdminUserCreator";
+import AdminUserCreator from "./admin/components/Student_Parent/AdminStudentParentCreation";
 import AdminClassCreator from "./admin/components/Class/AdminClassCreator,";
 import AdminTeacherCreator from "./admin/components/Teachers/AdminTeacherCreator";
 import AdminScheduleCreator from "./admin/components/Creation/Schdule/AdminScheduleCreator";
@@ -26,7 +26,7 @@ import AdminClassEdit from "./admin/components/Class/AdminClassEdit";
 import AdminStudentView from "./admin/components/Student_Parent/AdminStudentView";
 import AdminParentView from "./admin/components/Student_Parent/AdminParentView";
 import AdminParentEdit from "./admin/components/Student_Parent/AdminParentEdit";
-import AdminParentDelete from "./admin/components/Student_Parent/AdminParentDelete";
+import AdmintStudentEdit from "./admin/components/Student_Parent/AdminStudentEdit";
 
 const App = () => {
   return (
@@ -60,8 +60,8 @@ const App = () => {
         <Route path="/admin/classes/edit/:id" element={<AdminClassEdit />} />
         <Route path="/admin/students/" element={<AdminStudentView />} />
         <Route path="/admin/parents/" element={<AdminParentView />} /> 
-        <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />     
-        <Route path="/admin/parents/delete/:id" element={<AdminParentDelete />} />
+        <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />
+        <Route path="/admin/students/edit/:id" element={<AdmintStudentEdit />} />
       </Routes>
     </Router>
   );

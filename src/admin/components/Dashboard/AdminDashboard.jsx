@@ -45,14 +45,14 @@ const AdminDashboard = () => {
           path: '/admin/create-student'
         },
         { 
-          name: 'View Students/Parents', 
+          name: 'View Students', 
           icon: Eye,
-          path: '/admin/students'  // Placeholder route
+          path: '/admin/students'
         },
         { 
-          name: 'Edit Student/Parent', 
-          icon: Edit,
-          path: '/admin/students/edit'  // Placeholder route
+          name: 'View Parents', 
+          icon: Eye,
+          path: '/admin/parents'
         },
         { 
           name: 'Delete Student/Parent', 
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
           path: '/admin/students/delete'  // Placeholder route
         }
       ]
-    },
+    },    
     {
       id: 'professor',
       title: 'Professor',

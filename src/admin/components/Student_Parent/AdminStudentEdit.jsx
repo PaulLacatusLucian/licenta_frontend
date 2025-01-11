@@ -1,48 +1,59 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { User, Mail, Phone, ArrowLeft } from "lucide-react";
+import { User, Mail, Phone, GraduationCap, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
 
-const EditParent = () => {
+const EditStudent = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const [formData, setFormData] = useState({
-    motherName: "",
-    motherEmail: "",
-    motherPhoneNumber: "",
-    fatherName: "",
-    fatherEmail: "",
-    fatherPhoneNumber: "",
+    name: "",
+    email: "",
+    phoneNumber: "",
+    studentClassId: "",
   });
 
+  const [classes, setClasses] = useState([]);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchParent = async () => {
+    const fetchStudent = async () => {
       try {
-        const response = await axios.get(`/parents/${id}`);
+        const response = await axios.get(`/api/students/${id}`);
         setFormData({
-          motherName: response.data.motherName,
-          motherEmail: response.data.motherEmail,
-          motherPhoneNumber: response.data.motherPhoneNumber,
-          fatherName: response.data.fatherName,
-          fatherEmail: response.data.fatherEmail,
-          fatherPhoneNumber: response.data.fatherPhoneNumber,
+          name: response.data.name,
+          email: response.data.email,
+          phoneNumber: response.data.phoneNumber,
+          studentClassId: response.data.studentClass?.id || "",
         });
-        setLoading(false);
       } catch (error) {
-        console.error("Error fetching parent:", error);
+        console.error("Error fetching student:", error);
         setMessage({
           type: "error",
-          text: "Eroare la încărcarea datelor părintelui. Te rog încearcă din nou.",
+          text: "Eroare la încărcarea datelor studentului. Te rog încearcă din nou.",
         });
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchParent();
+    const fetchClasses = async () => {
+      try {
+        const response = await axios.get("/classes");
+        setClasses(response.data);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+        setMessage({
+          type: "error",
+          text: "Eroare la încărcarea claselor. Te rog încearcă din nou.",
+        });
+      }
+    };
+
+    fetchStudent();
+    fetchClasses();
   }, [id]);
 
   const handleChange = (e) => {
@@ -57,19 +68,22 @@ const EditParent = () => {
     e.preventDefault();
 
     try {
-      await axios.put(`/parents/${id}`, formData);
+      await axios.put(`/api/students/${id}`, {
+        ...formData,
+        studentClass: { id: parseInt(formData.studentClassId) },
+      });
       setMessage({
         type: "success",
-        text: "Datele părintelui au fost actualizate cu succes!",
+        text: "Studentul a fost actualizat cu succes!",
       });
       setTimeout(() => {
-        navigate("/admin/parents");
+        navigate("/admin/students");
       }, 1500);
     } catch (error) {
-      console.error("Error updating parent:", error);
+      console.error("Error updating student:", error);
       setMessage({
         type: "error",
-        text: "Eroare la actualizarea datelor părintelui. Te rog încearcă din nou.",
+        text: "Eroare la actualizarea studentului. Te rog încearcă din nou.",
       });
     }
   };
@@ -87,13 +101,13 @@ const EditParent = () => {
       <div className="w-full max-w-md bg-white rounded-lg border shadow-sm">
         <div className="p-6 pb-4 border-b flex items-center">
           <button
-            onClick={() => navigate("/admin/parents")}
+            onClick={() => navigate("/admin/students")}
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Înapoi la Listă
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Editează Părinte</h2>
+          <h2 className="text-lg font-semibold ml-auto">Editează Student</h2>
         </div>
 
         <div className="p-6">
@@ -111,15 +125,15 @@ const EditParent = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Nume Mamă</label>
+              <label className="text-sm font-medium text-gray-900">Nume Student</label>
               <div className="relative">
                 <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Nume Mamă"
-                  name="motherName"
+                  name="name"
+                  placeholder="Nume Student"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
-                  value={formData.motherName}
+                  value={formData.name}
                   onChange={handleChange}
                   required
                 />
@@ -127,15 +141,15 @@ const EditParent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Email Mamă</label>
+              <label className="text-sm font-medium text-gray-900">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="email"
-                  placeholder="Email Mamă"
-                  name="motherEmail"
+                  name="email"
+                  placeholder="Email"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
-                  value={formData.motherEmail}
+                  value={formData.email}
                   onChange={handleChange}
                   required
                 />
@@ -143,69 +157,42 @@ const EditParent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Telefon Mamă</label>
+              <label className="text-sm font-medium text-gray-900">Telefon</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Telefon Mamă"
-                  name="motherPhoneNumber"
+                  name="phoneNumber"
+                  placeholder="Telefon"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
-                  value={formData.motherPhoneNumber}
+                  value={formData.phoneNumber}
                   onChange={handleChange}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Nume Tată</label>
-              <div className="relative">
-                <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <input
-                  type="text"
-                  placeholder="Nume Tată"
-                  name="fatherName"
-                  className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
-                  value={formData.fatherName}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Email Tată</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <input
-                  type="email"
-                  placeholder="Email Tată"
-                  name="fatherEmail"
-                  className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
-                  value={formData.fatherEmail}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Telefon Tată</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <input
-                  type="text"
-                  placeholder="Telefon Tată"
-                  name="fatherPhoneNumber"
-                  className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
-                  value={formData.fatherPhoneNumber}
-                  onChange={handleChange}
-                />
-              </div>
+              <label className="text-sm font-medium text-gray-900">Clasă</label>
+              <select
+                name="studentClassId"
+                value={formData.studentClassId}
+                onChange={handleChange}
+                className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
+                required
+              >
+                <option value="">Selectează Clasa</option>
+                {classes.map((cls) => (
+                  <option key={cls.id} value={cls.id}>
+                    {cls.name} - {cls.specialization}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="flex space-x-4">
               <button
                 type="button"
-                onClick={() => navigate("/admin/parents")}
+                onClick={() => navigate("/admin/students")}
                 className="inline-flex w-1/2 items-center justify-center rounded-md border border-gray-200 px-4 h-9 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
               >
                 Anulează
@@ -224,4 +211,4 @@ const EditParent = () => {
   );
 };
 
-export default EditParent;
+export default EditStudent;

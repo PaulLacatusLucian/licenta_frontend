@@ -53,11 +53,6 @@ const AdminDashboard = () => {
           name: 'View Parents', 
           icon: Eye,
           path: '/admin/parents'
-        },
-        { 
-          name: 'Delete Student/Parent', 
-          icon: Trash,
-          path: '/admin/students/delete'  // Placeholder route
         }
       ]
     },    
@@ -78,16 +73,6 @@ const AdminDashboard = () => {
           name: 'View Professors', 
           icon: Eye,
           path: '/admin/teachers'
-        },
-        { 
-          name: 'Edit Professor', 
-          icon: Edit,
-          path: '/admin/teachers/edit'  // Will need :id param when clicking
-        },
-        { 
-          name: 'Delete Professor', 
-          icon: Trash,
-          path: '/admin/teachers/delete'  // Will need :id param when clicking
         }
       ]
     },
@@ -108,16 +93,6 @@ const AdminDashboard = () => {
           name: 'View Classes', 
           icon: Eye,
           path: '/admin/classes'  // Placeholder route
-        },
-        { 
-          name: 'Edit Class', 
-          icon: Edit,
-          path: '/admin/classes/edit'  // Placeholder route
-        },
-        { 
-          name: 'Delete Class', 
-          icon: Trash,
-          path: '/admin/classes/delete'  // Placeholder route
         }
       ]
     },
@@ -132,22 +107,12 @@ const AdminDashboard = () => {
         { 
           name: 'Create Timetable', 
           icon: Plus,
-          path: '/admin/create-schedule'
+          path: '/admin/class-schedule'
         },
         { 
           name: 'View Timetables', 
           icon: Eye,
           path: '/admin/class-schedule'
-        },
-        { 
-          name: 'Edit Timetable', 
-          icon: Edit,
-          path: '/admin/schedule/edit'  // Placeholder route
-        },
-        { 
-          name: 'Delete Timetable', 
-          icon: Trash,
-          path: '/admin/schedule/delete'  // Placeholder route
         }
       ]
     }

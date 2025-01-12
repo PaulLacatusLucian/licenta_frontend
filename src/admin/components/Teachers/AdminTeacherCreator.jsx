@@ -36,22 +36,27 @@ const CreateTeacher = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const response = await axios.post("/teachers", formData);
+      // Trimiterea datelor către backend
+      const response = await axios.post("/users/register-teacher", formData);
+      
       setMessage({
         type: "success",
-        text: "Profesorul a fost creat cu succes!",
+        text: `Profesorul a fost creat cu succes! Username: ${response.data.username}, Parola: ${response.data.password}`,
       });
+  
+      // Resetează formularul după succes
       setFormData({
         name: "",
         subject: "",
       });
     } catch (error) {
       console.error("Error creating teacher:", error);
+  
       setMessage({
         type: "error",
-        text: "Eroare la crearea profesorului. Te rog încearcă din nou.",
+        text: error.response?.data?.message || "Eroare la crearea profesorului. Te rog încearcă din nou.",
       });
     }
   };

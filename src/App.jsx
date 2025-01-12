@@ -10,6 +10,7 @@ import ContactUs from "./homepage/ContactUs/ContactUs";
 import Login from "./homepage/Auth/Login";
 import ParentDashboard from "./parent/components/Dashboard/ParentDashboard";
 import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
+import TeacherDashboard from "./teacher/components/Dashboard/TeacherDashboard";
 import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
 import StudentProfile from "./stud/components/Profile/StudentProfile";
 import StudentCalendar from "./stud/components/Calendar/StudentCalendar";
@@ -27,6 +28,9 @@ import AdminStudentView from "./admin/components/Student_Parent/AdminStudentView
 import AdminParentView from "./admin/components/Student_Parent/AdminParentView";
 import AdminParentEdit from "./admin/components/Student_Parent/AdminParentEdit";
 import AdmintStudentEdit from "./admin/components/Student_Parent/AdminStudentEdit";
+import StudentGrades from "./stud/components/Grade/StudentGrade";
+import TeacherStudentOverview from "./teacher/components/Students/TeacherStudentsOverview";
+import TeacherWeeklySchedule from "./teacher/components/WeeklySchedule/TeacherWeeklySchedule";
 
 const App = () => {
   return (
@@ -45,6 +49,7 @@ const App = () => {
         {/* Rute pentru fiecare tip de utilizator */}
         <Route path="/parent" element={<ParentDashboard />} />
         <Route path="/stud" element={<StudentDashboard />} />
+        <Route path="/teacher" element={<TeacherDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/stud/profile" element={<StudentProfile />} />
         <Route path="/stud/calendar" element={<StudentCalendar />} />
@@ -62,6 +67,9 @@ const App = () => {
         <Route path="/admin/parents/" element={<AdminParentView />} /> 
         <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />
         <Route path="/admin/students/edit/:id" element={<AdmintStudentEdit />} />
+        <Route path="/stud/grades" element={<StudentGrades />} />
+        <Route path="/teacher/students" element={<TeacherStudentOverview />} />
+        <Route path="/teacher/schedule" element={<TeacherWeeklySchedule />} />
       </Routes>
     </Router>
   );

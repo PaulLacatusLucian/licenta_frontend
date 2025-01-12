@@ -109,7 +109,7 @@ const ChildProfile = ({ studentData }) => {
               <div className="space-y-6">
                 {[
                   { label: "Email", value: studentData?.email },
-                  { label: "Teacher", value: studentData?.studentClass?.classTeacher },
+                  { label: "Teacher", value: studentData?.studentClass?.classTeacher?.name || "N/A" },
                   { label: "Specialization", value: studentData?.studentClass?.specialization },
                   { label: "Phone", value: studentData?.phoneNumber },
                 ].map((item, index) => (

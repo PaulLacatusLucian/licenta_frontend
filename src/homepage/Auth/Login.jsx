@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { use } from "react";
 
 /**
  * Component for displaying the login form and handling its functionality.
@@ -39,7 +40,10 @@ function Login() {
                 navigate("/stud");
             } else if (username.endsWith(".admin")) {
                 navigate("/admin");
-            } else {
+            } else if (username.endsWith(".prof")) {
+                navigate("/teacher");
+            }
+            else {
                 throw new Error("Invalid username type");
             }
         } catch (error) {

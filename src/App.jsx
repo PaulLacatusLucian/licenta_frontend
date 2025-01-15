@@ -31,6 +31,7 @@ import AdmintStudentEdit from "./admin/components/Student_Parent/AdminStudentEdi
 import StudentGrades from "./stud/components/Grade/StudentGrade";
 import TeacherStudentOverview from "./teacher/components/Students/TeacherStudentsOverview";
 import TeacherWeeklySchedule from "./teacher/components/WeeklySchedule/TeacherWeeklySchedule";
+import OurServices from "./homepage/OurServices/OurServices";
 
 const App = () => {
   return (
@@ -38,7 +39,7 @@ const App = () => {
       <Routes>
         {/* Layout cu Navbar */}
         <Route path="/" element={<MainLayout><Home /></MainLayout>} />
-        <Route path="/services" element={<MainLayout><Services /></MainLayout>} />
+        <Route path="/services" element={<MainLayout><OurServices /></MainLayout>} />
         <Route path="/about-us" element={<MainLayout><AboutUs /></MainLayout>} />
         <Route path="/our-team" element={<MainLayout><OurTeam /></MainLayout>} />
         <Route path="/contact-us" element={<MainLayout><ContactUs /></MainLayout>} />

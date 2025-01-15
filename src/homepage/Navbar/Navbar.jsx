@@ -12,22 +12,22 @@ const NavbarMenu = [
   {
     id: 2,
     title: "Services",
-    link: "#",
+    path: "/services",
   },
   {
     id: 3,
     title: "About Us",
-    link: "#",
+    path: "/about-us",
   },
   {
     id: 4,
     title: "Our Team",
-    link: "#",
+    path: "/our-team",
   },
   {
     id: 5,
     title: "Contact Us",
-    link: "#",
+    path: "/contact-us",
   },
 ];
 

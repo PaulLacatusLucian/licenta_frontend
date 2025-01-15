@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, GraduationCap, School, Calendar, Plus, Eye, Edit, Trash, X, UserPlus } from 'lucide-react';
+import axios from "../../../axiosConfig";
+
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -93,6 +95,11 @@ const AdminDashboard = () => {
           name: 'View Classes', 
           icon: Eye,
           path: '/admin/classes'  // Placeholder route
+        },
+        { 
+          name: 'Go to Next Year', 
+          icon: Calendar,
+          action: () => handleGoToNextYear() // Acțiune specifică pentru acest buton
         }
       ]
     },
@@ -119,9 +126,25 @@ const AdminDashboard = () => {
   ];
 
   const handleOperationClick = (section, operation) => {
-    navigate(operation.path);
-    setSelectedSection(null); // Close modal after navigation
+    if (operation.action) {
+      operation.action(); // Apelează funcția personalizată
+    } else if (operation.path) {
+      navigate(operation.path); // Navighează către ruta specificată
+    }
+    setSelectedSection(null); // Închide modalul după execuție
   };
+  
+
+  const handleGoToNextYear = async () => {
+    try {
+      const response = await axios.post("/api/year/start-new-year");
+      alert("Anul școlar a fost avansat cu succes!");
+    } catch (err) {
+      console.error("Eroare la avansarea anului școlar:", err);
+      alert("Eroare la avansarea anului școlar. Verificați logurile serverului.");
+    }
+  };
+  
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">

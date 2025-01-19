@@ -32,6 +32,9 @@ import StudentGrades from "./stud/components/Grade/StudentGrade";
 import TeacherStudentOverview from "./teacher/components/Students/TeacherStudentsOverview";
 import TeacherWeeklySchedule from "./teacher/components/WeeklySchedule/TeacherWeeklySchedule";
 import OurServices from "./homepage/OurServices/OurServices";
+import GradeEntry from "./teacher/components/Grade/GradeEntry";
+import AbsenceEntry from "./teacher/components/Absence/AbsenceEntry";
+import StudentAbsences from "./stud/components/Absences/StudentAbsences ";
 
 const App = () => {
   return (
@@ -69,8 +72,11 @@ const App = () => {
         <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />
         <Route path="/admin/students/edit/:id" element={<AdmintStudentEdit />} />
         <Route path="/stud/grades" element={<StudentGrades />} />
+        <Route path="/stud/absences" element={<StudentAbsences />} />
         <Route path="/teacher/students" element={<TeacherStudentOverview />} />
         <Route path="/teacher/schedule" element={<TeacherWeeklySchedule />} />
+        <Route path="/teacher/grades" element={<GradeEntry />} />
+        <Route path="/teacher/absence" element={<AbsenceEntry />} />
       </Routes>
     </Router>
   );

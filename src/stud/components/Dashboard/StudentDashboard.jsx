@@ -79,7 +79,7 @@ const StudentDashboard = () => {
   const navItems = [
     { icon: FaHome, label: "Home", path: "/" },
     { icon: FaUserCircle, label: "My Profile", path: "/stud/profile" },
-    { icon: FaChartLine, label: "Grades", path: "/grades" },
+    { icon: FaChartLine, label: "Grades", path: "/stud/grades" },
     { icon: FaClipboardList, label: "Assignments", path: "/assignments" },
     { icon: FaCalendarAlt, label: "Calendar", path: "/stud/calendar" },
     { icon: FaUtensils, label: "Food", path: "/food" },

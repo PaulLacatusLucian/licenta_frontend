@@ -121,7 +121,7 @@ const TeacherDashboard = () => {
 <div className="bg-white p-6 rounded-xl shadow-md">
   <div className="flex items-center justify-between mb-4">
     <h4 className="text-xl font-semibold text-dark">Today's Classes</h4>
-    <Link to="/teacher/weekly-schedule" className="text-secondary hover:underline">
+    <Link to="/teacher/schedule" className="text-secondary hover:underline">
       Full Schedule
     </Link>
   </div>

@@ -8,7 +8,7 @@ const CreateSchedule = ({
   selectedClass,
   selectedClassName,
   onClose,
-  onScheduleCreated, // Added callback prop
+  onScheduleCreated, // Callback for notifying parent component
 }) => {
   const [formData, setFormData] = useState({
     classId: selectedClass || "",
@@ -41,7 +41,7 @@ const CreateSchedule = ({
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
+  
     if (name === "teacherId") {
       const selectedTeacher = teachers.find(
         (teacher) => teacher.id === parseInt(value)
@@ -49,7 +49,7 @@ const CreateSchedule = ({
       setFormData((prev) => ({
         ...prev,
         [name]: value,
-        subject: selectedTeacher ? selectedTeacher.subject : "",
+        subject: selectedTeacher ? selectedTeacher.subject : "", // Actualizează materia
       }));
     } else {
       setFormData((prev) => ({
@@ -58,6 +58,7 @@ const CreateSchedule = ({
       }));
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,28 +71,32 @@ const CreateSchedule = ({
       return;
     }
 
+    const requestData = {
+      studentClass: { id: parseInt(formData.classId) },
+      scheduleDay: formData.scheduleDay,
+      startTime: formData.startTime,
+      endTime: formData.endTime,
+      teacher: { id: parseInt(formData.teacherId) },
+      subjects: [formData.subject],
+    };
+
+    console.log("Sending data:", requestData);
+
     try {
-      await axios.post("/schedules", {
-        studentClass: { id: parseInt(formData.classId) },
-        scheduleDay: formData.scheduleDay,
-        startTime: formData.startTime,
-        endTime: formData.endTime,
-        teacher: { id: parseInt(formData.teacherId) },
-        subjects: [formData.subject],
-      });
+      const response = await axios.post("/schedules", requestData);
+      console.log("Response:", response.data);
 
       setMessage({ type: "success", text: "Orarul a fost creat cu succes!" });
 
-      // Trigger calendar sync
       if (onScheduleCreated) {
         onScheduleCreated();
       }
 
       setTimeout(() => {
-        onClose(); // Close the modal after creation
+        onClose();
       }, 1000);
     } catch (error) {
-      console.error("Error creating schedule:", error);
+      console.error("Error creating schedule:", error.response?.data || error);
       setMessage({
         type: "error",
         text: "Eroare la crearea orarului. Te rog încearcă din nou.",
@@ -200,8 +205,8 @@ const CreateSchedule = ({
               type="text"
               name="subject"
               value={formData.subject}
-              readOnly
-              className="w-full h-9 rounded-md border bg-gray-50"
+              onChange={handleInputChange}
+              className="w-full h-9 rounded-md border"
             />
           </div>
         </div>

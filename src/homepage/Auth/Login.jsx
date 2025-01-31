@@ -22,18 +22,18 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
-            // Send login request
+            // Trimite request-ul de login
             const response = await axios.post("/users/login", formData);
             const userId = response.data.id;
             const username = response.data.username;
-
-            // Save user data in cookies (optional)
-            Cookies.set("userId", userId, { expires: 1 / 8 }); // 3 hours
+    
+            // Salvează userId și username în cookies (expiră în 3 ore)
+            Cookies.set("userId", userId, { expires: 1 / 8 });
             Cookies.set("username", username, { expires: 1 / 8 });
-
-            // Determine redirection based on username suffix
+    
+            // Redirecționare bazată pe tipul de utilizator
             if (username.endsWith(".parent")) {
                 navigate("/parent");
             } else if (username.endsWith(".stud")) {
@@ -42,8 +42,9 @@ function Login() {
                 navigate("/admin");
             } else if (username.endsWith(".prof")) {
                 navigate("/teacher");
-            }
-            else {
+            } else if (username.endsWith(".chef")) {
+                navigate("/chef");
+            } else {
                 throw new Error("Invalid username type");
             }
         } catch (error) {
@@ -53,6 +54,7 @@ function Login() {
             setErrorMessage(errorMessage);
         }
     };
+    
 
     return (
         <div className="min-h-screen bg-gray-100 flex justify-center items-center">

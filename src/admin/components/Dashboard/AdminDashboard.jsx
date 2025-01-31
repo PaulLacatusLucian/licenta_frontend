@@ -122,7 +122,23 @@ const AdminDashboard = () => {
           path: '/admin/class-schedule'
         }
       ]
+    },
+    {
+      id: 'pastStudents',
+      title: 'Past Students',
+      icon: GraduationCap,
+      color: 'bg-blue-500',
+      hoverColor: 'hover:bg-blue-600',
+      lightColor: 'bg-blue-50',
+      operations: [
+        { 
+          name: 'View Past Students', 
+          icon: Eye,
+          path: '/admin/past-students'
+        }
+      ]
     }
+    
   ];
 
   const handleOperationClick = (section, operation) => {

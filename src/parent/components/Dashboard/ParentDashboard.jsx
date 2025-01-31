@@ -32,24 +32,29 @@ const ParentDashboard = () => {
 
   useEffect(() => {
     const fetchStudentData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`/parents/${parentId}/student`);
-        console.log("Received student data:", response.data);
-        setStudentData(response.data);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch student data:", err);
-        setError("Failed to load student data. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
+        try {
+            setIsLoading(true);
+            const response = await axios.get(`/parents/${parentId}/student`);
+            console.log("Received student data:", response.data);
+            setStudentData(response.data);
+
+            // ✅ Stochează ID-ul elevului în Cookies
+            Cookies.set("studentId", response.data.id, { expires: 1 / 8 });
+
+            setError(null);
+        } catch (err) {
+            console.error("Failed to fetch student data:", err);
+            setError("Failed to load student data. Please try again later.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     if (parentId) {
-      fetchStudentData();
+        fetchStudentData();
     }
-  }, [parentId]);
+}, [parentId]);
+
 
   const renderHomeContent = () => {
     if (isLoading) {
@@ -113,7 +118,15 @@ const ParentDashboard = () => {
             <h4 className="text-lg md:text-xl font-semibold text-dark">Food Orders</h4>
           </div>
           <p>Manage your child's meal orders here.</p>
+          <button
+            onClick={() => window.location.href = "http://localhost:5173/cafeteria/"}
+            className="w-full bg-primary text-white py-2 rounded-lg hover:opacity-90 mt-2"
+          >
+            Go to Cafeteria
+          </button>
         </div>
+
+
 
         {/* Communication */}
         <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">

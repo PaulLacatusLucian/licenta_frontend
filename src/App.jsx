@@ -35,6 +35,11 @@ import OurServices from "./homepage/OurServices/OurServices";
 import GradeEntry from "./teacher/components/Grade/GradeEntry";
 import AbsenceEntry from "./teacher/components/Absence/AbsenceEntry";
 import StudentAbsences from "./stud/components/Absences/StudentAbsences ";
+import ViewPastStudents from "./admin/components/PastStudents/ViewPastStudents";
+import ChefDashboard from "./chef/components/Dashboard/ChefDashboard";
+import AddFood from "./chef/components/AddFood/AddFood";
+import MenuList from "./Cafeteria/MenuList";
+import ParentProfile from "./Cafeteria/Profile/ParentProfile";
 
 const App = () => {
   return (
@@ -71,12 +76,18 @@ const App = () => {
         <Route path="/admin/parents/" element={<AdminParentView />} /> 
         <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />
         <Route path="/admin/students/edit/:id" element={<AdmintStudentEdit />} />
+        <Route path="/admin/past-students" element={<ViewPastStudents />} />
         <Route path="/stud/grades" element={<StudentGrades />} />
         <Route path="/stud/absences" element={<StudentAbsences />} />
         <Route path="/teacher/students" element={<TeacherStudentOverview />} />
         <Route path="/teacher/schedule" element={<TeacherWeeklySchedule />} />
         <Route path="/teacher/grades" element={<GradeEntry />} />
         <Route path="/teacher/absence" element={<AbsenceEntry />} />
+        <Route path="/chef" element={<ChefDashboard />} />
+        <Route path="/add-food" element={<AddFood />} />
+        <Route path="/cafeteria" element={<MenuList />} />
+        <Route path="/cafeteria/profile" element={<ParentProfile />} />
+
       </Routes>
     </Router>
   );

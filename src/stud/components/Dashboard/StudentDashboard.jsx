@@ -10,7 +10,8 @@ const StudentDashboard = () => {
   const [absences, setAbsences] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);  // Added this line
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
+  const [studentOrders, setStudentOrders] = useState([]); 
   const navigate = useNavigate();
 
   const userId = Cookies.get("userId");
@@ -24,23 +25,24 @@ const StudentDashboard = () => {
     const fetchStudentData = async () => {
       try {
         setIsLoading(true);
-        const [studentResponse, absencesResponse, classesResponse] = await Promise.all([
-          axios.get(`/api/students/${userId}`),
-          axios.get(`/api/students/${userId}/total_absences`),
-          axios.get(`/api/students/${userId}/upcoming-classes`),
-        ]);
-
-        const fetchedStudentData = studentResponse.data || null;
+    
+        const studentResponse = await axios.get(`/api/students/${userId}`);
+        console.log("Student data response:", studentResponse.data); // Debugging
+    
+        const absencesResponse = await axios.get(`/api/students/${userId}/total-absences`);
+        const classesResponse = await axios.get(`/api/students/${userId}/upcoming-classes`);
+    
+        setStudentData(studentResponse.data || null);
+        setAbsences(absencesResponse.data || { total: 0 });
+        
+        // Verificăm dacă avem date despre cursurile viitoare
         const fetchedUpcomingClasses = classesResponse.data || [];
-
-        if (fetchedUpcomingClasses.length === 0 && fetchedStudentData?.studentClass?.schedules) {
-          setUpcomingClasses(fetchedStudentData.studentClass.schedules);
+        if (fetchedUpcomingClasses.length === 0 && studentResponse.data.studentClass?.schedules) {
+          setUpcomingClasses(studentResponse.data.studentClass.schedules);
         } else {
           setUpcomingClasses(fetchedUpcomingClasses);
         }
-
-        setStudentData(fetchedStudentData);
-        setAbsences(absencesResponse.data || { total: 0 });
+    
         setError(null);
       } catch (error) {
         console.error("Error fetching student data:", error);
@@ -52,9 +54,32 @@ const StudentDashboard = () => {
         setIsLoading(false);
       }
     };
+    
 
     fetchStudentData();
   }, [userId, navigate]);
+
+  useEffect(() => {
+    const fetchStudentOrders = async () => {
+      try {
+        if (!userId) return;
+  
+        const now = new Date();
+        const month = now.getMonth() + 1; // Lunile încep de la 0 în JS
+        const year = now.getFullYear();
+  
+        const response = await axios.get(`/menu/orders/student/${userId}/${month}/${year}`);
+        console.log("Student orders:", response.data);
+        setStudentOrders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching student orders:", error);
+      }
+    };
+  
+    fetchStudentOrders();
+  }, [userId]);
+  
+  
 
   const getAbsenceEmoji = (absenceCount) => {
     if (absenceCount <= 3) {
@@ -118,6 +143,36 @@ const StudentDashboard = () => {
           </div>
         </div>
       </div>
+
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+        <div className="flex items-center mb-4">
+          <FaUtensils className="text-xl md:text-2xl text-primary mr-3" />
+          <h4 className="text-lg md:text-xl font-semibold text-dark">Your Food Orders</h4>
+        </div>
+        <div className="space-y-4">
+          {studentOrders.length > 0 ? (
+            studentOrders.map((order, index) => (
+              <div key={index} className="border-b pb-3 last:border-b-0">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="font-semibold text-dark">{order.menuItemName}</p>
+                    <p className="text-dark2 text-sm">
+                      Ordered on: {new Date(order.orderTime).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-dark font-medium">Quantity: {order.quantity}</p>
+                    <p className="text-dark font-medium">Total: ${order.price.toFixed(2)}</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-dark2">No food orders this month.</p>
+          )}
+        </div>
+      </div>
+
   
       {/* Upcoming Classes Section */}
       <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">

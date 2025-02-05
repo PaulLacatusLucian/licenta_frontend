@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, GraduationCap, School, Calendar, Plus, Eye, Edit, Trash, X, UserPlus } from 'lucide-react';
+import { Users, GraduationCap, School, Calendar, Plus, Eye, Edit, Trash, X, UserPlus, UtensilsCrossed } from 'lucide-react';
 import axios from "../../../axiosConfig";
 
 
@@ -137,6 +137,26 @@ const AdminDashboard = () => {
           path: '/admin/past-students'
         }
       ]
+    },
+    {
+      id: "chef",
+      title: "Bucătari",
+      icon: UtensilsCrossed,
+      color: "bg-orange-500",
+      hoverColor: "hover:bg-orange-600",
+      lightColor: "bg-orange-50",
+      operations: [
+        {
+          name: "Înregistrează Bucătar",
+          icon: Plus,
+          path: "/admin/create-chef",
+        },
+        {
+          name: "Vizualizează Bucătari",
+          icon: Eye,
+          path: "/admin/chefs",
+        }
+      ],
     }
     
   ];

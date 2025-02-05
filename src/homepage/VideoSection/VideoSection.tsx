@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 // Înlocuiește cu ID-ul videoclipului tău
-const videoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ"; // Exemplu de URL corect pentru YouTube
+const videoUrl = "https://www.youtube.com/embed/2mrNqd8n7U8";
 
 const FadeUp = (delay) => {
   return {
@@ -52,16 +52,17 @@ const VideoSection = () => {
           animate="animate"
           className="flex justify-center"
         >
-          <iframe
+         <iframe
             width="560"
             height="315"
-            src={videoUrl}
+            src={videoUrl} // Folosește URL-ul corect
             title="School Experience Video"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             className="rounded-lg shadow-lg"
           ></iframe>
+
         </motion.div>
       </div>
     </section>

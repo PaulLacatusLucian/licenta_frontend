@@ -10,6 +10,7 @@ function MyProfile() {
     const navigate = useNavigate();
 
     const userId = Cookies.get("userId");
+    const studentId = Cookies.get("studentId");
     const currentYear = new Date().getFullYear();
 
     useEffect(() => {
@@ -24,7 +25,7 @@ function MyProfile() {
         try {
             console.log("Fetching order history for student:", userId);
     
-            const response = await axios.get(`/menu/orders/student/${userId}/${month}/${year}`);
+            const response = await axios.get(`/menu/orders/student/${studentId}/${month}/${year}`);
             console.log("✅ Order history response:", response.data);
     
             setOrderHistory(response.data);

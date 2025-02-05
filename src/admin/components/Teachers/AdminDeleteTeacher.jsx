@@ -11,7 +11,7 @@ const DeleteTeacher = () => {
     try {
       await axios.delete(`/teachers/${id}`);
       setMessage("Profesor șters cu succes.");
-      navigate("/teachers");
+      navigate("/admin/teachers");
     } catch (err) {
       console.error("Error deleting teacher:", err);
       setMessage("Eroare la ștergerea profesorului.");
@@ -27,7 +27,7 @@ const DeleteTeacher = () => {
           <button onClick={handleDelete} className="bg-red-500 text-white py-2 px-4 rounded">
             Da, Șterge
           </button>
-          <button onClick={() => navigate("/teachers")} className="bg-gray-300 py-2 px-4 rounded">
+          <button onClick={() => navigate("/admin/teachers")} className="bg-gray-300 py-2 px-4 rounded">
             Anulează
           </button>
         </div>

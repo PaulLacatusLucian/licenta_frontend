@@ -24,10 +24,15 @@ import AdminTeacherEdit from "./admin/components/Teachers/AdminTeacherEdit";
 import AdminTeacherView from "./admin/components/Teachers/AdminTeacherView";
 import AdminClassesView from "./admin/components/Class/AdminClassView";
 import AdminClassEdit from "./admin/components/Class/AdminClassEdit";
+import AdminDeleteClass from "./admin/components/Class/AdminDeleteClass";
 import AdminStudentView from "./admin/components/Student_Parent/AdminStudentView";
 import AdminParentView from "./admin/components/Student_Parent/AdminParentView";
 import AdminParentEdit from "./admin/components/Student_Parent/AdminParentEdit";
 import AdmintStudentEdit from "./admin/components/Student_Parent/AdminStudentEdit";
+import AdminChefCreator from "./admin/components/Chef/AdminChefCreator";
+import AdminChefEdit from "./admin/components/Chef/AdminChefEdit";
+import AdminChefView from "./admin/components/Chef/AdminChefView";
+import AdminChefDelete from "./admin/components/Chef/AdminChefDelete";
 import StudentGrades from "./stud/components/Grade/StudentGrade";
 import TeacherStudentOverview from "./teacher/components/Students/TeacherStudentsOverview";
 import TeacherWeeklySchedule from "./teacher/components/WeeklySchedule/TeacherWeeklySchedule";
@@ -72,11 +77,16 @@ const App = () => {
         <Route path="/admin/teachers/delete/:id" element={<AdminDeleteTeacher />} />
         <Route path="/admin/classes/" element={<AdminClassesView />} />
         <Route path="/admin/classes/edit/:id" element={<AdminClassEdit />} />
+        <Route path="/admin/classes/delete/:id" element={<AdminDeleteClass />} />
         <Route path="/admin/students/" element={<AdminStudentView />} />
         <Route path="/admin/parents/" element={<AdminParentView />} /> 
         <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />
         <Route path="/admin/students/edit/:id" element={<AdmintStudentEdit />} />
         <Route path="/admin/past-students" element={<ViewPastStudents />} />
+        <Route path="/admin/create-chef" element={<AdminChefCreator />} />
+        <Route path="/admin/edit-chef/:id" element={<AdminChefEdit />} />
+        <Route path="/admin/chefs/" element={<AdminChefView />} />
+        <Route path="/admin/delete-chef/:id" element={<AdminChefDelete />} />
         <Route path="/stud/grades" element={<StudentGrades />} />
         <Route path="/stud/absences" element={<StudentAbsences />} />
         <Route path="/teacher/students" element={<TeacherStudentOverview />} />

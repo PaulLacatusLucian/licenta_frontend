@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, ArrowLeft, Pencil, Trash, Search } from "lucide-react";
 import axios from "../../../axiosConfig";
+import Cookies from "js-cookie";
+
 
 const ViewTeachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -9,20 +11,27 @@ const ViewTeachers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchTeachers = async () => {
-      try {
-        const response = await axios.get("/teachers");
-        setTeachers(response.data);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching teachers:", err);
-        setError("Failed to load teachers. Please try again later.");
-      }
-    };
+useEffect(() => {
+  const fetchTeachers = async () => {
+    try {
+      const token = Cookies.get("jwt-token");
 
-    fetchTeachers();
-  }, []);
+      const response = await axios.get("/teachers", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setTeachers(response.data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching teachers:", err);
+      setError("Failed to load teachers. Please try again later.");
+    }
+  };
+
+  fetchTeachers();
+}, []);
 
   const filteredTeachers = teachers.filter(teacher =>
     teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -73,6 +82,9 @@ const ViewTeachers = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Materie
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tip
+                  </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Acțiuni
                   </th>
@@ -86,6 +98,9 @@ const ViewTeachers = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {teacher.subject}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {teacher.type === "EDUCATOR" ? "Educator" : "Profesor"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button

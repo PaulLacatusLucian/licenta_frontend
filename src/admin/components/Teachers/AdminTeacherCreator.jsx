@@ -8,7 +8,9 @@ const CreateTeacher = () => {
 
   const [formData, setFormData] = React.useState({
     name: "",
+    email: "",
     subject: "",
+    type: "TEACHER",
   });
 
   const [message, setMessage] = React.useState(null);
@@ -27,6 +29,14 @@ const CreateTeacher = () => {
     }));
   };
 
+  const handleTypeChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      type: e.target.value,
+    }));
+  };
+  
+
   const handleSubjectChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -38,22 +48,19 @@ const CreateTeacher = () => {
     e.preventDefault();
   
     try {
-      // Trimiterea datelor către backend
-      const response = await axios.post("/users/register-teacher", formData);
-      
+      const response = await axios.post("/auth/register-teacher", formData);
       setMessage({
         type: "success",
         text: `Profesorul a fost creat cu succes! Username: ${response.data.username}, Parola: ${response.data.password}`,
       });
   
-      // Resetează formularul după succes
       setFormData({
         name: "",
         subject: "",
+        type: "TEACHER",
       });
     } catch (error) {
       console.error("Error creating teacher:", error);
-  
       setMessage({
         type: "error",
         text: error.response?.data?.message || "Eroare la crearea profesorului. Te rog încearcă din nou.",
@@ -106,6 +113,20 @@ const CreateTeacher = () => {
             </div>
 
             <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-900">Email Profesor</label>
+              <input
+                type="email"
+                placeholder="exemplu@domeniu.com"
+                className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                }
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium text-gray-900">Materie Predată</label>
               <select
                 value={formData.subject}
@@ -123,6 +144,19 @@ const CreateTeacher = () => {
                     ))}
                   </optgroup>
                 ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-900">Tip Profesor</label>
+              <select
+                value={formData.type}
+                onChange={handleTypeChange}
+                required
+                className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="TEACHER">Profesor (clase 5–12)</option>
+                <option value="EDUCATOR">Educator (clase 0–4)</option>
               </select>
             </div>
 

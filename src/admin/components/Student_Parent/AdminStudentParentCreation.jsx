@@ -63,7 +63,7 @@ const AdminUserCreator = () => {
     if (!confirm) return;
 
     try {
-      await axios.post("/users/register-with-parent", {
+      await axios.post("/auth/register-with-parent", {
         student: {
           username: formData.studentUsername,
           password: formData.studentPassword,
@@ -74,6 +74,7 @@ const AdminUserCreator = () => {
           parent: {
             username: formData.parentUsername,
             password: formData.parentPassword,
+            email: formData.motherEmail,
             motherName: formData.motherName,
             motherEmail: formData.motherEmail,
             motherPhoneNumber: formData.motherPhoneNumber,

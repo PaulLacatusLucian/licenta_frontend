@@ -9,7 +9,8 @@ const CreateClass = () => {
   const [formData, setFormData] = React.useState({
     name: "",
     classTeacherId: "",
-    specialization: "",
+    educationLevel: "PRIMARY",
+    specialization: ""
   });
 
   const [teachers, setTeachers] = React.useState([]);
@@ -34,7 +35,16 @@ const CreateClass = () => {
     };
 
     fetchTeachers();
-  }, []);
+      }, []);
+      const filteredTeachers = teachers
+      .filter((t) => !t.classId) 
+      .filter((t) =>
+        formData.educationLevel === "PRIMARY"
+          ? t.type === "EDUCATOR"
+          : ["MIDDLE", "HIGH"].includes(formData.educationLevel)
+          ? t.type === "TEACHER"
+          : true
+      );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -47,30 +57,38 @@ const CreateClass = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!formData.specialization || !formData.classTeacherId) {
+    if (!formData.educationLevel) {
       setMessage({
         type: "error",
-        text: "Te rog selectează o specializare și un profesor diriginte!",
+        text: "Te rog selectează un nivel educațional!",
       });
       return;
     }
+    
+    const payload = {
+      name: formData.name,
+      specialization: formData.educationLevel === "HIGH" ? formData.specialization : null,
+    };
+  
+    let endpoint = "/classes/create-primary";
+
+    if (formData.educationLevel === "PRIMARY") {
+      endpoint = `/classes/create-primary`;
+      if (formData.classTeacherId) {
+        endpoint += `?teacherId=${formData.classTeacherId}`;
+      }
+    } else if (formData.educationLevel === "MIDDLE") {
+      endpoint = `/classes/create-middle?teacherId=${formData.classTeacherId}`;
+    } else if (formData.educationLevel === "HIGH") {
+      endpoint = `/classes/create-high?teacherId=${formData.classTeacherId}`;
+    }
+
+    
   
     try {
-      // Trimitere cerere POST cu `teacherId` ca request parameter
-      const response = await axios.post(
-        `/classes?teacherId=${formData.classTeacherId}`,
-        {
-          name: formData.name,
-          specialization: formData.specialization,
-        }
-      );
-  
+await axios.post(endpoint, payload);
       setMessage({ type: "success", text: "Clasa a fost creată cu succes!" });
-      setFormData({
-        name: "",
-        classTeacherId: "",
-        specialization: "",
-      });
+      setFormData({ name: "", classTeacherId: "", specialization: "" });
     } catch (error) {
       console.error("Error creating class:", error);
       setMessage({
@@ -81,7 +99,6 @@ const CreateClass = () => {
   };
   
   
-
   return (
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg border shadow-sm">
@@ -128,46 +145,87 @@ const CreateClass = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Profesor Diriginte</label>
-              <div className="relative">
-                <Users className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <select
-                  name="classTeacherId"
-                  className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={formData.classTeacherId}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Selectează un profesor</option>
-                  {teachers.map((teacher) => (
+              <label className="text-sm font-medium text-gray-900">Nivel Educațional</label>
+              <select
+                name="educationLevel"
+                className="w-full h-9 rounded-md border border-gray-200 px-3 py-1 text-sm shadow-sm"
+                value={formData.educationLevel}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="PRIMARY">Clasa 0–4 (Învățământ Primar)</option>
+                <option value="MIDDLE">Clasa 5–8 (Învățământ Gimnazial)</option>
+                <option value="HIGH">Clasa 9–12 (Învățământ Liceal)</option>
+              </select>
+            </div>
+
+
+            {formData.educationLevel === "PRIMARY" && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-900">Învățător</label>
+              <select
+                name="classTeacherId"
+                className="w-full h-9 rounded-md border border-gray-200 px-3 py-1 text-sm shadow-sm"
+                value={formData.classTeacherId}
+                onChange={handleInputChange}
+              >
+                <option value="">Selectează un învățător</option>
+                {teachers
+                  .filter((t) => t.type === "EDUCATOR" && !t.hasClassAssigned)
+                  .map((teacher) => (
+                    <option key={teacher.id} value={teacher.id}>
+                      {teacher.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
+
+
+
+          {(formData.educationLevel === "MIDDLE" || formData.educationLevel === "HIGH") && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-900">Diriginte</label>
+              <select
+                name="classTeacherId"
+                className="w-full h-9 rounded-md border border-gray-200 px-3 py-1 text-sm shadow-sm"
+                value={formData.classTeacherId}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Selectează un profesor</option>
+                {teachers
+                .filter((t) => t.type === "TEACHER" && !t.hasClassAssigned)
+                .map((teacher) => (
                     <option key={teacher.id} value={teacher.id}>
                       {teacher.name} - {teacher.subject}
                     </option>
                   ))}
-                </select>
-              </div>
+              </select>
             </div>
+          )}
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Specializare</label>
-              <div className="relative">
-                <BookOpen className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <select
-                  name="specialization"
-                  className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={formData.specialization}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Selectează o specializare</option>
-                  {specializations.map((spec, index) => (
-                    <option key={index} value={spec}>
-                      {spec}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+
+        {formData.educationLevel === "HIGH" && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Specializare</label>
+            <select
+              name="specialization"
+              className="w-full h-9 rounded-md border border-gray-200 px-3 py-1 text-sm shadow-sm"
+              value={formData.specialization}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Selectează o specializare</option>
+              {specializations.map((spec, index) => (
+                <option key={index} value={spec}>
+                  {spec}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
 
             <button
               type="submit"

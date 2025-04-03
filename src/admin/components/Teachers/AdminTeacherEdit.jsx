@@ -10,6 +10,7 @@ const EditTeacher = () => {
   const [formData, setFormData] = useState({
     name: "",
     subject: "",
+    type: "",
   });
 
   const [message, setMessage] = useState(null);
@@ -29,6 +30,7 @@ const EditTeacher = () => {
         setFormData({
           name: response.data.name,
           subject: response.data.subject,
+          type: response.data.type || "",
         });
         setLoading(false);
       } catch (error) {
@@ -44,12 +46,37 @@ const EditTeacher = () => {
     fetchTeacher();
   }, [id]);
 
+  useEffect(() => {
+    if (formData.type === "EDUCATOR") {
+      axios.get(`/classes?classTeacherId=${id}`).then(res => {
+        const assignedClass = res.data?.find(cls => cls.educationLevel === "PRIMARY");
+        if (assignedClass) {
+          setMessage({
+            type: "error",
+            text: `Profesorul este asignat clasei ${assignedClass.name} (clasă primară) și nu poate fi transformat în TEACHER.`,
+          });
+        }
+      });
+    }
+  }, [id, formData.type]);
+  
+
   const handleNameChange = (e) => {
     setFormData((prev) => ({
       ...prev,
       name: e.target.value,
     }));
   };
+
+  const handleTypeChange = (e) => {
+    const selectedType = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      type: selectedType,
+      subject: selectedType === "EDUCATOR" ? "" : prev.subject,
+    }));
+  };
+  
 
   const handleSubjectChange = (e) => {
     setFormData((prev) => ({
@@ -132,25 +159,43 @@ const EditTeacher = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Materie Predată</label>
+              <label className="text-sm font-medium text-gray-900">Tip Profesor</label>
               <select
-                value={formData.subject}
-                onChange={handleSubjectChange}
+                name="type"
+                value={formData.type}
+                onChange={handleTypeChange}
                 required
-                className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
               >
-                <option value="">Selectează Materia</option>
-                {Object.entries(subjectsByCategory).map(([category, subjects]) => (
-                  <optgroup key={category} label={category} className="font-medium">
-                    {subjects.map((subject) => (
-                      <option key={subject} value={subject}>
-                        {subject}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
+                <option value="">Selectează tipul</option>
+                <option value="EDUCATOR">Învățător</option>
+                <option value="TEACHER">Profesor</option>
               </select>
             </div>
+
+
+            {formData.type !== "EDUCATOR" && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-900">Materie Predată</label>
+                <select
+                  value={formData.subject}
+                  onChange={handleSubjectChange}
+                  required={formData.type !== "EDUCATOR"} // required doar dacă nu e educator
+                  className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950"
+                >
+                  <option value="">Selectează Materia</option>
+                  {Object.entries(subjectsByCategory).map(([category, subjects]) => (
+                    <optgroup key={category} label={category} className="font-medium">
+                      {subjects.map((subject) => (
+                        <option key={subject} value={subject}>
+                          {subject}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="flex space-x-4">
               <button

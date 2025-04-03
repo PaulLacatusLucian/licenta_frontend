@@ -21,7 +21,7 @@ const EditStudent = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await axios.get(`/api/students/${id}`);
+        const response = await axios.get(`/students/${id}`);
         setFormData({
           name: response.data.name,
           email: response.data.email,
@@ -68,7 +68,7 @@ const EditStudent = () => {
     e.preventDefault();
 
     try {
-      await axios.put(`/api/students/${id}`, {
+      await axios.put(`/students/${id}`, {
         ...formData,
         studentClass: { id: parseInt(formData.studentClassId) },
       });

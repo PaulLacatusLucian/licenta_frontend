@@ -80,7 +80,7 @@ const StudentProfile = () => {
     const fetchStudentData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`/api/students/${userId}`);
+        const response = await axios.get(`/students/${userId}`);
         setStudentData(response.data);
         setImagePreview(response.data?.profileImage);
       } catch (error) {
@@ -103,7 +103,7 @@ const StudentProfile = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post(`/api/students/${userId}/profile-image`, formData, {
+      const response = await axios.post(`/students/${userId}/profile-image`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

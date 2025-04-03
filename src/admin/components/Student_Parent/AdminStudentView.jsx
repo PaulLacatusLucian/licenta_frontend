@@ -12,7 +12,7 @@ const ViewStudents = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("/api/students");
+        const response = await axios.get("/students");
         setStudents(response.data);
         setError(null);
       } catch (err) {
@@ -27,7 +27,7 @@ const ViewStudents = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Ești sigur că vrei să ștergi acest student?")) {
       try {
-        await axios.delete(`/api/students/${id}`);
+        await axios.delete(`/students/${id}`);
         setStudents((prev) => prev.filter((student) => student.id !== id));
         console.log(`Student cu ID ${id} a fost șters.`);
       } catch (err) {

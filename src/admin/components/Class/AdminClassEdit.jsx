@@ -11,6 +11,7 @@ const EditClass = () => {
     name: "",
     specialization: "",
     classTeacherId: "",
+    educationLevel: "",
   });
 
   const [teachers, setTeachers] = useState([]);
@@ -30,9 +31,11 @@ const EditClass = () => {
         const classResponse = await axios.get(`/classes/${id}`);
         setFormData({
           name: classResponse.data.name,
-          specialization: classResponse.data.specialization,
-          classTeacherId: classResponse.data.classTeacherId || "",
+          specialization: classResponse.data.specialization || "",
+          classTeacherId: classResponse.data.classTeacher?.id || "",
+          educationLevel: classResponse.data.educationLevel || "",
         });
+        
 
         const teachersResponse = await axios.get("/teachers");
         setTeachers(teachersResponse.data);
@@ -52,11 +55,42 @@ const EditClass = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+  
+      // Live validation doar pentru numele clasei
+      if (name === "name" || name === "educationLevel") {
+        const namePattern = /^(\d{1,2})([A-Z])$/;
+        const match = updated.name.match(namePattern);
+        const grade = match ? parseInt(match[1]) : null;
+        const level = updated.educationLevel;
+  
+        let valid = false;
+        if (match) {
+          if (
+            (level === "PRIMARY" && grade >= 0 && grade <= 4) ||
+            (level === "MIDDLE" && grade >= 5 && grade <= 8) ||
+            (level === "HIGH" && grade >= 9 && grade <= 12)
+          ) {
+            valid = true;
+          }
+        }
+  
+        if (!valid && updated.name !== "") {
+          setMessage({
+            type: "error",
+            text: "Nume clasă invalid pentru nivelul educațional selectat.",
+          });
+        } else {
+          setMessage(null);
+        }
+      }
+  
+      return updated;
+    });
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,6 +120,12 @@ const EditClass = () => {
       </div>
     );
   }
+  
+  const filteredTeachers = teachers.filter((teacher) => {
+    if (formData.educationLevel === "PRIMARY") return teacher.type === "EDUCATOR";
+    return teacher.type === "TEACHER";
+  });
+  
 
   return (
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
@@ -131,23 +171,26 @@ const EditClass = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Specializare</label>
-              <select
-                name="specialization"
-                className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
-                value={formData.specialization}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Selectează Specializarea</option>
-                {specializations.map((spec, index) => (
-                  <option key={index} value={spec}>
-                    {spec}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {formData.educationLevel === "HIGH" && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-900">Specializare</label>
+                <select
+                  name="specialization"
+                  className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                  value={formData.specialization}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Selectează Specializarea</option>
+                  {specializations.map((spec, index) => (
+                    <option key={index} value={spec}>
+                      {spec}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-900">Profesor Diriginte</label>
@@ -159,11 +202,11 @@ const EditClass = () => {
                 required
               >
                 <option value="">Selectează un Profesor</option>
-                {teachers.map((teacher) => (
+                {filteredTeachers.map((teacher) => (
                   <option key={teacher.id} value={teacher.id}>
-                    {teacher.name} - {teacher.subject}
+                    {teacher.name} - {teacher.subject} ({teacher.type})
                   </option>
-                ))}
+              ))}
               </select>
             </div>
 
@@ -177,6 +220,7 @@ const EditClass = () => {
               </button>
               <button
                 type="submit"
+                disabled={message?.type === "error"}
                 className="inline-flex w-1/2 items-center justify-center rounded-md bg-gray-900 px-4 h-9 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
               >
                 <BookOpen className="mr-2 h-4 w-4" />

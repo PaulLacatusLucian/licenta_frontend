@@ -11,27 +11,21 @@ const ViewTeachers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-useEffect(() => {
-  const fetchTeachers = async () => {
-    try {
-      const token = Cookies.get("jwt-token");
-
-      const response = await axios.get("/teachers", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setTeachers(response.data);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching teachers:", err);
-      setError("Failed to load teachers. Please try again later.");
-    }
-  };
-
-  fetchTeachers();
-}, []);
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await axios.get("/teachers");
+        setTeachers(response.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching teachers:", err);
+        setError("Failed to load teachers. Please try again later.");
+      }
+    };
+  
+    fetchTeachers();
+  }, []);
+  
 
   const filteredTeachers = teachers.filter(teacher =>
     teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

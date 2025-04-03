@@ -18,7 +18,7 @@ const WeeklySchedule = () => {
         }
 
         // Fetch student data to get the class ID
-        const studentResponse = await axios.get(`/api/students/${userId}`);
+        const studentResponse = await axios.get(`/students/${userId}`);
         const studentClass = studentResponse.data.studentClass;
 
         if (!studentClass) {

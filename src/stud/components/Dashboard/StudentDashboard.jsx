@@ -26,11 +26,11 @@ const StudentDashboard = () => {
       try {
         setIsLoading(true);
     
-        const studentResponse = await axios.get(`/api/students/${userId}`);
+        const studentResponse = await axios.get(`/students/${userId}`);
         console.log("Student data response:", studentResponse.data); // Debugging
     
-        const absencesResponse = await axios.get(`/api/students/${userId}/total-absences`);
-        const classesResponse = await axios.get(`/api/students/${userId}/upcoming-classes`);
+        const absencesResponse = await axios.get(`/students/${userId}/total-absences`);
+        const classesResponse = await axios.get(`/students/${userId}/upcoming-classes`);
     
         setStudentData(studentResponse.data || null);
         setAbsences(absencesResponse.data || { total: 0 });

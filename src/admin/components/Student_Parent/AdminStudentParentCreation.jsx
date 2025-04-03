@@ -4,17 +4,13 @@ import { User, Users, Mail, Phone, Lock, GraduationCap, ArrowLeft } from "lucide
 import axios from "../../../axiosConfig";
 
 const AdminUserCreator = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const [formData, setFormData] = React.useState({
     studentName: "",
-    studentUsername: "",
-    studentPassword: "",
     studentEmail: "",
     studentPhoneNumber: "",
     studentClassId: "",
-    parentUsername: "",
-    parentPassword: "",
     motherName: "",
     motherEmail: "",
     motherPhoneNumber: "",
@@ -22,6 +18,10 @@ const AdminUserCreator = () => {
     fatherEmail: "",
     fatherPhoneNumber: "",
   });
+
+  const usernameBase = formData.studentName.trim().toLowerCase().replace(/\s+/g, "_");
+  const studentUsername = `${usernameBase}.student`;
+  const parentUsername = `${usernameBase}.parent`;
 
   const [classes, setClasses] = React.useState([]);
   const [message, setMessage] = React.useState(null);
@@ -58,50 +58,44 @@ const AdminUserCreator = () => {
     e.preventDefault();
 
     const confirm = window.confirm(
-      `Sigur dorești să creezi utilizatorii:\n\nStudent: ${formData.studentUsername}\nPărinte: ${formData.parentUsername}`
+      `Sigur dorești să creezi utilizatorii:\n\nStudent: ${studentUsername}\nPărinte: ${parentUsername}`
     );
+    
     if (!confirm) return;
 
     try {
       await axios.post("/auth/register-with-parent", {
         student: {
-          username: formData.studentUsername,
-          password: formData.studentPassword,
           name: formData.studentName,
           email: formData.studentEmail,
           phoneNumber: formData.studentPhoneNumber,
           studentClass: { id: parseInt(formData.studentClassId) },
           parent: {
-            username: formData.parentUsername,
-            password: formData.parentPassword,
-            email: formData.motherEmail,
             motherName: formData.motherName,
             motherEmail: formData.motherEmail,
             motherPhoneNumber: formData.motherPhoneNumber,
             fatherName: formData.fatherName,
             fatherEmail: formData.fatherEmail,
             fatherPhoneNumber: formData.fatherPhoneNumber,
+            email: formData.motherEmail || formData.fatherEmail, // dacă ai un email general
           },
         },
       });
+      
 
       setMessage({ type: "success", text: "Student și părinte creați cu succes!" });
       setFormData({
         studentName: "",
-        studentUsername: "",
-        studentPassword: "",
         studentEmail: "",
         studentPhoneNumber: "",
         studentClassId: "",
-        parentUsername: "",
-        parentPassword: "",
         motherName: "",
         motherEmail: "",
         motherPhoneNumber: "",
         fatherName: "",
         fatherEmail: "",
         fatherPhoneNumber: "",
-      });
+      });      
     } catch (error) {
       console.error("Error creating users:", error);
       setMessage({
@@ -154,23 +148,6 @@ const AdminUserCreator = () => {
                   required
                 />
                 <InputField
-                  icon={User}
-                  type="text"
-                  name="studentUsername"
-                  placeholder="Username Student"
-                  value={formData.studentUsername}
-                  readOnly
-                />
-                <InputField
-                  icon={Lock}
-                  type="password"
-                  name="studentPassword"
-                  placeholder="Parolă Student"
-                  value={formData.studentPassword}
-                  onChange={handleInputChange}
-                  required
-                />
-                <InputField
                   icon={Mail}
                   type="email"
                   name="studentEmail"
@@ -212,23 +189,6 @@ const AdminUserCreator = () => {
             <fieldset className="space-y-4">
               <legend className="text-base font-medium text-gray-900 border-b pb-2">Detalii Părinte</legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  icon={User}
-                  type="text"
-                  name="parentUsername"
-                  placeholder="Username Părinte"
-                  value={formData.parentUsername}
-                  readOnly
-                />
-                <InputField
-                  icon={Lock}
-                  type="password"
-                  name="parentPassword"
-                  placeholder="Parolă Părinte"
-                  value={formData.parentPassword}
-                  onChange={handleInputChange}
-                  required
-                />
                 <InputField
                   icon={User}
                   type="text"

@@ -40,7 +40,7 @@ const ViewStudents = () => {
   const filteredStudents = students.filter((student) =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (student.studentClass?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+    (student.className || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -111,10 +111,10 @@ const ViewStudents = () => {
                       {student.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {student.studentClass?.name || "N/A"}
+                      {student.className || "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {student.studentClass?.specialization || "N/A"}
+                      {student.classSpecialization || "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {student.phoneNumber || "N/A"}

@@ -22,6 +22,14 @@ const CreateSchedule = ({
   const [teachers, setTeachers] = useState([]);
   const [message, setMessage] = useState(null);
 
+  const subjectsByCategory = {
+    Reale: ["Informatica", "Matematica", "Fizica", "Chimie", "Biologie"],
+    Umane: ["Istorie", "Geografie", "Romana", "Engleza", "Germana", "Italiana", "Latina", "Franceza"],
+    "Arte și Sport": ["Educatie Fizica", "Arte Vizuale", "Muzica"],
+    Altele: ["Religie", "Psihologie", "Economie", "Filosofie"],
+  };
+  
+
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
@@ -38,6 +46,22 @@ const CreateSchedule = ({
 
     fetchTeachers();
   }, []);
+
+  const [educationLevel, setEducationLevel] = useState("");
+
+useEffect(() => {
+  const fetchClassDetails = async () => {
+    try {
+      const response = await axios.get(`/classes/${selectedClass}`);
+      setEducationLevel(response.data.educationLevel); 
+    } catch (error) {
+      console.error("Error fetching class info:", error);
+    }
+  };
+
+  if (selectedClass) fetchClassDetails();
+}, [selectedClass]);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,8 +87,12 @@ const CreateSchedule = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.classId || !formData.scheduleDay || !formData.teacherId) {
-      setMessage({
+    if (
+      !formData.classId ||
+      !formData.scheduleDay ||
+      (educationLevel !== "PRIMARY" && !formData.teacherId)
+    ) {
+          setMessage({
         type: "error",
         text: "Te rog completează toate câmpurile necesare.",
       });
@@ -76,9 +104,13 @@ const CreateSchedule = ({
       scheduleDay: formData.scheduleDay,
       startTime: formData.startTime,
       endTime: formData.endTime,
-      teacher: { id: parseInt(formData.teacherId) },
       subjects: [formData.subject],
     };
+    
+    if (educationLevel !== "PRIMARY") {
+      requestData.teacher = { id: parseInt(formData.teacherId) };
+    }
+    
 
     console.log("Sending data:", requestData);
 
@@ -105,6 +137,7 @@ const CreateSchedule = ({
   };
 
   return (
+
     <div className="relative bg-white rounded-lg shadow-lg p-6">
       <button
         onClick={onClose}
@@ -178,48 +211,83 @@ const CreateSchedule = ({
             />
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-gray-900">Profesor</label>
-            <div className="relative">
-              <Users className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+          {educationLevel === "PRIMARY" ? (
+            <div className="col-span-2">
+              <label className="text-sm font-medium text-gray-900">Materie</label>
               <select
-                name="teacherId"
-                value={formData.teacherId}
+                name="subject"
+                value={formData.subject}
                 onChange={handleInputChange}
-                className="w-full pl-9 h-9 rounded-md border"
+                className="w-full h-9 rounded-md border"
                 required
               >
-                <option value="">Selectează un profesor</option>
-                {teachers.map((teacher) => (
-                  <option key={teacher.id} value={teacher.id}>
-                    {teacher.name} - {teacher.subject}
-                  </option>
+                <option value="">Selectează Materia</option>
+                {Object.entries(subjectsByCategory).map(([category, subjects]) => (
+                  <optgroup key={category} label={category}>
+                    {subjects.map((subject) => (
+                      <option key={subject} value={subject}>
+                        {subject}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
             </div>
-          </div>
+          ) : (
+            <>
+              <div>
+                <label className="text-sm font-medium text-gray-900">Profesor</label>
+                <div className="relative">
+                  <Users className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                  <select
+                    name="teacherId"
+                    value={formData.teacherId}
+                    onChange={handleInputChange}
+                    className="w-full pl-9 h-9 rounded-md border"
+                    required
+                  >
+                    <option value="">Selectează un profesor</option>
+                    {teachers
+                    .filter((teacher) => teacher.type !== "EDUCATOR")
+                    .map((teacher) => (
+                      <option key={teacher.id} value={teacher.id}>
+                        {teacher.name} - {teacher.subject}
+                      </option>
+                  ))}
+                  </select>
+                </div>
+              </div>
 
-          <div>
-            <label className="text-sm font-medium text-gray-900">Materie</label>
-            <input
-              type="text"
-              name="subject"
-              value={formData.subject}
-              onChange={handleInputChange}
-              className="w-full h-9 rounded-md border"
-            />
-          </div>
-        </div>
+              <div>
+                <label className="text-sm font-medium text-gray-900">Materie</label>
+                <input
+                  type="text"
+                  name="subject"
+                  value={formData.subject}
+                  readOnly
+                  className="w-full h-9 rounded-md border bg-gray-100"
+                />
+              </div>
+            </>
+          )}
 
-        <button
-          type="submit"
-          className="w-full h-9 rounded-md bg-green-500 text-white"
-        >
-          Creează Orar
-        </button>
-      </form>
-    </div>
-  );
-};
+          </div> {/* <- închide gridul cu câmpuri */}
+
+          <button
+            type="submit"
+            className="w-full h-9 rounded-md bg-green-500 text-white"
+          >
+            Creează Orar
+          </button>
+          </form>
+            </div>
+          );
+        };
+
+
+
+
+
+
 
 export default CreateSchedule;

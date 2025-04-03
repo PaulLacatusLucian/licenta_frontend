@@ -26,7 +26,7 @@ const EditStudent = () => {
           name: response.data.name,
           email: response.data.email,
           phoneNumber: response.data.phoneNumber,
-          studentClassId: response.data.studentClass?.id || "",
+          studentClassId: response.data.classId || "", 
         });
       } catch (error) {
         console.error("Error fetching student:", error);

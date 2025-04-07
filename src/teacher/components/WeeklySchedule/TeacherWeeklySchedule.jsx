@@ -9,13 +9,12 @@ const WeeklySchedule = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const userId = Cookies.get("userId");
 
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`/teachers/${userId}/weekly-schedule`); // Endpoint pentru orar
+        const response = await axios.get(`/teachers/me/weekly-schedule`);
         setSchedule(response.data);
         setError(null);
       } catch (error) {
@@ -26,10 +25,8 @@ const WeeklySchedule = () => {
       }
     };
 
-    if (userId) {
-      fetchSchedule();
-    }
-  }, [userId]);
+    fetchSchedule();
+  }, []);
 
   const daysOfWeek = ["Luni", "Marți", "Miercuri", "Joi", "Vineri"]; // Zilele săptămânii conform răspunsului backend
 

@@ -14,35 +14,27 @@ const StudentDashboard = () => {
   const [studentOrders, setStudentOrders] = useState([]); 
   const navigate = useNavigate();
 
-  const userId = Cookies.get("userId");
-
   useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-      return;
-    }
-
     const fetchStudentData = async () => {
       try {
         setIsLoading(true);
-    
-        const studentResponse = await axios.get(`/students/${userId}`);
-        console.log("Student data response:", studentResponse.data); // Debugging
-    
-        const absencesResponse = await axios.get(`/students/${userId}/total-absences`);
-        const classesResponse = await axios.get(`/students/${userId}/upcoming-classes`);
-    
+  
+        const studentResponse = await axios.get(`/students/me`);
+        console.log("Student data response:", studentResponse.data);
+  
+        const absencesResponse = await axios.get(`/students/me/total-absences`);
+        const classesResponse = await axios.get(`/students/me/upcoming-classes`);
+  
         setStudentData(studentResponse.data || null);
         setAbsences(absencesResponse.data || { total: 0 });
-        
-        // Verificăm dacă avem date despre cursurile viitoare
+  
         const fetchedUpcomingClasses = classesResponse.data || [];
         if (fetchedUpcomingClasses.length === 0 && studentResponse.data.studentClass?.schedules) {
           setUpcomingClasses(studentResponse.data.studentClass.schedules);
         } else {
           setUpcomingClasses(fetchedUpcomingClasses);
         }
-    
+  
         setError(null);
       } catch (error) {
         console.error("Error fetching student data:", error);
@@ -54,21 +46,19 @@ const StudentDashboard = () => {
         setIsLoading(false);
       }
     };
-    
-
-    fetchStudentData();
-  }, [userId, navigate]);
+  
+    fetchStudentData(); // 👈 Apelul real al funcției
+  }, []);
+  
 
   useEffect(() => {
     const fetchStudentOrders = async () => {
-      try {
-        if (!userId) return;
-  
+      try {  
         const now = new Date();
         const month = now.getMonth() + 1; // Lunile încep de la 0 în JS
         const year = now.getFullYear();
   
-        const response = await axios.get(`/menu/orders/student/${userId}/${month}/${year}`);
+        const response = await axios.get(`/menu/orders/student/me/${month}/${year}`);
         console.log("Student orders:", response.data);
         setStudentOrders(response.data || []);
       } catch (error) {
@@ -77,7 +67,7 @@ const StudentDashboard = () => {
     };
   
     fetchStudentOrders();
-  }, [userId]);
+  }, []);
   
   
 

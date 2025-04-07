@@ -10,15 +10,9 @@ const WeeklySchedule = () => {
   useEffect(() => {
     const fetchStudentClassSchedule = async () => {
       try {
-        // Get userId from cookies
-        const userId = Cookies.get("userId");
-        if (!userId) {
-          setError("Utilizatorul nu este autentificat.");
-          return;
-        }
 
         // Fetch student data to get the class ID
-        const studentResponse = await axios.get(`/students/${userId}`);
+        const studentResponse = await axios.get(`/students/me`);
         const studentClass = studentResponse.data.studentClass;
 
         if (!studentClass) {

@@ -16,19 +16,14 @@ const TeacherDashboard = () => {
   
   const userId = Cookies.get("userId");
 
-  useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-      return;
-    }
-  
+  useEffect(() => {  
     const fetchTeacherData = async () => {
       try {
         setIsLoading(true);
         const [teacherResponse, studentsResponse, scheduleResponse] = await Promise.all([
-          axios.get(`/teachers/${userId}`),
-          axios.get(`/teachers/${userId}/students`),
-          axios.get(`/teachers/${userId}/weekly-schedule`) // Cererea pentru schedule
+          axios.get(`/teachers/me`),
+          axios.get(`/teachers/me/students`),
+          axios.get(`/teachers/me/weekly-schedule`) // Cererea pentru schedule
         ]);
   
         setTeacherData(teacherResponse.data);

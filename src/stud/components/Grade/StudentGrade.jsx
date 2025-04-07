@@ -14,13 +14,7 @@ const StudentGrades = () => {
   useEffect(() => {
     const fetchGrades = async () => {
       try {
-        const userId = Cookies.get("userId");
-        if (!userId) {
-          setMessage("User ID not found. Please log in.");
-          return;
-        }
-    
-        const response = await axios.get(`/grades/${userId}`);
+        const response = await axios.get(`/grades/me`);
         setGrades(response.data);
         setMessage("");
       } catch (error) {

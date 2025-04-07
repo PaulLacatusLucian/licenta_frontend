@@ -15,6 +15,8 @@ const CreateClass = () => {
 
   const [teachers, setTeachers] = React.useState([]);
   const [message, setMessage] = React.useState(null);
+  const [nameError, setNameError] = React.useState("");
+
 
   const specializations = [
     "Matematica-Informatica",
@@ -22,6 +24,18 @@ const CreateClass = () => {
     "Filologie",
     "Bio-Chimie",
   ];
+
+  const isClassNameValid = (name, level) => {
+    const patternMap = {
+      PRIMARY: /^[0-4][A-Z]$/,   // Exemple valide: 0A, 4Z
+      MIDDLE: /^[5-8][A-Z]$/,    // Exemple valide: 5A, 8Z
+      HIGH: /^(9|1[0-2])[A-Z]$/, // Exemple valide: 9A, 10B, 12Z
+    };
+  
+    const pattern = patternMap[level];
+    return pattern ? pattern.test(name) : false;
+  };
+  
 
   React.useEffect(() => {
     const fetchTeachers = async () => {
@@ -54,13 +68,35 @@ const CreateClass = () => {
     }));
   };
 
+  React.useEffect(() => {
+    if (!formData.name) {
+      setNameError("");
+      return;
+    }
+  
+    if (!isClassNameValid(formData.name, formData.educationLevel)) {
+      setNameError("Numele clasei nu este valid pentru nivelul educațional ales.");
+    } else {
+      setNameError("");
+    }
+  }, [formData.name, formData.educationLevel]);
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!formData.educationLevel) {
+    if (!formData.educationLevel || !formData.name) {
       setMessage({
         type: "error",
-        text: "Te rog selectează un nivel educațional!",
+        text: "Te rog completează toate câmpurile necesare!",
+      });
+      return;
+    }
+  
+    if (!isClassNameValid(formData.name, formData.educationLevel)) {
+      setMessage({
+        type: "error",
+        text: "Numele clasei nu este valid pentru nivelul educațional selectat.",
       });
       return;
     }
@@ -128,21 +164,24 @@ await axios.post(endpoint, payload);
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Nume Clasă</label>
-              <div className="relative">
-                <School className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Ex: 10A"
-                  className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-900">Nume Clasă</label>
+            <div className="relative">
+              <School className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+              <input
+                type="text"
+                name="name"
+                placeholder="Ex: 10A"
+                className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
             </div>
+            {nameError && (
+              <p className="text-red-500 text-xs mt-1">{nameError}</p>
+            )}
+          </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-900">Nivel Educațional</label>

@@ -12,13 +12,12 @@ const StudentsOverview = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const userId = Cookies.get("userId");
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`/teachers/${userId}/students`);
+        const response = await axios.get(`/teachers/me/students`);
         setStudents(response.data);
         setFilteredStudents(response.data); // Setăm studenții filtrați inițial
         setError(null);
@@ -30,10 +29,9 @@ const StudentsOverview = () => {
       }
     };
 
-    if (userId) {
-      fetchStudents();
-    }
-  }, [userId]);
+    fetchStudents();
+
+  }, []);
 
   // Sort students
   const handleSort = (criteria) => {

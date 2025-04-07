@@ -12,22 +12,11 @@ const AbsenceEntry = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const userId = Cookies.get("userId");
-    if (userId) {
-      setTeacherId(userId);
-    } else {
-      setMessage("Teacher ID not found in cookies.");
-    }
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
-      if (!teacherId) return;
-
       try {
         const [sessionsResponse, studentsResponse] = await Promise.all([
-          axios.get(`/teachers/${teacherId}/sessions`),
-          axios.get(`/teachers/${teacherId}/students`),
+          axios.get(`/teachers/me/sessions`),
+          axios.get(`/teachers/me/students`),
         ]);
         setSessions(sessionsResponse.data);
         setStudents(studentsResponse.data);
@@ -38,7 +27,7 @@ const AbsenceEntry = () => {
     };
 
     fetchData();
-  }, [teacherId]);
+  },[]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +41,7 @@ const AbsenceEntry = () => {
       setIsSubmitting(true);
       setMessage("");
       // Trimite absența către API
-      await axios.post(`/api/class-sessions/session/${selectedSession}/absences`, null, {
+      await axios.post(`/class-sessions/session/${selectedSession}/absences`, null, {
         params: {
           studentId: selectedStudent,
         },
@@ -65,16 +54,6 @@ const AbsenceEntry = () => {
       setIsSubmitting(false);
     }
   };
-  
-
-  if (!teacherId) {
-    return (
-      <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Record Absence</h2>
-        <p className="text-center text-dark">Teacher ID is missing. Please log in again.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md">

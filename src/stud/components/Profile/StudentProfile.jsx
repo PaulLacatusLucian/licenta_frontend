@@ -10,7 +10,6 @@ const StudentProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const userId = Cookies.get("userId");
   const navigate = useNavigate();
 
   const achievements = [
@@ -72,15 +71,10 @@ const StudentProfile = () => {
   };
 
   useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-      return;
-    }
-
     const fetchStudentData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`/students/${userId}`);
+        const response = await axios.get(`/students/me`);
         setStudentData(response.data);
         setImagePreview(response.data?.profileImage);
       } catch (error) {
@@ -90,9 +84,10 @@ const StudentProfile = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchStudentData();
-  }, [userId, navigate]);
+  }, []);
+  
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -103,7 +98,7 @@ const StudentProfile = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post(`/students/${userId}/profile-image`, formData, {
+      const response = await axios.post(`/students/me/profile-image`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -169,7 +164,7 @@ const StudentProfile = () => {
               <div className="flex items-center gap-6">
                 <div className="bg-secondary bg-opacity-20 px-4 py-2 rounded-lg">
                   <p className="text-sm opacity-80">Class</p>
-                  <p className="font-semibold">{studentData?.studentClass?.name}</p>
+                  <p className="font-semibold">{studentData?.className}</p>
                 </div>
                 <div className="bg-secondary bg-opacity-20 px-4 py-2 rounded-lg">
                   <p className="text-sm opacity-80">Student ID</p>
@@ -191,8 +186,8 @@ const StudentProfile = () => {
               <div className="space-y-6">
                 {[
                   { label: "Email", value: studentData?.email },
-                  { label: "Teacher", value: studentData?.studentClass?.classTeacher?.name || "N/A" },
-                  { label: "Specialization", value: studentData?.studentClass.specialization },
+                  { label: "Teacher", value: studentData?.classTeacher?.name || "N/A" },
+                  { label: "Specialization", value: studentData?.classSpecialization },
                   { label: "Phone", value: studentData?.phoneNumber }
                 ].map((item, index) => (
                   <div key={index} className="bg-gray-50 p-4 rounded-lg">

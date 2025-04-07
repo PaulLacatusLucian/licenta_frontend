@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./routes/ProtectedRoute"; // Adjust the path as needed
 import MainLayout from "./homepage/Layouts/MainLayout";
 import AuthLayout from "./homepage/Layouts/AuthLayout";
 import Home from "./homepage/Home/Home";
@@ -50,54 +51,62 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Layout cu Navbar */}
+        {/* Public Routes */}
         <Route path="/" element={<MainLayout><Home /></MainLayout>} />
         <Route path="/services" element={<MainLayout><OurServices /></MainLayout>} />
         <Route path="/about-us" element={<MainLayout><AboutUs /></MainLayout>} />
         <Route path="/our-team" element={<MainLayout><OurTeam /></MainLayout>} />
         <Route path="/contact-us" element={<MainLayout><ContactUs /></MainLayout>} />
-
-        {/* Layout fără Navbar */}
         <Route path="/login" element={<AuthLayout><Login /></AuthLayout>} />
 
-        {/* Rute pentru fiecare tip de utilizator */}
-        <Route path="/parent" element={<ParentDashboard />} />
-        <Route path="/stud" element={<StudentDashboard />} />
-        <Route path="/teacher" element={<TeacherDashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/stud/profile" element={<StudentProfile />} />
-        <Route path="/stud/calendar" element={<StudentCalendar />} />
-        <Route path="/admin/create-student" element={<AdminUserCreator />} />
-        <Route path="/admin/create-class" element={<AdminClassCreator />} />
-        <Route path="/admin/create-teacher" element={<AdminTeacherCreator />} />
-        <Route path="/admin/create-schedule" element={<AdminScheduleCreator />} />
-        <Route path="/admin/class-schedule" element={<ClassScheduleCalendar />} />
-        <Route path="/admin/teachers/" element={<AdminTeacherView />} />
-        <Route path="/admin/teachers/edit/:id" element={<AdminTeacherEdit />} />
-        <Route path="/admin/teachers/delete/:id" element={<AdminDeleteTeacher />} />
-        <Route path="/admin/classes/" element={<AdminClassesView />} />
-        <Route path="/admin/classes/edit/:id" element={<AdminClassEdit />} />
-        <Route path="/admin/classes/delete/:id" element={<AdminDeleteClass />} />
-        <Route path="/admin/students/" element={<AdminStudentView />} />
-        <Route path="/admin/parents/" element={<AdminParentView />} /> 
-        <Route path="/admin/parents/edit/:id" element={<AdminParentEdit />} />
-        <Route path="/admin/students/edit/:id" element={<AdmintStudentEdit />} />
-        <Route path="/admin/past-students" element={<ViewPastStudents />} />
-        <Route path="/admin/create-chef" element={<AdminChefCreator />} />
-        <Route path="/admin/edit-chef/:id" element={<AdminChefEdit />} />
-        <Route path="/admin/chefs/" element={<AdminChefView />} />
-        <Route path="/admin/delete-chef/:id" element={<AdminChefDelete />} />
-        <Route path="/stud/grades" element={<StudentGrades />} />
-        <Route path="/stud/absences" element={<StudentAbsences />} />
-        <Route path="/teacher/students" element={<TeacherStudentOverview />} />
-        <Route path="/teacher/schedule" element={<TeacherWeeklySchedule />} />
-        <Route path="/teacher/grades" element={<GradeEntry />} />
-        <Route path="/teacher/absence" element={<AbsenceEntry />} />
-        <Route path="/chef" element={<ChefDashboard />} />
-        <Route path="/add-food" element={<AddFood />} />
-        <Route path="/cafeteria" element={<MenuList />} />
-        <Route path="/cafeteria/profile" element={<ParentProfile />} />
-
+        {/* Protected Routes */}
+        {/* Parent Routes */}
+        <Route path="/parent" element={<ProtectedRoute><ParentDashboard /></ProtectedRoute>} />
+        <Route path="/cafeteria/profile" element={<ProtectedRoute><ParentProfile /></ProtectedRoute>} />
+        
+        {/* Student Routes */}
+        <Route path="/stud" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
+        <Route path="/stud/profile" element={<ProtectedRoute><StudentProfile /></ProtectedRoute>} />
+        <Route path="/stud/calendar" element={<ProtectedRoute><StudentCalendar /></ProtectedRoute>} />
+        <Route path="/stud/grades" element={<ProtectedRoute><StudentGrades /></ProtectedRoute>} />
+        <Route path="/stud/absences" element={<ProtectedRoute><StudentAbsences /></ProtectedRoute>} />
+        
+        {/* Teacher Routes */}
+        <Route path="/teacher" element={<ProtectedRoute><TeacherDashboard /></ProtectedRoute>} />
+        <Route path="/teacher/students" element={<ProtectedRoute><TeacherStudentOverview /></ProtectedRoute>} />
+        <Route path="/teacher/schedule" element={<ProtectedRoute><TeacherWeeklySchedule /></ProtectedRoute>} />
+        <Route path="/teacher/grades" element={<ProtectedRoute><GradeEntry /></ProtectedRoute>} />
+        <Route path="/teacher/attendance" element={<ProtectedRoute><AbsenceEntry /></ProtectedRoute>} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/create-student" element={<ProtectedRoute><AdminUserCreator /></ProtectedRoute>} />
+        <Route path="/admin/create-class" element={<ProtectedRoute><AdminClassCreator /></ProtectedRoute>} />
+        <Route path="/admin/create-teacher" element={<ProtectedRoute><AdminTeacherCreator /></ProtectedRoute>} />
+        <Route path="/admin/create-schedule" element={<ProtectedRoute><AdminScheduleCreator /></ProtectedRoute>} />
+        <Route path="/admin/class-schedule" element={<ProtectedRoute><ClassScheduleCalendar /></ProtectedRoute>} />
+        <Route path="/admin/teachers/" element={<ProtectedRoute><AdminTeacherView /></ProtectedRoute>} />
+        <Route path="/admin/teachers/edit/:id" element={<ProtectedRoute><AdminTeacherEdit /></ProtectedRoute>} />
+        <Route path="/admin/teachers/delete/:id" element={<ProtectedRoute><AdminDeleteTeacher /></ProtectedRoute>} />
+        <Route path="/admin/classes/" element={<ProtectedRoute><AdminClassesView /></ProtectedRoute>} />
+        <Route path="/admin/classes/edit/:id" element={<ProtectedRoute><AdminClassEdit /></ProtectedRoute>} />
+        <Route path="/admin/classes/delete/:id" element={<ProtectedRoute><AdminDeleteClass /></ProtectedRoute>} />
+        <Route path="/admin/students/" element={<ProtectedRoute><AdminStudentView /></ProtectedRoute>} />
+        <Route path="/admin/parents/" element={<ProtectedRoute><AdminParentView /></ProtectedRoute>} />
+        <Route path="/admin/parents/edit/:id" element={<ProtectedRoute><AdminParentEdit /></ProtectedRoute>} />
+        <Route path="/admin/students/edit/:id" element={<ProtectedRoute><AdmintStudentEdit /></ProtectedRoute>} />
+        <Route path="/admin/past-students" element={<ProtectedRoute><ViewPastStudents /></ProtectedRoute>} />
+        <Route path="/admin/create-chef" element={<ProtectedRoute><AdminChefCreator /></ProtectedRoute>} />
+        <Route path="/admin/edit-chef/:id" element={<ProtectedRoute><AdminChefEdit /></ProtectedRoute>} />
+        <Route path="/admin/chefs/" element={<ProtectedRoute><AdminChefView /></ProtectedRoute>} />
+        <Route path="/admin/delete-chef/:id" element={<ProtectedRoute><AdminChefDelete /></ProtectedRoute>} />
+        
+        {/* Chef Routes */}
+        <Route path="/chef" element={<ProtectedRoute><ChefDashboard /></ProtectedRoute>} />
+        <Route path="/add-food" element={<ProtectedRoute><AddFood /></ProtectedRoute>} />
+        
+        {/* Cafeteria Routes */}
+        <Route path="/cafeteria" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

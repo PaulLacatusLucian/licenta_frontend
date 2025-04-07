@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -12,43 +12,44 @@ function Login() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const [redirectToDashboard, setRedirectToDashboard] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+      
         try {
-            const response = await axios.post("/auth/login", formData);
-            const token = response.data.token;
-    
-            // Decode token pentru a extrage username-ul (dacă nu îl ai direct)
-            const base64Payload = token.split('.')[1];
-            const payload = JSON.parse(atob(base64Payload));
-            const username = payload.sub;
-    
-            // Salvează token și username în cookies
-            Cookies.set("jwt-token", token, { expires: 1 / 8 });
-            Cookies.set("username", username, { expires: 1 / 8 });
-        
-            // Redirecționează în funcție de tipul de user
-            if (username.endsWith(".parent")) {
-                navigate("/parent");
-            } else if (username.endsWith(".stud")) {
-                navigate("/stud");
-            } else if (username.endsWith(".admin")) {
-                navigate("/admin");
-            } else if (username.endsWith(".prof")) {
-                navigate("/teacher");
-            } else if (username.endsWith(".chef")) {
-                navigate("/chef");
-            } else {
-                throw new Error("Invalid username type");
-            }
+          const response = await axios.post("/auth/login", formData);
+          const token = response.data.token;
+      
+          const base64Payload = token.split('.')[1];
+          const payload = JSON.parse(atob(base64Payload));
+          const username = payload.sub.toLowerCase();
+      
+          Cookies.set("jwt-token", token, { expires: 1 / 8 });
+          Cookies.set("username", username, { expires: 1 / 8 });
+          
+      
+          // 🔁 Fă redirectul direct aici!
+          if (username.endsWith(".parent")) {
+            navigate("/parent");
+          } else if (username.endsWith(".student")) {
+            navigate("/stud");
+          } else if (username.endsWith(".admin")) {
+            navigate("/admin");
+          } else if (username.endsWith(".prof")) {
+            navigate("/teacher");
+          } else if (username.endsWith(".chef")) {
+            navigate("/chef");
+          } else {
+            throw new Error("Rol necunoscut.");
+          }
+      
         } catch (error) {
-            console.error("Login error:", error);
-            const errorMessage =
-                error.response?.data?.message || "Eroare la autentificare.";
-            setErrorMessage(errorMessage);
+          console.error("Login error:", error);
+          setErrorMessage("Eroare la autentificare.");
         }
-    };
+      };
+      
     
 
     return (

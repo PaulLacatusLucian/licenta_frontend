@@ -8,30 +8,24 @@ const WeeklySchedule = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchStudentClassSchedule = async () => {
+    const fetchSchedule = async () => {
       try {
+        const scheduleResponse = await axios.get(`/schedules/me/weekly`);
+        const scheduleData = scheduleResponse.data;
 
-        // Fetch student data to get the class ID
-        const studentResponse = await axios.get(`/students/me`);
-        const studentClass = studentResponse.data.studentClass;
-
-        if (!studentClass) {
-          setError("Studentul nu are o clasă asociată.");
+        if (!scheduleData || scheduleData.length === 0) {
+          setError("Nu a fost găsit niciun orar.");
           return;
         }
 
-        setStudentClassName(studentClass.name);
-
-        // Fetch schedule for the student's class
-        const scheduleResponse = await axios.get(`/classes/${studentClass.id}`);
-        setClassSchedule(scheduleResponse.data.schedules || []);
+        setClassSchedule(scheduleData);
       } catch (err) {
-        console.error("Error fetching schedule:", err);
+        console.error("Eroare la încărcarea orarului:", err);
         setError("Nu am putut încărca orarul. Vă rugăm să încercați din nou.");
       }
     };
 
-    fetchStudentClassSchedule();
+    fetchSchedule();
   }, []);
 
   const weekdays = ["Luni", "Marți", "Miercuri", "Joi", "Vineri"];
@@ -40,7 +34,7 @@ const WeeklySchedule = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold text-primary mb-6">
-          Orarul Săptămânal - {studentClassName}
+          Orarul Săptămânal
         </h2>
         {error && (
           <div className="text-red-500 text-center mb-6">

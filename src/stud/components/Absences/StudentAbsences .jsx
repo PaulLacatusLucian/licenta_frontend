@@ -10,13 +10,6 @@ const StudentAbsences = () => {
   useEffect(() => {
     const fetchAbsences = async () => {
       try {
-        // Obține ID-ul utilizatorului din cookies
-        const userId = Cookies.get("userId");
-        if (!userId) {
-          setMessage("User ID not found. Please log in.");
-          return;
-        }
-
         // Trimite cererea pentru toate absențele
         const response = await axios.get(`/absences`);
 

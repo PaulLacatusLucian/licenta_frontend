@@ -35,14 +35,14 @@ const GradeEntryPage = () => {
       setMessage("Please select a session, student, and enter a grade.");
       return;
     }
-
+  
     try {
       setIsSubmitting(true);
       setMessage("");
-      await axios.post(`/api/class-sessions/session/${selectedSession}`, null, {
+      await axios.post(`/class-sessions/session/${selectedSession}/grades`, null, {
         params: {
           studentId: selectedStudent,
-          gradeValue: parseFloat(gradeValue), // Ensure grade is a number
+          gradeValue: parseFloat(gradeValue),
         },
       });
       setMessage("Grade submitted successfully!");
@@ -53,6 +53,7 @@ const GradeEntryPage = () => {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md">

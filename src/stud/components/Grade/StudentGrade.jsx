@@ -241,8 +241,8 @@ const StudentGrades = () => {
                         {grade.grade} {getGradeEmoji(grade.grade)}
                       </td>
                       <td className="p-4 text-center text-dark2">
-                        {grade.dateReceived 
-                          ? new Date(grade.dateReceived).toLocaleString("ro-RO", { 
+                        {grade.sessionDate 
+                          ? new Date(grade.sessionDate).toLocaleString("ro-RO", { 
                               year: "numeric", 
                               month: "long", 
                               day: "numeric", 

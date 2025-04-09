@@ -1,16 +1,64 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../axiosConfig";
-import Cookies from "js-cookie";
 import { FaUserCircle, FaMedal, FaTrophy, FaStar, FaGraduationCap, FaCalendarCheck, 
-         FaBookReader, FaAward, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa";
+         FaBookReader, FaAward, FaChalkboardTeacher, FaUserGraduate, FaChartLine,
+         FaClipboardCheck, FaBell, FaCalendarAlt, FaEdit, FaChevronRight, FaClock, FaArrowLeft  } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const StudentProfile = () => {
   const [studentData, setStudentData] = useState(null);
+  const [absences, setAbsences] = useState([]);
+  const [grades, setGrades] = useState([]);
+  const [totalAbsences, setTotalAbsences] = useState(0);
+  const [upcomingClasses, setUpcomingClasses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [activeTab, setActiveTab] = useState("overview");
   const navigate = useNavigate();
+
+  // Calculate average grade from grades array
+  const calculateAverageGrade = (grades) => {
+    if (!grades || grades.length === 0) return 0;
+    const sum = grades.reduce((acc, grade) => acc + grade.grade, 0);
+    return sum / grades.length;
+  };
+
+  // Check if student is top performer (has at least 2 grades above 9)
+  const isTopPerformer = (grades) => {
+    if (!grades) return false;
+    const highGrades = grades.filter(grade => grade.grade >= 9);
+    return highGrades.length >= 2;
+  };
+  
+  // Check if student has improved grades over time
+  const hasImprovedGrades = (grades) => {
+    if (!grades || grades.length < 2) return false;
+    
+    // Sort grades by date
+    const sortedGrades = [...grades].sort((a, b) => 
+      new Date(a.sessionDate) - new Date(b.sessionDate)
+    );
+    
+    // Check if last grade is higher than first grade
+    return sortedGrades[sortedGrades.length - 1].grade > sortedGrades[0].grade;
+  };
+
+  // Check if student has perfect math grades
+  const hasPerfectMathGrades = (grades) => {
+    if (!grades) return false;
+    const mathGrades = grades.filter(grade => 
+      grade.subject.toLowerCase().includes("math") || 
+      grade.subject.toLowerCase().includes("matematică")
+    );
+    return mathGrades.length > 0 && mathGrades.every(grade => grade.grade >= 9.5);
+  };
+
+  // Determine if student is in a specialized class
+  const isInSpecializedClass = (student) => {
+    if (!student?.classSpecialization) return false;
+    return student.classSpecialization.includes("Matematică-Informatică");
+  };
 
   const achievements = [
     {
@@ -18,31 +66,39 @@ const StudentProfile = () => {
       title: "Perfect Attendance",
       description: "No absences this semester",
       icon: FaCalendarCheck,
-      condition: (student) => student?.absences === 0,
+      condition: () => totalAbsences === 0,
       level: "gold"
     },
     {
       id: "honor-roll",
       title: "Honor Roll Scholar",
-      description: "Maintained an average grade above 90%",
+      description: "Maintained an average grade above 9",
       icon: FaGraduationCap,
-      condition: (student) => student?.averageGrade >= 90,
+      condition: () => calculateAverageGrade(grades) >= 9,
       level: "platinum"
     },
     {
-      id: "active-learner",
-      title: "Active Learner",
-      description: "Participated in 5+ school activities",
-      icon: FaBookReader,
-      condition: (student) => student?.activitiesCount >= 5,
+      id: "math-wizard",
+      title: "Math Wizard",
+      description: "Perfect grades in Mathematics",
+      icon: FaChartLine,
+      condition: () => hasPerfectMathGrades(grades),
+      level: "diamond"
+    },
+    {
+      id: "class-specialist",
+      title: "STEM Specialist",
+      description: "Enrolled in Matematică-Informatică specialization",
+      icon: FaClipboardCheck,
+      condition: () => isInSpecializedClass(studentData),
       level: "silver"
     },
     {
-      id: "class-leader",
-      title: "Class Leader",
-      description: "Demonstrated exceptional leadership skills",
-      icon: FaChalkboardTeacher,
-      condition: (student) => student?.isClassLeader,
+      id: "improvement-star",
+      title: "Rising Star",
+      description: "Consistently improving grades",
+      icon: FaChartLine,
+      condition: () => hasImprovedGrades(grades),
       level: "gold"
     },
     {
@@ -50,7 +106,7 @@ const StudentProfile = () => {
       title: "Academic Excellence",
       description: "Top performer in multiple subjects",
       icon: FaUserGraduate,
-      condition: (student) => student?.topPerformer,
+      condition: () => isTopPerformer(grades),
       level: "diamond"
     }
   ];
@@ -58,37 +114,49 @@ const StudentProfile = () => {
   const getLevelStyle = (level) => {
     switch (level) {
       case 'platinum':
-        return 'bg-gradient-to-r from-gray-100 to-gray-300';
+        return 'bg-light border-gray-300';
       case 'diamond':
-        return 'bg-gradient-to-r from-blue-200 to-purple-200';
+        return 'bg-primary bg-opacity-10 border-primary';
       case 'gold':
-        return 'bg-gradient-to-r from-yellow-200 to-yellow-400';
+        return 'bg-yellow-100 border-yellow-300';
       case 'silver':
-        return 'bg-gradient-to-r from-gray-200 to-gray-400';
+        return 'bg-gray-200 border-gray-400';
       default:
-        return 'bg-gray-100';
+        return 'bg-light border-gray-200';
     }
   };
+  
 
   useEffect(() => {
-    const fetchStudentData = async () => {
+    const fetchAllData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`/students/me`);
-        setStudentData(response.data);
-        setImagePreview(response.data?.profileImage);
+        // Fetch all required data in parallel
+        const [studentResponse, absencesResponse, gradesResponse, totalAbsencesResponse, upcomingClassesResponse] = await Promise.all([
+          axios.get('/students/me'),
+          axios.get('/absences/me'),
+          axios.get('/grades/me'),
+          axios.get('/students/me/total-absences'),
+          axios.get('/students/me/upcoming-classes')
+        ]);
+
+        setStudentData(studentResponse.data);
+        setAbsences(absencesResponse.data || []);
+        setGrades(gradesResponse.data || []);
+        setTotalAbsences(totalAbsencesResponse.data.total);
+        setUpcomingClasses(upcomingClassesResponse.data || []);
+        setImagePreview(studentResponse.data?.profileImage);
       } catch (error) {
-        console.error("Error fetching student data:", error);
+        console.error("Error fetching data:", error);
         setError("Failed to load profile data. Please try again later.");
       } finally {
         setIsLoading(false);
       }
     };
   
-    fetchStudentData();
+    fetchAllData();
   }, []);
   
-
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -116,7 +184,13 @@ const StudentProfile = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-light">
-        <div className="text-xl text-dark">Loading...</div>
+        <div className="text-xl text-primary flex items-center">
+          <svg className="animate-spin -ml-1 mr-3 h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Loading your profile...
+        </div>
       </div>
     );
   }
@@ -124,111 +198,361 @@ const StudentProfile = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-light">
-        <div className="text-xl text-red-500">{error}</div>
+        <div className="text-xl text-red-500 p-8 bg-white rounded-xl shadow-lg max-w-lg">
+          <h2 className="font-bold text-2xl mb-4">Something went wrong</h2>
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-6 bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
+  const averageGrade = calculateAverageGrade(grades);
+  const earnedAchievements = achievements.filter(achievement => achievement.condition());
+
   return (
-    <div className="p-8 bg-light min-h-screen">
+    <div className="min-h-screen bg-light">
       <div className="max-w-6xl mx-auto">
-        {/* Profile Header */}
-        <div className="bg-primary rounded-xl shadow-lg p-8 mb-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-secondary opacity-10 rounded-full transform translate-x-32 -translate-y-32"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary opacity-10 rounded-full transform -translate-x-24 translate-y-24"></div>
-          
-          <div className="flex items-center gap-8 relative z-10">
-            <div className="relative group">
-              <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-secondary shadow-xl">
-                <img
-                  src={imagePreview || "/api/placeholder/160/160"}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
+        {/* Hero Header */}
+        <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-b-xl shadow-md">
+          <div className="p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+              <div className="relative group">
+                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white shadow-xl">
+                  <img
+                    src={imagePreview || "/api/placeholder/160/160"}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-all duration-300 transform">
+                  <div className="text-center">
+                    <FaEdit className="text-2xl mb-1 mx-auto" />
+                    <span className="text-sm font-medium">Change</span>
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
+                </label>
               </div>
-              <label className="absolute inset-0 flex items-center justify-center bg-secondary bg-opacity-70 text-white opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-all duration-300 transform group-hover:scale-105">
-                <div className="text-center">
-                  <FaUserCircle className="text-3xl mb-2 mx-auto" />
-                  <span className="text-sm font-medium">Change Photo</span>
-                </div>
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                />
-              </label>
-            </div>
-            <div className="text-white">
-              <h1 className="text-4xl font-bold mb-2">{studentData?.name}</h1>
-              <div className="flex items-center gap-6">
-                <div className="bg-secondary bg-opacity-20 px-4 py-2 rounded-lg">
-                  <p className="text-sm opacity-80">Class</p>
-                  <p className="font-semibold">{studentData?.className}</p>
-                </div>
-                <div className="bg-secondary bg-opacity-20 px-4 py-2 rounded-lg">
-                  <p className="text-sm opacity-80">Student ID</p>
-                  <p className="font-semibold">{studentData?.id}</p>
+              
+              <div className="text-center md:text-left md:flex-1">
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">{studentData?.name}</h1>
+                <p className="text-indigo-100 mb-4">Student at {studentData?.className} - {studentData?.classSpecialization}</p>
+                
+                <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
+                  <div className="bg-white bg-opacity-20 px-5 py-3 rounded-lg backdrop-blur-sm">
+                    <p className="text-xs opacity-80">Average Grade</p>
+                    <p className="text-2xl font-bold">{averageGrade.toFixed(2)}</p>
+                  </div>
+                  
+                  <div className="bg-white bg-opacity-20 px-5 py-3 rounded-lg backdrop-blur-sm">
+                    <p className="text-xs opacity-80">Absences</p>
+                    <p className="text-2xl font-bold">{totalAbsences}</p>
+                  </div>
+                  
+                  <div className="bg-white bg-opacity-20 px-5 py-3 rounded-lg backdrop-blur-sm">
+                    <p className="text-xs opacity-80">Achievements</p>
+                    <p className="text-2xl font-bold">{earnedAchievements.length}</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Personal Information */}
-          <div className="md:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-              <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
-                <FaUserCircle className="text-secondary mr-3" />
-                Personal Information
-              </h2>
-              <div className="space-y-6">
-                {[
-                  { label: "Email", value: studentData?.email },
-                  { label: "Teacher", value: studentData?.classTeacher?.name || "N/A" },
-                  { label: "Specialization", value: studentData?.classSpecialization },
-                  { label: "Phone", value: studentData?.phoneNumber }
-                ].map((item, index) => (
-                  <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-secondary text-sm font-medium mb-1">{item.label}</p>
-                    <p className="text-dark font-medium">{item.value}</p>
+        {/* Back Button */}
+        <div className="mt-6 px-4">
+          <button
+            onClick={() => navigate("/stud")}
+            className="flex items-center text-dark2 hover:text-primary transition-colors duration-200"
+          >
+            <FaArrowLeft className="mr-2" />
+            <span>Back to Dashboard</span>
+          </button>
+        </div>
+
+
+        {/* Navigation Tabs */}
+        <div className="bg-white rounded-xl shadow-sm mt-6">
+          <div className="px-4">
+            <nav className="flex space-x-8">
+              {[
+                { id: "overview", label: "Overview", icon: FaUserCircle },
+                { id: "achievements", label: "Achievements", icon: FaTrophy },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`py-4 px-1 relative font-medium text-sm flex items-center ${
+                    activeTab === tab.id
+                      ? "text-primary border-b-2 border-primary"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  <tab.icon className="mr-2" />
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
+        
+        <div className="py-6">
+          {activeTab === "overview" && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Personal Information */}
+              <div className="md:col-span-1">
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
+                    <FaUserCircle className="text-primary mr-3" />
+                    Personal Information
+                  </h2>
+                  <div className="space-y-4">
+                    {[
+                      { label: "Email", value: studentData?.email || "N/A", icon: "📧" },
+                      { label: "Class Teacher", value: studentData?.classTeacher?.name || "N/A", icon: "👨‍🏫" },
+                      { label: "Specialization", value: studentData?.classSpecialization || "N/A", icon: "🎓" },
+                      { label: "Phone", value: studentData?.phoneNumber || "N/A", icon: "📱" },
+                      { label: "Student ID", value: studentData?.id || "N/A", icon: "🪪" }
+                    ].map((item, index) => (
+                      <div key={index} className="flex items-center p-3 bg-light rounded-lg">
+                        <div className="flex-shrink-0 text-xl mr-3">{item.icon}</div>
+                        <div className="flex-1">
+                          <p className="text-gray-500 text-sm">{item.label}</p>
+                          <p className="text-dark font-medium">{item.value}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+
+                {/* Quick Stats */}
+                <div className="bg-white rounded-xl shadow-sm p-6 mt-6">
+                  <h2 className="text-xl font-bold text-dark mb-4 flex items-center">
+                    <FaChartLine className="text-primary mr-3" />
+                    Quick Stats
+                  </h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-primary bg-opacity-10 p-4 rounded-lg text-center">
+                      <p className="text-primary text-sm mb-1">Total Grades</p>
+                      <p className="text-3xl font-bold text-primary">{grades.length}</p>
+                    </div>
+                    <div className="bg-secondary bg-opacity-10 p-4 rounded-lg text-center">
+                      <p className="text-secondary text-sm mb-1">Absences</p>
+                      <p className="text-3xl font-bold text-secondary">{totalAbsences}</p>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded-lg text-center">
+                      <p className="text-blue-600 text-sm mb-1">Highest Grade</p>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {grades.length > 0 ? Math.max(...grades.map(g => g.grade)).toFixed(2) : "N/A"}
+                      </p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg text-center">
+                      <p className="text-green-600 text-sm mb-1">Perfect Subjects</p>
+                      <p className="text-3xl font-bold text-green-600">
+                        {grades
+                          .filter(g => g.grade === 10)
+                          .filter((g, i, arr) => arr.findIndex(t => t.subject === g.subject) === i)
+                          .length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Content */}
+              <div className="md:col-span-2">
+                {/* Top Achievements */}
+                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-bold text-dark flex items-center">
+                      <FaTrophy className="text-primary mr-3" />
+                      Top Achievements
+                    </h2>
+                    <button 
+                      onClick={() => setActiveTab("achievements")}
+                      className="text-primary text-sm font-medium hover:text-secondary flex items-center"
+                    >
+                      View All <FaChevronRight className="ml-1" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {earnedAchievements.slice(0, 3).map((achievement) => (
+                      <div
+                        key={achievement.id}
+                        className={`relative overflow-hidden rounded-xl border transition-all duration-300 ${getLevelStyle(achievement.level)}`}
+                      >
+                        <div className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="text-3xl text-primary bg-white p-3 rounded-full shadow-md">
+                              <achievement.icon />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-dark flex items-center gap-2">
+                                {achievement.title}
+                                <FaAward className="text-yellow-500" />
+                              </h3>
+                              <p className="text-gray-600 text-sm mt-1">{achievement.description}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {earnedAchievements.length === 0 && (
+                      <div className="text-center p-8 bg-light rounded-lg">
+                        <FaTrophy className="text-gray-400 text-4xl mx-auto mb-3" />
+                        <p className="text-gray-500">No achievements earned yet. Keep working!</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Recent Grades */}
+                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-bold text-dark flex items-center">
+                      <FaGraduationCap className="text-primary mr-3" />
+                      Recent Grades
+                    </h2>
+                    <button 
+                      onClick={() => navigate("/stud/grades")}
+                      className="text-primary text-sm font-medium hover:text-secondary flex items-center"
+                    >
+                      View All <FaChevronRight className="ml-1" />
+                    </button>
+                  </div>
+
+                  {grades.length > 0 ? (
+                    <div className="overflow-x-auto -mx-4 px-4">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
+                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {grades.slice(0, 3).map((grade, index) => (
+                            <tr key={index}>
+                              <td className="py-3 px-4 text-sm text-dark">{grade.subject}</td>
+                              <td className="py-3 px-4">
+                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                  grade.grade >= 9 ? 'bg-green-100 text-green-800' : 
+                                  grade.grade >= 7 ? 'bg-yellow-100 text-yellow-800' : 
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {grade.grade.toFixed(2)}
+                                </span>
+                              </td>
+                              <td className="py-3 px-4 text-sm text-gray-600">{grade.teacherName}</td>
+                              <td className="py-3 px-4 text-sm text-gray-600">{new Date(grade.sessionDate).toLocaleDateString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="text-center p-8 bg-light rounded-lg">
+                      <FaGraduationCap className="text-gray-400 text-4xl mx-auto mb-3" />
+                      <p className="text-gray-500">No grades available yet.</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Upcoming Classes/Calendar */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
+                    <FaCalendarAlt className="text-primary mr-3" />
+                    Upcoming Schedule
+                  </h2>
+                  
+                  <div className="space-y-4">
+                    {upcomingClasses && upcomingClasses.length > 0 ? (
+                      upcomingClasses.slice(0, 3).map((classSession, index) => (
+                        <div key={index} className="flex items-center p-4 bg-light rounded-lg border-l-4 border-primary">
+                          <div className="bg-primary bg-opacity-10 p-3 rounded-lg mr-4">
+                            <FaClock className="text-primary text-xl" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-dark">{classSession.subject || "Class Session"}</p>
+                            <p className="text-sm text-gray-500">
+                              {classSession.date ? 
+                                new Date(classSession.date).toLocaleDateString() + " • " + 
+                                (classSession.startTime || "TBD") : 
+                                "Date TBD"
+                              }
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center p-8 bg-light rounded-lg">
+                        <FaCalendarAlt className="text-gray-400 text-4xl mx-auto mb-3" />
+                        <p className="text-gray-500">No upcoming classes scheduled.</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Achievements/Trophies */}
-          <div className="md:col-span-2">
-            <div className="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+          {activeTab === "achievements" && (
+            <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
-                <FaTrophy className="text-secondary mr-3" />
-                Achievements
+                <FaTrophy className="text-primary mr-3" />
+                All Achievements
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {achievements.map((achievement) => {
-                  const isEarned = achievement.condition(studentData);
+                  const isEarned = achievement.condition();
                   return (
                     <div
                       key={achievement.id}
-                      className={`relative overflow-hidden rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                        isEarned ? getLevelStyle(achievement.level) : 'bg-gray-100 opacity-50'
+                      className={`relative overflow-hidden rounded-xl border transition-all duration-300 ${
+                        isEarned ? getLevelStyle(achievement.level) : 'bg-gray-100 border-gray-200 opacity-70'
                       }`}
                     >
                       <div className="p-6">
                         <div className="flex items-center gap-4">
-                          <div className={`text-4xl ${isEarned ? 'text-secondary' : 'text-gray-400'}`}>
+                          <div className={`p-4 rounded-full ${
+                            isEarned ? 'bg-white text-primary' : 'bg-gray-200 text-gray-400'
+                          } text-3xl shadow`}>
                             <achievement.icon />
                           </div>
                           <div>
                             <h3 className="font-bold text-dark flex items-center gap-2">
                               {achievement.title}
                               {isEarned && (
-                                <FaAward className="text-secondary animate-pulse" />
+                                <FaAward className={`${
+                                  achievement.level === 'diamond' ? 'text-purple-500' :
+                                  achievement.level === 'platinum' ? 'text-gray-500' :
+                                  achievement.level === 'gold' ? 'text-yellow-500' : 'text-gray-400'
+                                }`} />
                               )}
                             </h3>
-                            <p className="text-dark2 text-sm mt-1">{achievement.description}</p>
+                            <p className="text-gray-600 text-sm mt-1">{achievement.description}</p>
+                            <div className="mt-3">
+                              <span className={`text-xs font-semibold uppercase px-2 py-1 rounded ${
+                                isEarned ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
+                              }`}>
+                                {isEarned ? 'Earned' : 'Not Earned'}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -237,7 +561,7 @@ const StudentProfile = () => {
                 })}
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

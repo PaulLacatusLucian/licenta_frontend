@@ -118,7 +118,7 @@ const TeacherMeeting = () => {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
           <button 
-            onClick={() => navigate('/teacher/dashboard')}
+            onClick={() => navigate('/teacher')}
             className="flex items-center text-dark hover:text-secondary transition"
           >
             <FaArrowLeft className="mr-2" />

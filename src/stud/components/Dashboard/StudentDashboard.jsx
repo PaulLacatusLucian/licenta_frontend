@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
-import { FaSearch, FaUserCircle, FaHome, FaChartLine, FaClipboardList, FaCalendarAlt, FaUtensils, FaRobot, FaBars } from "react-icons/fa";
+import { FaSearch, FaUserCircle, FaHome, FaChartLine, FaCalendarTimes, FaCalendarAlt, FaUtensils, FaRobot, FaBars } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 
 const StudentDashboard = () => {
@@ -12,6 +12,9 @@ const StudentDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
   const [studentOrders, setStudentOrders] = useState([]); 
+  const [grades, setGrades] = useState([]);
+  const [message, setMessage] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +27,9 @@ const StudentDashboard = () => {
   
         const absencesResponse = await axios.get(`/students/me/total-absences`);
         const classesResponse = await axios.get(`/students/me/upcoming-classes`);
-  
+        const gradesResponse = await axios.get(`/grades/me`);
+
+        setGrades(gradesResponse.data || []);
         setStudentData(studentResponse.data || null);
         setAbsences(absencesResponse.data || { total: 0 });
   
@@ -47,7 +52,7 @@ const StudentDashboard = () => {
       }
     };
   
-    fetchStudentData(); // 👈 Apelul real al funcției
+    fetchStudentData();
   }, []);
   
 
@@ -69,8 +74,12 @@ const StudentDashboard = () => {
     fetchStudentOrders();
   }, []);
   
+  const calculateGPA = (grades) => {
+    if (!grades.length) return 0;
+    const sum = grades.reduce((acc, curr) => acc + curr.grade, 0);
+    return (sum / grades.length).toFixed(2);
+  };
   
-
   const getAbsenceEmoji = (absenceCount) => {
     if (absenceCount <= 3) {
       return "😄 Great job attending classes!";
@@ -95,26 +104,31 @@ const StudentDashboard = () => {
     { icon: FaHome, label: "Home", path: "/" },
     { icon: FaUserCircle, label: "My Profile", path: "/stud/profile" },
     { icon: FaChartLine, label: "Grades", path: "/stud/grades" },
-    { icon: FaClipboardList, label: "Assignments", path: "/assignments" },
-    { icon: FaCalendarAlt, label: "Calendar", path: "/stud/calendar" },
+    { icon: FaCalendarTimes, label: "Absences", path: "/stud/absences" },
+    { icon: FaCalendarAlt, label: "Schedule", path: "/stud/calendar" },
     { icon: FaUtensils, label: "Food", path: "/food" },
     { icon: FaRobot, label: "Ask Schoolie", path: "/ask-schoolie" }
   ];
 
   const renderHomeContent = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
       {/* Welcome Card */}
-      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md col-span-1 md:col-span-2">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md col-span-1 md:col-span-2 lg:col-span-3">
         <h3 className="text-xl md:text-2xl font-bold text-dark mb-2 md:mb-4">
           Welcome, {studentData?.name || "Student"}!
         </h3>
         <p className="text-dark2">Here's a quick overview of your academic journey.</p>
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg">
+            {error}
+          </div>
+        )}
       </div>
   
       {/* Absences Section */}
-      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="flex items-center mb-4">
-          <FaHome className="text-xl md:text-2xl text-primary mr-3" />
+          <FaCalendarTimes className="text-xl md:text-2xl text-primary mr-3" />
           <h4 className="text-lg md:text-xl font-semibold text-dark">Absences</h4>
         </div>
         <div className="space-y-4">
@@ -131,28 +145,35 @@ const StudentDashboard = () => {
               </p>
             </div>
           </div>
+          <Link 
+            to="/stud/absences" 
+            className="block text-center bg-light py-2 rounded-lg text-primary font-medium hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            View All Absences
+          </Link>
         </div>
       </div>
 
-      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+      {/* Food Orders Section */}
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="flex items-center mb-4">
           <FaUtensils className="text-xl md:text-2xl text-primary mr-3" />
           <h4 className="text-lg md:text-xl font-semibold text-dark">Your Food Orders</h4>
         </div>
         <div className="space-y-4">
           {studentOrders.length > 0 ? (
-            studentOrders.map((order, index) => (
+            studentOrders.slice(0, 2).map((order, index) => (
               <div key={index} className="border-b pb-3 last:border-b-0">
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="font-semibold text-dark">{order.menuItemName}</p>
                     <p className="text-dark2 text-sm">
-                      Ordered on: {new Date(order.orderTime).toLocaleDateString()}
+                      {new Date(order.orderTime).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-dark font-medium">Quantity: {order.quantity}</p>
-                    <p className="text-dark font-medium">Total: ${order.price.toFixed(2)}</p>
+                    <p className="text-dark font-medium">Qty: {order.quantity}</p>
+                    <p className="text-dark font-medium">${order.price.toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -162,28 +183,27 @@ const StudentDashboard = () => {
           )}
         </div>
       </div>
-
   
       {/* Upcoming Classes Section */}
-      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="flex items-center mb-4">
           <FaCalendarAlt className="text-xl md:text-2xl text-primary mr-3" />
           <h4 className="text-lg md:text-xl font-semibold text-dark">Upcoming Classes</h4>
         </div>
         <div className="space-y-4">
           {upcomingClasses.length > 0 ? (
-            upcomingClasses.slice(0, 3).map((classItem, index) => (
+            upcomingClasses.slice(0, 2).map((classItem, index) => (
               <div key={index} className="border-b pb-3 last:border-b-0">
-                <div className="flex flex-col md:flex-row justify-between md:items-center">
+                <div className="flex flex-col justify-between">
                   <div>
                     <p className="font-semibold text-dark">
                       {classItem.subjects?.join(", ") || "Unknown Subject"}
                     </p>
                     <p className="text-dark2 text-sm">
-                      with {classItem.teacher?.name || "Unknown Teacher"}
+                      {classItem.teacher?.name || "Unknown Teacher"}
                     </p>
                   </div>
-                  <div className="text-left md:text-right mt-2 md:mt-0">
+                  <div className="mt-1">
                     <p className="text-dark font-medium">
                       {classItem.startTime} - {classItem.endTime}
                     </p>
@@ -195,11 +215,50 @@ const StudentDashboard = () => {
           ) : (
             <p className="text-dark2">No upcoming classes</p>
           )}
+          <Link 
+            to="/stud/calendar" 
+            className="block text-center bg-light py-2 rounded-lg text-primary font-medium hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            View Schedule
+          </Link>
         </div>
       </div>
   
+      {/* Grades Quick View */}
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div className="flex items-center mb-4">
+          <FaChartLine className="text-xl md:text-2xl text-primary mr-3" />
+          <h4 className="text-lg md:text-xl font-semibold text-dark">Grades</h4>
+        </div>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="font-semibold text-dark">Average</p>
+              <p className="text-xl md:text-2xl font-bold text-primary">
+                {grades.length > 0 ? calculateGPA(grades) : "N/A"}
+              </p>
+            </div>
+            <div className="text-right">
+            <p className="text-lg md:text-xl text-primary">
+            {grades.length > 0 
+              ? calculateGPA(grades) >= 8 ? "🌟 Excellent!" 
+                : calculateGPA(grades) >= 6 ? "✨ Keep it up!" 
+                : "📚 Room to improve"
+              : "No grades yet"}
+          </p>
+            </div>
+          </div>
+          <Link 
+            to="/stud/grades" 
+            className="block text-center bg-light py-2 rounded-lg text-primary font-medium hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            View All Grades
+          </Link>
+        </div>
+      </div>
+
       {/* Ask Schoolie Section */}
-      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow-md col-span-1 lg:col-span-3 hover:shadow-lg transition-shadow duration-300">
         <div className="flex items-center mb-4">
           <FaRobot className="text-xl md:text-2xl text-secondary mr-3" />
           <h4 className="text-lg md:text-xl font-semibold text-dark">Ask Schoolie</h4>
@@ -207,11 +266,11 @@ const StudentDashboard = () => {
         <div className="flex flex-col md:flex-row">
           <input
             type="text"
-            placeholder="Ask a question..."
-            className="w-full md:flex-grow p-2 border rounded-t-lg md:rounded-l-lg md:rounded-tr-none text-dark focus:outline-none focus:ring-2 focus:ring-secondary"
+            placeholder="Ask a question about your school, grades, or schedule..."
+            className="w-full md:flex-grow p-3 border rounded-t-lg md:rounded-l-lg md:rounded-tr-none text-dark focus:outline-none focus:ring-2 focus:ring-secondary"
           />
-          <button className="w-full md:w-auto bg-secondary text-white px-4 py-2 rounded-b-lg md:rounded-r-lg md:rounded-bl-none hover:opacity-90 mt-2 md:mt-0">
-            Send
+          <button className="w-full md:w-auto bg-secondary text-white px-6 py-3 rounded-b-lg md:rounded-r-lg md:rounded-bl-none hover:opacity-90 transition-opacity duration-200 mt-2 md:mt-0 font-medium">
+            Ask Now
           </button>
         </div>
       </div>
@@ -265,6 +324,17 @@ const StudentDashboard = () => {
             ))}
           </ul>
         </nav>
+
+        {/* Profile Info */}
+        <div className="mt-auto pt-6 border-t border-gray-200 mt-6">
+          <div className="flex items-center">
+            <FaUserCircle className="text-3xl mr-3" />
+            <div>
+              <p className="font-medium">{studentData?.name || "Student"}</p>
+              <p className="text-sm text-dark2">{studentData?.studentClass?.name || "No Class"}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Overlay for mobile sidebar */}
@@ -289,20 +359,19 @@ const StudentDashboard = () => {
             </div>
           </div>
 
-          <div className="hidden md:flex items-center">
-            <FaUserCircle className="text-4xl text-dark2 mr-4" />
-            <div>
-              <p className="font-semibold text-dark">
-                {studentData?.name || "Student Name"}
-              </p>
-              <p className="text-sm text-dark2">
-                {studentData?.studentClass?.name || "No Class"}
-              </p>
-            </div>
-          </div>
+
         </header>
 
-        {renderHomeContent()}
+        {isLoading ? (
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <p className="text-dark2 font-medium">Loading your dashboard...</p>
+            </div>
+          </div>
+        ) : (
+          renderHomeContent()
+        )}
       </div>
     </div>
   );

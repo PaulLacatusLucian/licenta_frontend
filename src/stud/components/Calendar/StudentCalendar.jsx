@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
+import { FaArrowLeft, FaCalendarAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const WeeklySchedule = () => {
   const [classSchedule, setClassSchedule] = useState([]); // Schedule of the student's class
   const [studentClassName, setStudentClassName] = useState(""); // Class name for the logged-in student
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -33,9 +36,21 @@ const WeeklySchedule = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-primary mb-6">
-          Orarul Săptămânal
-        </h2>
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-6 flex items-center text-dark2 hover:text-primary transition-colors duration-200"
+        >
+          <FaArrowLeft className="mr-2" />
+          <span>Back to Dashboard</span>
+        </button>
+
+        <div className="flex items-center mb-6">
+          <FaCalendarAlt className="text-3xl text-primary mr-3" />
+          <h2 className="text-2xl font-bold text-primary">
+            Orarul Săptămânal
+          </h2>
+        </div>
+
         {error && (
           <div className="text-red-500 text-center mb-6">
             {error}
@@ -64,7 +79,9 @@ const WeeklySchedule = () => {
                       </div>
                     </div>
                   ))}
-                {classSchedule.filter((schedule) => schedule.scheduleDay === day).length === 0 && (
+                {classSchedule.filter(
+                  (schedule) => schedule.scheduleDay === day
+                ).length === 0 && (
                   <div className="text-gray-500">Nicio oră programată</div>
                 )}
               </div>

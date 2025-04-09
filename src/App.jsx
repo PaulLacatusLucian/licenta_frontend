@@ -11,6 +11,7 @@ import ContactUs from "./homepage/ContactUs/ContactUs";
 import Login from "./homepage/Auth/Login";
 import ParentDashboard from "./parent/components/Dashboard/ParentDashboard";
 import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
+import TeacherMeeting from "./teacher/components/Meeting/TeacherMeeting";
 import TeacherDashboard from "./teacher/components/Dashboard/TeacherDashboard";
 import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
 import StudentProfile from "./stud/components/Profile/StudentProfile";
@@ -77,6 +78,7 @@ const App = () => {
         <Route path="/teacher/schedule" element={<ProtectedRoute><TeacherWeeklySchedule /></ProtectedRoute>} />
         <Route path="/teacher/grades" element={<ProtectedRoute><GradeEntry /></ProtectedRoute>} />
         <Route path="/teacher/attendance" element={<ProtectedRoute><AbsenceEntry /></ProtectedRoute>} />
+        <Route path="/teacher/meetings/new" element={<TeacherMeeting />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />

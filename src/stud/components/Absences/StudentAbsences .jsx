@@ -10,15 +10,8 @@ const StudentAbsences = () => {
   useEffect(() => {
     const fetchAbsences = async () => {
       try {
-        // Trimite cererea pentru toate absențele
-        const response = await axios.get(`/absences`);
-
-        // Filtrează absențele pentru studentul curent
-        const filteredAbsences = response.data.filter(
-          (absence) => absence.student.id === parseInt(userId)
-        );
-
-        setAbsences(filteredAbsences);
+        const response = await axios.get(`/absences/me`);
+        setAbsences(response.data);
         setMessage("");
       } catch (error) {
         console.error("Error fetching absences:", error);
@@ -27,9 +20,10 @@ const StudentAbsences = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchAbsences();
   }, []);
+  
 
   if (isLoading) {
     return <div>Loading absences...</div>;
@@ -54,21 +48,20 @@ const StudentAbsences = () => {
             </tr>
           </thead>
           <tbody>
-  {absences.map((absence) => (
-    <tr key={absence.id}>
-      <td className="border border-gray-300 p-2">
-        {absence.subject || "Unknown Subject"}
-      </td>
-      <td className="border border-gray-300 p-2">
-        {absence.date ? new Date(absence.date).toLocaleDateString() : "Unknown Date"}
-      </td>
-      <td className="border border-gray-300 p-2">
-        {absence.classSession?.teacher?.name || "Unknown Teacher"}
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+          {absences.map((absence) => (
+            <tr key={absence.id}>
+              <td className="border border-gray-300 p-2">
+                {absence.student?.classTeacher?.subject || "Unknown Subject"}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {"Unknown Date"}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {absence.student?.classTeacher?.name || "Unknown Teacher"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
         </table>
       )}
     </div>

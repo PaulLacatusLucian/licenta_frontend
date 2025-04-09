@@ -80,6 +80,12 @@ const TeacherDashboard = () => {
             <button className="bg-primary text-dark font-semibold p-4 rounded-lg hover:opacity-90 transition">
               Create Assignment
             </button>
+            <button 
+              onClick={() => navigate('/teacher/meetings/new')} 
+              className="bg-primary text-dark font-semibold p-4 rounded-lg hover:opacity-90 transition"
+            >
+              Start Meeting
+            </button>
           </div>
         </div>
 

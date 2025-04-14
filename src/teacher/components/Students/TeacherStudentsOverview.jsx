@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "../../../axiosConfig";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from 'react';
+import { FaUserCircle, FaArrowLeft, FaSearch, FaSortAmountDown, FaGraduationCap, FaChalkboardTeacher } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import axios from '../../../axiosConfig';
 
 const StudentsOverview = () => {
+  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [sortBy, setSortBy] = useState("class");
   const [filterBy, setFilterBy] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`/teachers/me/students`);
+        const response = await axios.get('/teachers/me/students');
         setStudents(response.data);
-        setFilteredStudents(response.data); // Setăm studenții filtrați inițial
+        setFilteredStudents(response.data);
         setError(null);
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -30,7 +29,6 @@ const StudentsOverview = () => {
     };
 
     fetchStudents();
-
   }, []);
 
   // Sort students
@@ -53,89 +51,135 @@ const StudentsOverview = () => {
     if (value) {
       const filtered = students.filter(
         (student) =>
-          student.studentClass?.name.includes(value) ||
-          student.studentClass?.specialization.includes(value)
+          student.studentClass?.name.toLowerCase().includes(value.toLowerCase()) ||
+          student.studentClass?.specialization.toLowerCase().includes(value.toLowerCase()) ||
+          student.name.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredStudents(filtered);
     } else {
-      setFilteredStudents(students); // Resetăm la toți studenții
+      setFilteredStudents(students);
     }
   };
 
   return (
-    <div className="p-6 bg-light min-h-screen">
-      {/* Back Button */}
-      <div className="mb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="inline-flex items-center px-4 py-2 bg-yellow-500 text-dark font-medium rounded-lg shadow-md hover:bg-yellow-400 focus:ring-2 focus:ring-yellow-300 focus:outline-none"
-        >
-          ⬅ Back
-        </button>
-      </div>
+    <div className="bg-light min-h-screen p-4 md:p-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center mb-6">
+          <button 
+            onClick={() => navigate('/teacher')}
+            className="flex items-center text-dark hover:text-secondary transition"
+          >
+            <FaArrowLeft className="mr-2" />
+            Back to Dashboard
+          </button>
+        </div>
 
-      <h2 className="text-2xl font-bold mb-6 text-dark">Students Overview</h2>
-      {isLoading && <p className="text-center text-green-600">Loading students...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
-      {!isLoading && !error && (
-        <>
-          {/* Controls for sorting and filtering */}
-          <div className="bg-white p-6 rounded-xl shadow-md mb-6">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="flex items-center">
-                <label className="mr-2 font-medium text-dark">Sort by:</label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => handleSort(e.target.value)}
-                  className="border p-2 rounded-lg bg-yellow-100 text-dark shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-300"
-                >
-                  <option value="class">Class</option>
-                  <option value="profile">Profile</option>
-                </select>
+        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+          <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
+            <FaGraduationCap className="mr-3 text-secondary" />
+            Students Overview
+          </h2>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+              {error}
+            </div>
+          )}
+
+          <div className="mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
+              <div className="w-full md:w-1/2">
+                <label className="block text-dark font-semibold mb-2">Filter Students</label>
+                <div className="relative">
+                  <FaSearch className="absolute left-3 top-3 text-dark2" />
+                  <input
+                    type="text"
+                    placeholder="Search by name, class or profile"
+                    value={filterBy}
+                    onChange={(e) => handleFilter(e.target.value)}
+                    className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"
+                  />
+                </div>
               </div>
-              <div className="flex items-center">
-                <label className="mr-2 font-medium text-dark">Filter:</label>
-                <input
-                  type="text"
-                  placeholder="Class or Profile"
-                  value={filterBy}
-                  onChange={(e) => handleFilter(e.target.value)}
-                  className="border p-2 rounded-lg bg-green-100 text-dark shadow-sm focus:outline-none focus:ring-2 focus:ring-green-300"
-                />
+              
+              <div className="w-full md:w-1/2">
+                <label className="block text-dark font-semibold mb-2">Sort By</label>
+                <div className="flex space-x-2">
+                  <button 
+                    onClick={() => handleSort("class")}
+                    className={`flex-1 px-4 py-3 rounded-lg font-medium flex items-center justify-center ${
+                      sortBy === "class" ? "bg-secondary text-white" : "bg-primary text-dark"
+                    }`}
+                  >
+                    <FaChalkboardTeacher className="mr-2" />
+                    Class
+                  </button>
+                  <button 
+                    onClick={() => handleSort("profile")}
+                    className={`flex-1 px-4 py-3 rounded-lg font-medium flex items-center justify-center ${
+                      sortBy === "profile" ? "bg-secondary text-white" : "bg-primary text-dark"
+                    }`}
+                  >
+                    <FaSortAmountDown className="mr-2" />
+                    Profile
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Students Table */}
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-dark">Students List</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white rounded-lg shadow-md">
-                <thead className="bg-yellow-100">
-                  <tr>
-                    <th className="p-4 text-left font-medium text-dark">Name</th>
-                    <th className="p-4 text-left font-medium text-dark">Class</th>
-                    <th className="p-4 text-left font-medium text-dark">Profile</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredStudents.map((student) => (
-                    <tr key={student.id} className="border-b last:border-b-0">
-                      <td className="p-4 text-dark">{student.name}</td>
-                      <td className="p-4 text-dark">
-                        {student.studentClass?.name || "N/A"}
-                      </td>
-                      <td className="p-4 text-dark">
-                        {student.studentClass?.specialization || "N/A"}
-                      </td>
+          {isLoading ? (
+            <div className="text-center py-8">
+              <div className="inline-block p-3 bg-primary rounded-full">
+                <div className="animate-spin h-8 w-8 border-4 border-secondary border-t-transparent rounded-full"></div>
+              </div>
+              <p className="mt-4 text-dark2">Loading students data...</p>
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white rounded-lg overflow-hidden">
+                  <thead className="bg-primary">
+                    <tr>
+                      <th className="py-3 px-4 text-left font-semibold text-dark">Name</th>
+                      <th className="py-3 px-4 text-left font-semibold text-dark">Class</th>
+                      <th className="py-3 px-4 text-left font-semibold text-dark">Profile</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </>
-      )}
+                  </thead>
+                  <tbody>
+                    {filteredStudents.length === 0 ? (
+                      <tr>
+                        <td colSpan="3" className="py-6 text-center text-dark2">
+                          No students found matching your criteria.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredStudents.map((student) => (
+                        <tr key={student.id} className="border-b hover:bg-gray-50 transition">
+                          <td className="py-3 px-4 text-dark flex items-center">
+                            <FaUserCircle className="mr-2 text-secondary" />
+                            {student.name}
+                          </td>
+                          <td className="py-3 px-4 text-dark">
+                            {student.studentClass?.name || "N/A"}
+                          </td>
+                          <td className="py-3 px-4 text-dark">
+                            {student.studentClass?.specialization || "N/A"}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              
+              <div className="mt-4 text-sm text-dark2">
+                Showing {filteredStudents.length} of {students.length} students
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

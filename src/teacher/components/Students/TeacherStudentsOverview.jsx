@@ -20,6 +20,7 @@ const StudentsOverview = () => {
         setStudents(response.data);
         setFilteredStudents(response.data);
         setError(null);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching students:", error);
         setError("Failed to load students. Please try again later.");
@@ -161,10 +162,10 @@ const StudentsOverview = () => {
                             {student.name}
                           </td>
                           <td className="py-3 px-4 text-dark">
-                            {student.studentClass?.name || "N/A"}
+                            {student.className || "N/A"}
                           </td>
                           <td className="py-3 px-4 text-dark">
-                            {student.studentClass?.specialization || "N/A"}
+                            {student.classSpecialization || "N/A"}
                           </td>
                         </tr>
                       ))

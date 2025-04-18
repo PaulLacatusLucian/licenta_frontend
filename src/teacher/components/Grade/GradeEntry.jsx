@@ -107,6 +107,7 @@ const GradeEntryPage = () => {
           gradeValue: parseFloat(gradeValue),
         },
       });
+    
       
       // Find session and student names for the recently graded list
       const session = sessions.find(s => String(s.id) === String(selectedSession));
@@ -139,11 +140,19 @@ const GradeEntryPage = () => {
       setSelectedStudentName("");
     } catch (error) {
       console.error("Error submitting grade:", error);
-      setMessageType("error");
-      setMessage("Failed to submit grade. Please try again.");
+    
+      if (error.response?.status === 409) {
+        // Elevul este absent
+        setMessageType("error");
+        setMessage(error.response.data || "Elevul este absent și nu poate primi notă.");
+      } else {
+        setMessageType("error");
+        setMessage("Failed to submit grade. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
+    
   };
 
   const sortStudentsByName = () => {

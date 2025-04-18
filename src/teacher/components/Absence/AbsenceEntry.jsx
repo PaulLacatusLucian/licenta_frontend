@@ -92,18 +92,16 @@ const AbsenceEntry = () => {
     try {
       setIsSubmitting(true);
       setMessage("");
-      // Send absence to API
+      
       await axios.post(`/class-sessions/session/${selectedSession}/absences`, null, {
         params: {
           studentId: selectedStudent,
         },
       });
-      
-      // Find session and student names for the recently absences list
+  
       const session = sessions.find(s => s.id === selectedSession);
       const student = students.find(s => s.id === selectedStudent);
-      
-      // Add to recently absences list
+  
       setRecentAbsences(prev => [
         {
           id: Date.now(),
@@ -113,23 +111,29 @@ const AbsenceEntry = () => {
           date: session?.date || new Date().toISOString(),
           timestamp: new Date()
         },
-        ...prev.slice(0, 9) // Keep only the 10 most recent
+        ...prev.slice(0, 9)
       ]);
-      
+  
       setMessageType("success");
       setMessage(`Absence successfully recorded for ${student?.name}!`);
-      
-      // Reset student selection after successful submission
+  
       setSelectedStudent("");
       setSelectedStudentName("");
     } catch (error) {
       console.error("Error submitting absence:", error);
-      setMessageType("error");
-      setMessage("Failed to submit absence. Please try again.");
+  
+      if (error.response?.status === 409) {
+        setMessageType("error");
+        setMessage(error.response.data || "Elevul are deja o notă și nu poate fi marcat absent.");
+      } else {
+        setMessageType("error");
+        setMessage("Failed to submit absence. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   const sortStudentsByName = () => {
     const sorted = [...filteredStudents].sort((a, b) => a.name.localeCompare(b.name));

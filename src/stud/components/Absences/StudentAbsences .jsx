@@ -97,66 +97,66 @@ const StudentAbsences = () => {
   }
 
   return (
-    <div className="p-4 md:p-8 bg-light min-h-screen">
+    <div className="p-3 md:p-8 bg-light min-h-screen">
       <button
-        onClick={() => navigate(-1)}
-        className="mb-6 flex items-center text-dark2 hover:text-primary transition-colors duration-200"
+            onClick={() => navigate("/stud")}
+            className="mb-4 md:mb-6 flex items-center text-dark2 hover:text-primary transition-colors duration-200"
       >
         <FaArrowLeft className="mr-2" />
         <span>Back to Dashboard</span>
       </button>
 
-      <div className="grid gap-6 mb-6">
+      <div className="grid gap-4 md:gap-6 mb-6">
         {/* Main Stats */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="flex items-center mb-6">
-            <FaCalendarTimes className="text-3xl text-primary mr-3" />
-            <h2 className="text-2xl font-bold text-dark">Your Absences</h2>
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+          <div className="flex items-center mb-4 md:mb-6">
+            <FaCalendarTimes className="text-2xl md:text-3xl text-primary mr-2 md:mr-3" />
+            <h2 className="text-xl md:text-2xl font-bold text-dark">Your Absences</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-light p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6">
+            <div className="bg-light p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-dark2 text-sm uppercase tracking-wide">Total Absences</p>
-                  <p className="text-3xl font-bold text-primary mt-2">{totalAbsences}</p>
+                  <p className="text-dark2 text-xs md:text-sm uppercase tracking-wide">Total Absences</p>
+                  <p className="text-2xl md:text-3xl font-bold text-primary mt-1 md:mt-2">{totalAbsences}</p>
                 </div>
-                <FaExclamationTriangle className={`text-2xl ${totalAbsences > 10 ? "text-red-500" : "text-yellow-500"} opacity-70`} />
+                <FaExclamationTriangle className={`text-xl md:text-2xl ${totalAbsences > 10 ? "text-red-500" : "text-yellow-500"} opacity-70`} />
               </div>
             </div>
-            <div className="bg-light p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
+            <div className="bg-light p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-dark2 text-sm uppercase tracking-wide">Subjects Affected</p>
-                  <p className="text-3xl font-bold text-primary mt-2">{subjectAbsences.length}</p>
+                  <p className="text-dark2 text-xs md:text-sm uppercase tracking-wide">Subjects Affected</p>
+                  <p className="text-2xl md:text-3xl font-bold text-primary mt-1 md:mt-2">{subjectAbsences.length}</p>
                 </div>
-                <FaBook className="text-2xl text-primary opacity-50" />
+                <FaBook className="text-xl md:text-2xl text-primary opacity-50" />
               </div>
             </div>
-            <div className="bg-light p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
+            <div className="bg-light p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-dark2 text-sm uppercase tracking-wide">Attendance Status</p>
-                  <p className="text-3xl font-bold text-primary mt-2">
+                  <p className="text-dark2 text-xs md:text-sm uppercase tracking-wide">Attendance Status</p>
+                  <p className="text-2xl md:text-3xl font-bold text-primary mt-1 md:mt-2">
                     {totalAbsences <= 5 ? "Excellent" : totalAbsences <= 15 ? "Good" : "At Risk"}
                   </p>
                 </div>
-                <div className="text-2xl">{totalAbsences <= 5 ? "🌟" : totalAbsences <= 15 ? "✅" : "⚠️"}</div>
+                <div className="text-xl md:text-2xl">{totalAbsences <= 5 ? "🌟" : totalAbsences <= 15 ? "✅" : "⚠️"}</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Subject Absences */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h3 className="text-xl font-bold text-dark mb-4">Absences by Subject</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+          <h3 className="text-lg md:text-xl font-bold text-dark mb-3 md:mb-4">Absences by Subject</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {subjectAbsences.map((subjectData) => (
-              <div key={subjectData.subject} className="bg-light p-4 rounded-lg">
+              <div key={subjectData.subject} className="bg-light p-3 md:p-4 rounded-lg">
                 <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium text-dark">{subjectData.subject}</p>
+                  <div className="overflow-hidden">
+                    <p className="font-medium text-dark text-sm md:text-base truncate">{subjectData.subject}</p>
                   </div>
-                  <p className={`text-xl font-bold ${subjectData.count > 5 ? "text-red-600" : "text-yellow-600"}`}>
+                  <p className={`text-lg md:text-xl font-bold ${subjectData.count > 5 ? "text-red-600" : "text-yellow-600"}`}>
                     {subjectData.count}
                   </p>
                 </div>
@@ -166,82 +166,144 @@ const StudentAbsences = () => {
         </div>
 
         {/* Absences Table */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
           {message ? (
-            <div className="text-red-500 p-4 bg-red-50 rounded-lg mb-4">{message}</div>
+            <div className="text-red-500 p-3 md:p-4 bg-red-50 rounded-lg mb-3 md:mb-4">{message}</div>
           ) : sortedAbsences.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-dark2">
-              <FaCalendarTimes className="text-5xl mb-4 text-primary opacity-50" />
-              <p className="text-xl">No absences found</p>
-              <p className="text-sm mt-2">Great job maintaining perfect attendance!</p>
+            <div className="flex flex-col items-center justify-center py-8 md:py-12 text-dark2">
+              <FaCalendarTimes className="text-4xl md:text-5xl mb-3 md:mb-4 text-primary opacity-50" />
+              <p className="text-lg md:text-xl">No absences found</p>
+              <p className="text-xs md:text-sm mt-1 md:mt-2">Great job maintaining perfect attendance!</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-light">
-                    <th className="p-4 text-left">
-                      <button
-                        className="flex items-center text-dark2 font-medium hover:text-primary"
-                        onClick={() => requestSort('student.classTeacher.subject')}
+            <div>
+              {/* Desktop view - Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-light">
+                      <th className="p-4 text-left">
+                        <button
+                          className="flex items-center text-dark2 font-medium hover:text-primary"
+                          onClick={() => requestSort('student.classTeacher.subject')}
+                        >
+                          <FaBook className="mr-2" />
+                          <span>Subject</span>
+                          {getSortIcon('student.classTeacher.subject')}
+                        </button>
+                      </th>
+                      <th className="p-4 text-left">
+                        <div className="flex items-center">
+                          <FaUserTie className="text-primary mr-2" />
+                          <span className="text-dark2 font-medium">Teacher</span>
+                        </div>
+                      </th>
+                      <th className="p-4 text-center">
+                        <button
+                          className="flex items-center justify-center text-dark2 font-medium hover:text-primary mx-auto"
+                          onClick={() => requestSort('date')}
+                        >
+                          <span>Date</span>
+                          {getSortIcon('date')}
+                        </button>
+                      </th>
+                      <th className="p-4 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedAbsences.map((absence, index) => (
+                      <tr 
+                        key={absence.id || index} 
+                        className={`border-t hover:bg-light transition-colors duration-200 ${
+                          index % 2 === 0 ? "bg-light bg-opacity-30" : ""
+                        }`}
                       >
-                        <FaBook className="mr-2" />
-                        <span>Subject</span>
-                        {getSortIcon('student.classTeacher.subject')}
-                      </button>
-                    </th>
-                    <th className="p-4 text-left">
-                      <div className="flex items-center">
-                        <FaUserTie className="text-primary mr-2" />
-                        <span className="text-dark2 font-medium">Teacher</span>
-                      </div>
-                    </th>
-                    <th className="p-4 text-center">
-                      <button
-                        className="flex items-center justify-center text-dark2 font-medium hover:text-primary mx-auto"
-                        onClick={() => requestSort('date')}
-                      >
-                        <span>Date</span>
-                        {getSortIcon('date')}
-                      </button>
-                    </th>
-                    <th className="p-4 text-center">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedAbsences.map((absence, index) => (
-                    <tr 
-                      key={absence.id || index} 
-                      className={`border-t hover:bg-light transition-colors duration-200 ${
-                        index % 2 === 0 ? "bg-light bg-opacity-30" : ""
-                      }`}
-                    >
-                      <td className="p-4 font-medium text-dark">
+                        <td className="p-4 font-medium text-dark">
+                          {absence.student?.classTeacher?.subject || "Unknown Subject"}
+                        </td>
+                        <td className="p-4 text-dark2">
+                          {absence.student?.classTeacher?.name || "Unknown Teacher"}
+                        </td>
+                        <td className="p-4 text-center text-dark2">
+                          {absence.date 
+                            ? new Date(absence.date).toLocaleString("ro-RO", { 
+                                year: "numeric", 
+                                month: "long", 
+                                day: "numeric"
+                              }) 
+                            : "Unknown Date"}
+                        </td>
+                        <td className="p-4 text-center">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            absence.justified ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                          }`}>
+                            {absence.justified ? "Justified" : "Unjustified"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile view - Cards */}
+              <div className="md:hidden">
+                <div className="flex justify-between mb-3 px-2">
+                  <button
+                    className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
+                    onClick={() => requestSort('student.classTeacher.subject')}
+                  >
+                    <span>Sort by Subject</span>
+                    {getSortIcon('student.classTeacher.subject')}
+                  </button>
+                  <button
+                    className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
+                    onClick={() => requestSort('date')}
+                  >
+                    <span>Sort by Date</span>
+                    {getSortIcon('date')}
+                  </button>
+                </div>
+                {sortedAbsences.map((absence, index) => (
+                  <div
+                    key={absence.id || index}
+                    className={`mb-3 p-3 rounded-lg border-l-4 ${
+                      absence.justified ? "border-green-500" : "border-red-500"
+                    } bg-light bg-opacity-40`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="font-medium text-dark truncate max-w-[70%]">
                         {absence.student?.classTeacher?.subject || "Unknown Subject"}
-                      </td>
-                      <td className="p-4 text-dark2">
-                        {absence.student?.classTeacher?.name || "Unknown Teacher"}
-                      </td>
-                      <td className="p-4 text-center text-dark2">
-                        {absence.date 
-                          ? new Date(absence.date).toLocaleString("ro-RO", { 
-                              year: "numeric", 
-                              month: "long", 
-                              day: "numeric"
-                            }) 
-                          : "Unknown Date"}
-                      </td>
-                      <td className="p-4 text-center">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      </div>
+                      <div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           absence.justified ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                         }`}>
                           {absence.justified ? "Justified" : "Unjustified"}
                         </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                    <div className="flex flex-col space-y-1 text-sm">
+                      <div className="flex items-center text-dark2">
+                        <FaUserTie className="mr-2 text-xs" />
+                        <span className="truncate">{absence.student?.classTeacher?.name || "Unknown Teacher"}</span>
+                      </div>
+                      <div className="flex items-center text-dark2">
+                        <FaCalendarTimes className="mr-2 text-xs" />
+                        <span>
+                          {absence.date 
+                            ? new Date(absence.date).toLocaleString("ro-RO", { 
+                                year: "numeric", 
+                                month: "short", 
+                                day: "numeric"
+                              })
+                            : "Unknown Date"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

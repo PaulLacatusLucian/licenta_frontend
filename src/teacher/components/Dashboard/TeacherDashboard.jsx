@@ -15,11 +15,6 @@ const TeacherDashboard = () => {
   const navigate = useNavigate();
   
   useEffect(() => {  
-      const token = Cookies.get("jwt-token");
-      if (!token) {
-        navigate("/login");
-      }
-    
     const fetchTeacherData = async () => {
       try {
         setIsLoading(true);

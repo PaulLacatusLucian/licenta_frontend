@@ -37,8 +37,8 @@ const WeeklySchedule = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
         <button
-          onClick={() => navigate(-1)}
-          className="mb-6 flex items-center text-dark2 hover:text-primary transition-colors duration-200"
+            onClick={() => navigate("/stud")}
+            className="mb-6 flex items-center text-dark2 hover:text-primary transition-colors duration-200"
         >
           <FaArrowLeft className="mr-2" />
           <span>Back to Dashboard</span>

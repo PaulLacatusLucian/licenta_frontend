@@ -312,8 +312,8 @@ const GradeEntryPage = () => {
                       value={gradeValue}
                       onChange={(e) => setGradeValue(e.target.value)}
                     />
-                    <div className="grid grid-cols-5 gap-1">
-                      {[1, 2, 3, 4, 5].map((num) => (
+                    <div className="grid grid-cols-6 gap-1">
+                      {[7, 8, 9, 10].map((num) => (
                         <button
                           key={num}
                           type="button"
@@ -323,6 +323,28 @@ const GradeEntryPage = () => {
                           {num}
                         </button>
                       ))}
+                      <button
+                        type="button"
+                        className="p-2 border rounded hover:bg-yellow-50"
+                        onClick={() => {
+                          const currentValue = parseFloat(gradeValue) || 1;
+                          const newValue = Math.max(1, currentValue - 0.5);
+                          setGradeValue(newValue.toString());
+                        }}
+                      >
+                        -0.5
+                      </button>
+                      <button
+                        type="button"
+                        className="p-2 border rounded hover:bg-yellow-50"
+                        onClick={() => {
+                          const currentValue = parseFloat(gradeValue) || 0;
+                          const newValue = Math.min(10, currentValue + 0.5);
+                          setGradeValue(newValue.toString());
+                        }}
+                      >
+                        +0.5
+                      </button>
                     </div>
                   </div>
                 </div>

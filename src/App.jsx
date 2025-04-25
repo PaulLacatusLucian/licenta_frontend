@@ -10,6 +10,8 @@ import OurTeam from "./homepage/OurTeam/OurTeam";
 import ContactUs from "./homepage/ContactUs/ContactUs";
 import Login from "./homepage/Auth/Login";
 import ParentDashboard from "./parent/components/Dashboard/ParentDashboard";
+import AcademicReport from "./parent/components/Academic_Report/AcademicReport";
+import ParentProfile from "./parent/components/Profile/Profile.jsx";
 import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
 import TeacherMeeting from "./teacher/components/Meeting/TeacherMeeting";
 import TeacherDashboard from "./teacher/components/Dashboard/TeacherDashboard";
@@ -46,7 +48,8 @@ import ViewPastStudents from "./admin/components/PastStudents/ViewPastStudents";
 import ChefDashboard from "./chef/components/Dashboard/ChefDashboard";
 import AddFood from "./chef/components/AddFood/AddFood";
 import MenuList from "./Cafeteria/MenuList";
-import ParentProfile from "./Cafeteria/Profile/ParentProfile";
+import ParentProfileCafeteria from "./Cafeteria/Profile/ParentProfile";
+import CafeteriaStats from "./Cafeteria/Statistics.jsx";
 
 const App = () => {
   return (
@@ -63,7 +66,9 @@ const App = () => {
         {/* Protected Routes */}
         {/* Parent Routes */}
         <Route path="/parent" element={<ProtectedRoute><ParentDashboard /></ProtectedRoute>} />
-        <Route path="/cafeteria/profile" element={<ProtectedRoute><ParentProfile /></ProtectedRoute>} />
+        <Route path="/parent/academic-report" element={<ProtectedRoute><AcademicReport /></ProtectedRoute>} />
+        <Route path="/parent/profile" element={<ProtectedRoute><ParentProfile /></ProtectedRoute>} />
+        <Route path="/cafeteria/profile" element={<ProtectedRoute><ParentProfileCafeteria /></ProtectedRoute>} />
         
         {/* Student Routes */}
         <Route path="/stud" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
@@ -108,6 +113,8 @@ const App = () => {
         
         {/* Cafeteria Routes */}
         <Route path="/cafeteria" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
+        <Route path="/cafeteria/stats" element={<CafeteriaStats />} />
+
       </Routes>
     </Router>
   );

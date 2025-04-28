@@ -209,8 +209,16 @@ const ParentDashboard = () => {
           {/* Child Info Summary */}
           <div className="mt-4 p-4 bg-primary rounded-lg flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center mr-4">
-                <FaUserCircle className="text-4xl text-white" />
+              <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-300 flex items-center justify-center mr-4">
+                {studentData?.profileImage ? (
+                  <img
+                    src={`http://localhost:8080${studentData.profileImage}`}
+                    alt="Child Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <FaUserCircle className="text-4xl text-white" />
+                )}
               </div>
               <div>
                 <h4 className="text-xl font-bold">{studentData.name}</h4>

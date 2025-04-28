@@ -184,7 +184,7 @@ const ParentProfile = () => {
               <div className="relative group">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white shadow-xl">
                   <img
-                    src={imagePreview || "/api/placeholder/160/160"}
+                    src={imagePreview ? `http://localhost:8080${imagePreview}` : "/api/placeholder/160/160"}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -359,13 +359,12 @@ const ParentProfile = () => {
                   <div className="bg-light rounded-xl p-6">
                     <div className="flex flex-col md:flex-row items-start gap-6">
                       <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-white border-4 border-primary border-opacity-20">
-                        <img 
-                          src={childData?.profileImage || "/api/placeholder/128/128"} 
+                       <img 
+                          src={childData?.profileImage ? `http://localhost:8080${childData.profileImage}` : "/api/placeholder/128/128"} 
                           alt="Child" 
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-dark mb-2">{childData?.name || "Student Name"}</h3>
                         <p className="text-gray-600 mb-4">Class: {childData?.className || "N/A"} | Specialization: {childData?.classSpecialization || "N/A"}</p>
@@ -486,8 +485,8 @@ const ParentProfile = () => {
                 <div>
                   <div className="flex items-center mb-6">
                     <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-light border-4 border-primary border-opacity-20 mr-4">
-                      <img 
-                        src={childData?.profileImage || "/api/placeholder/96/96"} 
+                     <img 
+                        src={childData?.profileImage ? `http://localhost:8080${childData.profileImage}` : "/api/placeholder/128/128"} 
                         alt="Child" 
                         className="w-full h-full object-cover"
                       />

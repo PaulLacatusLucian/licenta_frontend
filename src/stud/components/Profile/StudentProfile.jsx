@@ -225,7 +225,7 @@ const StudentProfile = () => {
               <div className="relative group">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white shadow-xl">
                   <img
-                    src={imagePreview || "/api/placeholder/160/160"}
+                    src={imagePreview ? `http://localhost:8080${imagePreview}` : "/api/placeholder/160/160"}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { FaCalendarAlt, FaUserAlt, FaExclamationCircle, FaHistory, FaArrowLeft, 
+  FaSearch, FaFilter, FaSortAlphaDown, FaHome, FaUserGraduate, FaChartLine, 
+  FaClipboardList, FaVideo, FaBars, FaSignOutAlt, FaArrowRight } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../../../axiosConfig";
-import { FaCalendarAlt, FaUserAlt, FaExclamationCircle, FaHistory, FaArrowLeft, FaSearch, FaFilter, FaSortAlphaDown } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import logo from "../../../assets/logo.png"
+import Cookies from 'js-cookie';
 
 const AbsenceEntry = () => {
   const navigate = useNavigate();
@@ -21,14 +25,23 @@ const AbsenceEntry = () => {
   const [recentAbsences, setRecentAbsences] = useState([]);
   const [showRecentAbsences, setShowRecentAbsences] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [teacherData, setTeacherData] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeView, setActiveView] = useState("attendance");
 
   useEffect(() => {
+    const token = Cookies.get("jwt-token");
+    if (!token) {
+      navigate("/login");
+    }
+    
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [sessionsResponse, studentsResponse] = await Promise.all([
+        const [sessionsResponse, studentsResponse, teacherResponse] = await Promise.all([
           axios.get(`/teachers/me/sessions`),
           axios.get(`/teachers/me/students`),
+          axios.get(`/teachers/me`) // Added teacher data fetch
         ]);
         
         // Sort sessions by date (most recent first)
@@ -40,6 +53,9 @@ const AbsenceEntry = () => {
         const studentData = studentsResponse.data;
         setStudents(studentData);
         setFilteredStudents(studentData);
+        
+        // Set teacher data
+        setTeacherData(teacherResponse.data);
         
         // Extract unique class names
         const classes = [...new Set(studentData
@@ -59,7 +75,7 @@ const AbsenceEntry = () => {
     };
 
     fetchData();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     // Filter students based on search and class filter
@@ -99,7 +115,7 @@ const AbsenceEntry = () => {
         },
       });
   
-      const session = sessions.find(s => s.id === selectedSession);
+      const session = sessions.find(s => s.id === Number(selectedSession));
       const student = students.find(s => s.id === selectedStudent);
   
       setRecentAbsences(prev => [
@@ -124,7 +140,7 @@ const AbsenceEntry = () => {
   
       if (error.response?.status === 409) {
         setMessageType("error");
-        setMessage(error.response.data || "Elevul are deja o notă și nu poate fi marcat absent.");
+        setMessage(error.response.data || "This student already has a grade and cannot be marked absent.");
       } else {
         setMessageType("error");
         setMessage("Failed to submit absence. Please try again.");
@@ -154,37 +170,156 @@ const AbsenceEntry = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
+    if (!dateString) return "Data necunoscută";
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "Data invalidă";
+    
+    return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
   };
 
   const formatTime = (date) => {
     return new Date(date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   };
+  
+  const handleLogout = () => {
+    Cookies.remove("jwt-token");
+    Cookies.remove("username");
+    navigate("/login");
+  };
+  
+  // Match the navItems from TeacherDashboard
+  const navItems = [
+    { icon: FaHome, label: "Dashboard", view: "home", path: "/teacher" },
+    { icon: FaUserGraduate, label: "Students", view: "students", path: "/teacher/students" },
+    { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
+    { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
+    { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
+    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" }
+  ];
 
   return (
-    <div className="bg-light min-h-screen p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+    <div className="flex flex-col md:flex-row min-h-screen bg-light">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-white text-2xl"
+        >
+          <FaBars />
+        </button>
+        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
+          Record Attendance
+        </h2>
+      </div>
+
+      {/* Sidebar - Matched styling from TeacherDashboard */}
+      <div className={`
+        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
+        transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:transform-none transition-transform duration-200 z-30
+        h-full md:h-auto
+      `}>
+        <div className="flex flex-col items-center justify-center mb-10">
+          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <img 
+              src={logo}
+              alt="School Logo" 
+              className="w-20 h-20 object-contain"
+            />
+          </div>
+          <div className="text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-white">Teacher Portal</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">{teacherData?.subject || 'Teacher'}</p>
+          </div>
+        </div>
+
+        <nav className="flex-grow">
+          <ul className="space-y-2">
+            {navItems.map(({ icon: Icon, label, view, path }) => (
+              <li key={path}>
+                <Link 
+                  to={path} 
+                  className={`flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
+                    activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
+                  }`}
+                  onClick={() => {
+                    setActiveView(view);
+                    setIsSidebarOpen(false);
+                  }}
+                >
+                  <Icon className="mr-3 text-xl" />
+                  <span className="font-medium">{label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Logout button */}
+        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
           <button 
-            onClick={() => navigate('/teacher')}
-            className="flex items-center text-dark hover:text-secondary transition font-medium"
-            aria-label="Back to Dashboard"
+            onClick={handleLogout}
+            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
           >
-            <FaArrowLeft className="mr-2" />
-            Back to Dashboard
+            <FaSignOutAlt className="mr-3 text-xl" />
+            <span className="font-medium">Logout</span>
           </button>
+        </div>
+      </div>
+
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main content area */}
+      <div className="flex-1 p-4 md:p-8 bg-light">
+        <header className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-dark">Record Absences</h2>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setShowRecentAbsences(!showRecentAbsences)}
+              className="flex items-center text-dark hover:text-secondary transition font-medium"
+            >
+              <FaHistory className="mr-2" />
+              {showRecentAbsences ? "Hide Recent" : "Recent Absences"}
+              {!showRecentAbsences && <FaArrowRight className="ml-2" />}
+            </button>
+          </div>
+        </header>
+
+        <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">
+          <h3 className="text-2xl font-bold mb-2">
+            Attendance Management
+          </h3>
+          <p className="text-indigo-100 mb-4">Record and track student absences from class sessions</p>
           
-          <button
-            onClick={() => setShowRecentAbsences(!showRecentAbsences)}
-            className="flex items-center text-dark hover:text-secondary transition font-medium"
-          >
-            <FaHistory className="mr-2" />
-            {showRecentAbsences ? "Hide Recent" : "Recent Absences"}
-          </button>
+          <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Students</p>
+              <p className="text-3xl font-bold">{students.length}</p>
+            </div>
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Sessions</p>
+              <p className="text-3xl font-bold">{sessions.length}</p>
+            </div>
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Classes</p>
+              <p className="text-3xl font-bold">{availableClasses.length}</p>
+            </div>
+            <div className="text-center px-6 py-2">
+              <p className="text-xs text-indigo-100">Recent Absences</p>
+              <p className="text-3xl font-bold">{recentAbsences.length}</p>
+            </div>
+          </div>
         </div>
 
         {showRecentAbsences && recentAbsences.length > 0 && (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-6 transition-all">
+          <div className="bg-white rounded-xl shadow-md p-6 mb-6 transition-all border border-gray-200">
             <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
               <FaHistory className="mr-2 text-secondary" />
               Recently Recorded Absences
@@ -192,17 +327,17 @@ const AbsenceEntry = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-yellow-50">
-                    <th className="py-2 px-4 text-left">Student</th>
+                  <tr className="bg-gradient-to-r from-primary to-secondary text-white">
+                    <th className="py-2 px-4 text-left rounded-l-lg">Student</th>
                     <th className="py-2 px-4 text-left">Session</th>
                     <th className="py-2 px-4 text-left">Date</th>
-                    <th className="py-2 px-4 text-left">Time</th>
+                    <th className="py-2 px-4 text-left rounded-r-lg">Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentAbsences.map(entry => (
-                    <tr key={entry.id} className="border-b border-gray-100 hover:bg-yellow-50">
-                      <td className="py-2 px-4">{entry.studentName}</td>
+                    <tr key={entry.id} className="border-b border-gray-100 hover:bg-primary hover:bg-opacity-5 transition-colors">
+                      <td className="py-2 px-4 font-medium">{entry.studentName}</td>
                       <td className="py-2 px-4">{entry.sessionName}</td>
                       <td className="py-2 px-4">{formatDate(entry.date)}</td>
                       <td className="py-2 px-4 text-dark2">{formatTime(entry.timestamp)}</td>
@@ -214,50 +349,53 @@ const AbsenceEntry = () => {
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
-            <FaExclamationCircle className="mr-3 text-secondary" />
-            Record Absence
-          </h2>
-
-          {messageType === "error" && (
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-6">
-              <div className="flex items-center">
-                <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                {message}
-              </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center min-h-[300px] bg-white rounded-xl shadow-md p-6 border border-gray-200">
+            <div className="flex flex-col items-center space-y-4">
+              <svg className="animate-spin -ml-1 mr-3 h-12 w-12 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <p className="text-dark2 font-medium">Loading data...</p>
             </div>
-          )}
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+            <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
+              <FaExclamationCircle className="mr-3 text-secondary" />
+              Record Absence
+            </h2>
 
-          {messageType === "success" && (
-            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded mb-6">
-              <div className="flex items-center">
-                <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                {message}
+            {messageType === "error" && (
+              <div className="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg mb-6">
+                <div className="flex items-center">
+                  <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {message}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {isLoading ? (
-            <div className="text-center py-8">
-              <div className="inline-block p-3 bg-primary rounded-full">
-                <div className="animate-spin h-8 w-8 border-4 border-secondary border-t-transparent rounded-full"></div>
+            {messageType === "success" && (
+              <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg mb-6">
+                <div className="flex items-center">
+                  <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  {message}
+                </div>
               </div>
-              <p className="mt-4 text-dark2">Loading data...</p>
-            </div>
-          ) : (
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="mb-6">
                 <label className="block text-dark font-semibold mb-2 flex items-center">
-                  <FaCalendarAlt className="mr-2 text-yellow-500" />
+                  <FaCalendarAlt className="mr-2 text-primary" />
                   Select Session
                 </label>
                 <select
-                  className="w-full p-3 border rounded-lg text-dark focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-yellow-50"
+                  className="w-full p-3 border rounded-lg text-dark focus:outline-none focus:ring-2 focus:ring-primary bg-light"
                   value={selectedSession}
                   onChange={(e) => setSelectedSession(e.target.value)}
                 >
@@ -267,21 +405,21 @@ const AbsenceEntry = () => {
                   ) : (
                     sessions.map((session) => (
                       <option key={session.id} value={session.id}>
-                        {session.subject} ({session.date?.split('T')[0] || 'Unknown date'}) ({session.startTime} - {session.endTime})
+                        {session.subject} ({formatDate(session.date)}) ({session.startTime} - {session.endTime})
                       </option>
                     ))
                   )}
                 </select>
               </div>
 
-              <div className="mb-6 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+              <div className="my-6 bg-light p-6 rounded-xl shadow-md border border-gray-200">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
                   <div className="flex items-center justify-between w-full md:w-auto mb-2 md:mb-0">
                     <label className="block text-dark font-semibold flex items-center">
-                      <FaUserAlt className="mr-2 text-yellow-500" />
+                      <FaUserAlt className="mr-2 text-secondary" />
                       Select Student
                       {selectedStudentName && (
-                        <span className="ml-2 bg-yellow-100 text-yellow-800 text-sm px-2 py-1 rounded-full">
+                        <span className="ml-2 bg-secondary text-white text-sm px-3 py-1 rounded-full">
                           Selected: {selectedStudentName}
                         </span>
                       )}
@@ -290,7 +428,7 @@ const AbsenceEntry = () => {
                     <button 
                       type="button"
                       onClick={() => setShowFilters(!showFilters)}
-                      className="md:hidden text-sm text-dark hover:text-yellow-600 bg-white px-3 py-1 rounded border"
+                      className="md:hidden text-sm text-dark hover:text-secondary bg-white px-3 py-1 rounded border transition-colors"
                     >
                       {showFilters ? "Hide Filters" : "Show Filters"}
                     </button>
@@ -300,7 +438,7 @@ const AbsenceEntry = () => {
                     <button 
                       type="button"
                       onClick={sortStudentsByName}
-                      className="flex items-center text-sm text-dark hover:text-yellow-600 bg-white px-3 py-1 rounded border"
+                      className="flex items-center text-sm text-dark hover:text-secondary bg-white px-3 py-1 rounded border transition-colors"
                     >
                       <FaSortAlphaDown className="mr-1" />
                       Sort by name
@@ -315,7 +453,7 @@ const AbsenceEntry = () => {
                           setSelectedStudent("");
                           setSelectedStudentName("");
                         }}
-                        className="text-sm text-dark hover:text-red-600 bg-white px-3 py-1 rounded border"
+                        className="text-sm text-dark hover:text-red-600 bg-white px-3 py-1 rounded border transition-colors"
                       >
                         Clear filters
                       </button>
@@ -332,7 +470,7 @@ const AbsenceEntry = () => {
                         value={studentSearch}
                         onChange={(e) => setStudentSearch(e.target.value)}
                         placeholder="Search by student name"
-                        className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                       />
                     </div>
                   </div>
@@ -342,7 +480,7 @@ const AbsenceEntry = () => {
                       <select
                         value={classFilter}
                         onChange={(e) => setClassFilter(e.target.value)}
-                        className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                       >
                         <option value="all">All Classes</option>
                         {availableClasses.map((className, index) => (
@@ -364,12 +502,12 @@ const AbsenceEntry = () => {
                         <div 
                           key={student.id}
                           className={`p-3 flex items-center cursor-pointer transition ${
-                            selectedStudent === student.id ? 'bg-yellow-100' : 'hover:bg-yellow-50'
+                            selectedStudent === student.id ? 'bg-primary bg-opacity-10' : 'hover:bg-gray-50'
                           }`}
                           onClick={() => handleStudentSelect(student)}
                         >
                           <div className={`w-4 h-4 mr-3 rounded-full border ${
-                            selectedStudent === student.id ? 'bg-yellow-500 border-yellow-600' : 'border-gray-400'
+                            selectedStudent === student.id ? 'bg-secondary border-secondary' : 'border-gray-400'
                           }`}>
                             {selectedStudent === student.id && (
                               <div className="w-2 h-2 bg-white rounded-full m-0.5 mx-auto"></div>
@@ -401,7 +539,7 @@ const AbsenceEntry = () => {
                 <button
                   type="button"
                   onClick={clearForm}
-                  className="w-1/4 bg-gray-100 text-dark font-medium py-3 px-6 rounded-lg hover:bg-gray-200 transition"
+                  className="w-1/4 bg-primary text-dark font-medium py-3 px-6 rounded-lg hover:opacity-90 transition flex items-center justify-center"
                 >
                   Clear
                 </button>
@@ -425,8 +563,8 @@ const AbsenceEntry = () => {
                 </button>
               </div>
             </form>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

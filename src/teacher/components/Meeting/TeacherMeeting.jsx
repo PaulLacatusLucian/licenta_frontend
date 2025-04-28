@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserCircle, FaVideo, FaCalendarAlt, FaClock, FaEnvelope, FaCheckSquare, FaRegSquare, FaArrowLeft } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { FaUserCircle, FaVideo, FaCalendarAlt, FaClock, FaEnvelope, FaCheckSquare, 
+  FaRegSquare, FaArrowLeft, FaHome, FaUserGraduate, FaChartLine, FaClipboardList, 
+  FaBars, FaSignOutAlt } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../../axiosConfig';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import logo from "../../../assets/logo.png"
+import Cookies from 'js-cookie';
 
 const TeacherMeeting = () => {
   const navigate = useNavigate();
@@ -16,24 +20,39 @@ const TeacherMeeting = () => {
   const [endDateTime, setEndDateTime] = useState(new Date(new Date().getTime() + 60 * 60 * 1000)); // Default 1 hour later
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [teacherData, setTeacherData] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeView, setActiveView] = useState("meetings");
+  const [dataLoading, setDataLoading] = useState(true);
 
   useEffect(() => {
-    const fetchParentEmails = async () => {
+    const token = Cookies.get("jwt-token");
+    if (!token) {
+      navigate("/login");
+    }
+    
+    const fetchData = async () => {
       try {
-        setIsLoading(true);
-        const response = await axios.get('/teachers/my-class/parent-emails');
-        setParentEmails(response.data);
-        setSelectedEmails(response.data);
+        setDataLoading(true);
+        const [emailsResponse, teacherResponse] = await Promise.all([
+          axios.get('/teachers/my-class/parent-emails'),
+          axios.get(`/teachers/me`) // Added teacher data fetch
+        ]);
+        
+        setParentEmails(emailsResponse.data);
+        setSelectedEmails(emailsResponse.data);
+        setTeacherData(teacherResponse.data);
+        setError(null);
       } catch (error) {
-        console.error("Error fetching parent emails:", error);
+        console.error("Error fetching data:", error);
         setError("Failed to load parent emails. Please try again later.");
       } finally {
-        setIsLoading(false);
+        setDataLoading(false);
       }
     };
 
-    fetchParentEmails();
-  }, []);
+    fetchData();
+  }, [navigate]);
 
   const formatWithOffset = (date) => {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
@@ -50,6 +69,11 @@ const TeacherMeeting = () => {
     return `${sign}${hours}:${minutes}`;
   };
   
+  const handleLogout = () => {
+    Cookies.remove("jwt-token");
+    Cookies.remove("username");
+    navigate("/login");
+  };
 
   const toggleEmailSelection = (email) => {
     if (selectedEmails.includes(email)) {
@@ -83,11 +107,10 @@ const TeacherMeeting = () => {
       };
 
       if (meetingType === "scheduled") {
-            requestBody.startDateTime = formatWithOffset(startDateTime);
-            requestBody.endDateTime = formatWithOffset(endDateTime);
-        }
+        requestBody.startDateTime = formatWithOffset(startDateTime);
+        requestBody.endDateTime = formatWithOffset(endDateTime);
+      }
             
-
       await axios.post('/meetings/start', requestBody);
       setSuccess(meetingType === "immediate" ? 
         "Meeting will start in 5 minutes. Invitations sent!" : 
@@ -112,132 +135,257 @@ const TeacherMeeting = () => {
     }
     return true;
   };
+  
+  // Match the navItems from TeacherDashboard
+  const navItems = [
+    { icon: FaHome, label: "Dashboard", view: "home", path: "/teacher" },
+    { icon: FaUserGraduate, label: "Students", view: "students", path: "/teacher/students" },
+    { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
+    { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
+    { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
+    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" }
+  ];
 
   return (
-    <div className="bg-light min-h-screen p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center mb-6">
-          <button 
-            onClick={() => navigate('/teacher')}
-            className="flex items-center text-dark hover:text-secondary transition"
-          >
-            <FaArrowLeft className="mr-2" />
-            Back to Dashboard
-          </button>
-        </div>
+    <div className="flex flex-col md:flex-row min-h-screen bg-light">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-white text-2xl"
+        >
+          <FaBars />
+        </button>
+        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
+          Create Meeting
+        </h2>
+      </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-          <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
-            <FaVideo className="mr-3 text-secondary" />
-            Create New Meeting
-          </h2>
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-              {success}
-            </div>
-          )}
-
-          <div className="mb-6">
-            <label className="block text-dark font-semibold mb-2">Meeting Type</label>
-            <div className="flex space-x-4">
-              <button 
-                onClick={() => setMeetingType("immediate")}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  meetingType === "immediate" ? "bg-secondary text-white" : "bg-primary text-dark"
-                }`}
-              >
-                <FaClock className="inline mr-2" />
-                Start in 5 minutes
-              </button>
-              <button 
-                onClick={() => setMeetingType("scheduled")}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  meetingType === "scheduled" ? "bg-secondary text-white" : "bg-primary text-dark"
-                }`}
-              >
-                <FaCalendarAlt className="inline mr-2" />
-                Schedule for later
-              </button>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-dark font-semibold mb-2">Class</label>
-            <input 
-              type="text"
-              value={className}
-              onChange={(e) => setClassName(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"
-              placeholder="Enter class name"
+      {/* Sidebar - Matched styling from TeacherDashboard */}
+      <div className={`
+        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
+        transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:transform-none transition-transform duration-200 z-30
+        h-full md:h-auto
+      `}>
+        <div className="flex flex-col items-center justify-center mb-10">
+          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <img 
+              src={logo}
+              alt="School Logo" 
+              className="w-20 h-20 object-contain"
             />
           </div>
+          <div className="text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-white">Teacher Portal</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">{teacherData?.subject || 'Teacher'}</p>
+          </div>
+        </div>
 
-          {meetingType === "scheduled" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-dark font-semibold mb-2">Start Date & Time</label>
-                <DatePicker
-                  selected={startDateTime}
-                  onChange={(date) => setStartDateTime(date)}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}
-                  dateFormat="MMMM d, yyyy h:mm aa"
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"
-                />
-              </div>
-              <div>
-                <label className="block text-dark font-semibold mb-2">End Date & Time</label>
-                <DatePicker
-                  selected={endDateTime}
-                  onChange={(date) => setEndDateTime(date)}
-                  showTimeSelect
-                  timeFormat="HH:mm"
-                  timeIntervals={15}
-                  dateFormat="MMMM d, yyyy h:mm aa"
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary"
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-dark font-semibold">Invite Parents</label>
-              <div className="space-x-2">
-                <button 
-                  onClick={selectAllEmails}
-                  className="text-secondary hover:underline text-sm"
+        <nav className="flex-grow">
+          <ul className="space-y-2">
+            {navItems.map(({ icon: Icon, label, view, path }) => (
+              <li key={path}>
+                <Link 
+                  to={path} 
+                  className={`flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
+                    activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
+                  }`}
+                  onClick={() => {
+                    setActiveView(view);
+                    setIsSidebarOpen(false);
+                  }}
                 >
-                  Select All
+                  <Icon className="mr-3 text-xl" />
+                  <span className="font-medium">{label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Logout button */}
+        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
+          >
+            <FaSignOutAlt className="mr-3 text-xl" />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main content area */}
+      <div className="flex-1 p-4 md:p-8 bg-light">
+        <header className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-dark">Create New Meeting</h2>
+        </header>
+
+        <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">
+          <h3 className="text-2xl font-bold mb-2">
+            Virtual Meeting
+          </h3>
+          <p className="text-indigo-100 mb-4">Connect with parents through online meetings</p>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Meeting Type</p>
+              <p className="text-lg font-bold">{meetingType === "immediate" ? "Start in 5 min" : "Scheduled"}</p>
+            </div>
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Class</p>
+              <p className="text-lg font-bold">{className}</p>
+            </div>
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Parents</p>
+              <p className="text-lg font-bold">{parentEmails.length}</p>
+            </div>
+            <div className="text-center px-6 py-2">
+              <p className="text-xs text-indigo-100">Selected</p>
+              <p className="text-lg font-bold">{selectedEmails.length}</p>
+            </div>
+          </div>
+        </div>
+
+        {dataLoading ? (
+          <div className="flex items-center justify-center min-h-[300px] bg-white rounded-xl shadow-md p-6 border border-gray-200">
+            <div className="flex flex-col items-center space-y-4">
+              <svg className="animate-spin -ml-1 mr-3 h-12 w-12 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <p className="text-dark2 font-medium">Loading data...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+            <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
+              <FaVideo className="mr-3 text-secondary" />
+              Meeting Details
+            </h2>
+
+            {error && (
+              <div className="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg mb-6">
+                <div className="flex items-center">
+                  <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {error}
+                </div>
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg mb-6">
+                <div className="flex items-center">
+                  <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  {success}
+                </div>
+              </div>
+            )}
+
+            <div className="mb-6">
+              <label className="block text-dark font-semibold mb-2">Meeting Type</label>
+              <div className="flex space-x-4">
+                <button 
+                  onClick={() => setMeetingType("immediate")}
+                  className={`px-4 py-2 rounded-lg font-medium ${
+                    meetingType === "immediate" ? "bg-secondary text-white" : "bg-primary text-dark"
+                  }`}
+                >
+                  <FaClock className="inline mr-2" />
+                  Start in 5 minutes
                 </button>
                 <button 
-                  onClick={deselectAllEmails}
-                  className="text-secondary hover:underline text-sm"
+                  onClick={() => setMeetingType("scheduled")}
+                  className={`px-4 py-2 rounded-lg font-medium ${
+                    meetingType === "scheduled" ? "bg-secondary text-white" : "bg-primary text-dark"
+                  }`}
                 >
-                  Deselect All
+                  <FaCalendarAlt className="inline mr-2" />
+                  Schedule for later
                 </button>
               </div>
             </div>
-            
-            {isLoading ? (
-              <div className="text-center py-4">Loading parent emails...</div>
-            ) : (
-              <div className="max-h-60 overflow-y-auto border rounded-lg p-3">
+
+            <div className="mb-6">
+              <label className="block text-dark font-semibold mb-2">Class</label>
+              <input 
+                type="text"
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
+                placeholder="Enter class name"
+              />
+            </div>
+
+            {meetingType === "scheduled" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-dark font-semibold mb-2">Start Date & Time</label>
+                  <DatePicker
+                    selected={startDateTime}
+                    onChange={(date) => setStartDateTime(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
+                  />
+                </div>
+                <div>
+                  <label className="block text-dark font-semibold mb-2">End Date & Time</label>
+                  <DatePicker
+                    selected={endDateTime}
+                    onChange={(date) => setEndDateTime(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="mb-6 bg-light p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-dark font-semibold">Invite Parents</label>
+                <div className="space-x-2">
+                  <button 
+                    onClick={selectAllEmails}
+                    className="text-secondary hover:underline text-sm"
+                  >
+                    Select All
+                  </button>
+                  <button 
+                    onClick={deselectAllEmails}
+                    className="text-secondary hover:underline text-sm"
+                  >
+                    Deselect All
+                  </button>
+                </div>
+              </div>
+              
+              <div className="max-h-60 overflow-y-auto border rounded-lg p-3 bg-white">
                 {parentEmails.length === 0 ? (
-                  <p className="text-dark2">No parent emails available.</p>
+                  <p className="text-dark2 text-center py-4">No parent emails available.</p>
                 ) : (
                   parentEmails.map((email, index) => (
                     <div 
                       key={index} 
-                      className="flex items-center p-2 hover:bg-gray-50 border-b last:border-b-0"
+                      className="flex items-center p-2 hover:bg-primary hover:bg-opacity-5 border-b last:border-b-0 transition-colors"
                     >
                       <button 
                         onClick={() => toggleEmailSelection(email)}
@@ -256,33 +404,38 @@ const TeacherMeeting = () => {
                   ))
                 )}
               </div>
-            )}
-            <p className="text-sm text-dark2 mt-2">
-              Selected: {selectedEmails.length} of {parentEmails.length} parents
-            </p>
-          </div>
+              <p className="text-sm text-dark2 mt-2">
+                Selected: {selectedEmails.length} of {parentEmails.length} parents
+              </p>
+            </div>
 
-          <div className="flex justify-end">
-            <button
-              onClick={() => navigate('/teacher/dashboard')}
-              className="bg-gray-200 text-dark font-semibold px-6 py-3 rounded-lg mr-3 hover:bg-gray-300 transition"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleStartMeeting}
-              disabled={isLoading}
-              className="bg-secondary text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition flex items-center"
-            >
-              {isLoading ? "Processing..." : (
-                <>
-                  <FaVideo className="mr-2" />
-                  {meetingType === "immediate" ? "Start Meeting" : "Schedule Meeting"}
-                </>
-              )}
-            </button>
+            <div className="flex justify-end">
+              <button
+                onClick={() => navigate('/')}
+                className="bg-primary text-dark font-medium px-6 py-3 rounded-lg mr-3 hover:opacity-90 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleStartMeeting}
+                disabled={isLoading}
+                className="bg-secondary text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition flex items-center"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin h-5 w-5 mr-3 border-2 border-white border-t-transparent rounded-full"></div>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <FaVideo className="mr-2" />
+                    {meetingType === "immediate" ? "Start Meeting" : "Schedule Meeting"}
+                  </>
+                )}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

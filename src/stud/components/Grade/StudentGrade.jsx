@@ -1,31 +1,61 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
-import { FaBook, FaUserTie, FaGraduationCap, FaSpinner, FaArrowLeft, FaCalendarAlt, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { 
+  FaBook, 
+  FaUserTie, 
+  FaGraduationCap, 
+  FaSpinner, 
+  FaArrowLeft, 
+  FaCalendarAlt, 
+  FaSort, 
+  FaSortUp, 
+  FaSortDown,
+  FaHome,
+  FaUserCircle,
+  FaChartLine,
+  FaCalendarTimes,
+  FaUtensils,
+  FaRobot,
+  FaBars,
+  FaSignOutAlt
+} from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom";
 
 const StudentGrades = () => {
   const [grades, setGrades] = useState([]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeView, setActiveView] = useState("grades");
+  const [studentData, setStudentData] = useState(null);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchGrades = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`/grades/me`);
-        setGrades(response.data);
+        setIsLoading(true);
+        
+        // Fetch both student data and grades in parallel
+        const [studentResponse, gradesResponse] = await Promise.all([
+          axios.get('/students/me'),
+          axios.get('/grades/me')
+        ]);
+        
+        setStudentData(studentResponse.data);
+        setGrades(gradesResponse.data);
         setMessage("");
       } catch (error) {
-        console.error("Error fetching grades:", error);
+        console.error("Error fetching data:", error);
         setMessage("Failed to fetch grades. Please try again later.");
       } finally {
         setIsLoading(false);
       }
-    };    
+    };
 
-    fetchGrades();
+    fetchData();
   }, []);
 
   const sortedGrades = useMemo(() => {
@@ -94,80 +124,80 @@ const StudentGrades = () => {
     return "💪";
   };
 
+  const handleLogout = () => {
+    Cookies.remove("jwt-token");
+    Cookies.remove("username");
+    navigate("/login");
+  };
+
+  // Navigation items - similar to Dashboard
+  const navItems = [
+    { icon: FaHome, label: "Dashboard", view: "home", path: "/stud" },
+    { icon: FaUserCircle, label: "My Profile", view: "profile", path: "/stud/profile" },
+    { icon: FaChartLine, label: "Grades", view: "grades", path: "/stud/grades" },
+    { icon: FaCalendarTimes, label: "Absences", view: "absences", path: "/stud/absences" },
+    { icon: FaCalendarAlt, label: "Schedule", view: "calendar", path: "/stud/calendar" },
+    { icon: FaUtensils, label: "Food", view: "food", path: "/food" },
+    { icon: FaRobot, label: "Ask Schoolie", view: "ask", path: "/ask-schoolie" }
+  ];
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-light">
         <div className="flex flex-col items-center space-y-4">
-          <FaSpinner className="animate-spin text-4xl text-primary" />
+          <svg className="animate-spin -ml-1 mr-3 h-12 w-12 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
           <p className="text-dark2 font-medium">Loading grades...</p>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="p-3 md:p-8 bg-light min-h-screen">
-      <button
-            onClick={() => navigate("/stud")}
-            className="mb-4 md:mb-6 flex items-center text-dark2 hover:text-primary transition-colors duration-200"
-      >
-        <FaArrowLeft className="mr-2" />
-        <span>Back to Dashboard</span>
-      </button>
-
-      <div className="grid gap-4 md:gap-6 mb-6">
+  const renderGradesContent = () => {
+    return (
+      <div className="space-y-6">
         {/* Main Stats */}
-        <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
-          <div className="flex items-center mb-4 md:mb-6">
-            <FaGraduationCap className="text-2xl md:text-3xl text-primary mr-2 md:mr-3" />
-            <h2 className="text-xl md:text-2xl font-bold text-dark">Your Academic Performance</h2>
+        <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
+          <div className="flex items-center mb-6">
+            <FaGraduationCap className="text-3xl mr-3" />
+            <h2 className="text-2xl font-bold">Your Academic Performance</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6">
-            <div className="bg-light p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-dark2 text-xs md:text-sm uppercase tracking-wide">Total Subjects</p>
-                  <p className="text-2xl md:text-3xl font-bold text-primary mt-1 md:mt-2">{subjectAverages.length}</p>
-                </div>
-                <FaBook className="text-xl md:text-2xl text-primary opacity-50" />
-              </div>
+          <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Total Subjects</p>
+              <p className="text-3xl font-bold">{subjectAverages.length}</p>
             </div>
-            <div className="bg-light p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-dark2 text-xs md:text-sm uppercase tracking-wide">Overall Average</p>
-                  <p className="text-2xl md:text-3xl font-bold text-primary mt-1 md:mt-2">{calculateGPA(grades)}</p>
-                </div>
-                <div className="text-xl md:text-2xl">{getGradeEmoji(calculateGPA(grades))}</div>
-              </div>
+            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+              <p className="text-xs text-indigo-100">Overall Average</p>
+              <p className="text-3xl font-bold">{calculateGPA(grades)}</p>
             </div>
-            <div className="bg-light p-4 md:p-6 rounded-xl hover:shadow-md transition-shadow duration-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-dark2 text-xs md:text-sm uppercase tracking-wide">Academic Standing</p>
-                  <p className="text-2xl md:text-3xl font-bold text-primary mt-1 md:mt-2">
-                    {calculateGPA(grades) >= 7 ? "Good" : "Improving"}
-                  </p>
-                </div>
-                <div className="text-xl md:text-2xl">{calculateGPA(grades) >= 7 ? "🏆" : "📈"}</div>
-              </div>
+            <div className="text-center px-6 py-2">
+              <p className="text-xs text-indigo-100">Academic Standing</p>
+              <p className="text-3xl font-bold">
+                {calculateGPA(grades) >= 7 ? "Good" : "Improving"}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Subject Averages */}
-        <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
-          <h3 className="text-lg md:text-xl font-bold text-dark mb-3 md:mb-4">Subject Averages</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
+          <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
+            <FaBook className="text-primary mr-3" />
+            Subject Averages
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {subjectAverages.map((subjectData) => (
-              <div key={subjectData.subject} className="bg-light p-3 md:p-4 rounded-lg">
+              <div key={subjectData.subject} className="bg-white p-4 rounded-lg border border-gray-200">
                 <div className="flex justify-between items-center">
                   <div className="overflow-hidden">
-                    <p className="font-medium text-dark text-sm md:text-base truncate">{subjectData.subject}</p>
-                    <p className="text-xs md:text-sm text-dark2">{subjectData.count} grades</p>
+                    <p className="font-medium text-dark truncate">{subjectData.subject}</p>
+                    <p className="text-sm text-dark2">{subjectData.count} grades</p>
                   </div>
-                  <p className={`text-lg md:text-xl font-bold ${getGradeColor(parseFloat(subjectData.average))}`}>
-                    {subjectData.average}
+                  <p className={`text-xl font-bold ${getGradeColor(parseFloat(subjectData.average))}`}>
+                    {subjectData.average} {getGradeEmoji(parseFloat(subjectData.average))}
                   </p>
                 </div>
               </div>
@@ -176,22 +206,27 @@ const StudentGrades = () => {
         </div>
 
         {/* Grades Table */}
-        <div className="bg-white p-4 md:p-6 rounded-xl shadow-md">
+        <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
+          <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
+            <FaChartLine className="text-primary mr-3" />
+            Grade History
+          </h3>
+          
           {message ? (
-            <div className="text-red-500 p-3 md:p-4 bg-red-50 rounded-lg mb-3 md:mb-4">{message}</div>
+            <div className="text-red-500 p-4 bg-red-50 rounded-lg mb-4">{message}</div>
           ) : sortedGrades.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 md:py-12 text-dark2">
-              <FaBook className="text-4xl md:text-5xl mb-3 md:mb-4 text-primary opacity-50" />
-              <p className="text-lg md:text-xl">No grades found yet</p>
-              <p className="text-xs md:text-sm mt-1 md:mt-2">Grades will appear here once they're added</p>
+            <div className="flex flex-col items-center justify-center py-12 text-dark2">
+              <FaBook className="text-5xl mb-4 text-primary opacity-50" />
+              <p className="text-xl">No grades found yet</p>
+              <p className="text-sm mt-2">Grades will appear here once they're added</p>
             </div>
           ) : (
             <div>
               {/* Desktop view - Table */}
-              <div className="hidden md:block overflow-x-auto">
+              <div className="hidden md:block overflow-x-auto bg-white rounded-lg border border-gray-200">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-light">
+                    <tr className="bg-light bg-opacity-50">
                       <th className="p-4 text-left">
                         <button
                           className="flex items-center text-dark2 font-medium hover:text-primary"
@@ -282,7 +317,7 @@ const StudentGrades = () => {
                     key={index}
                     className={`mb-3 p-3 rounded-lg border-l-4 ${
                       getGradeColor(grade.grade).replace('text-', 'border-')
-                    } bg-light bg-opacity-40`}
+                    } bg-white`}
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div className="font-medium text-dark">{grade.subject || "N/A"}</div>
@@ -316,6 +351,99 @@ const StudentGrades = () => {
             </div>
           )}
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen bg-light">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-white text-2xl"
+        >
+          <FaBars />
+        </button>
+        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
+          Student Grades
+        </h2>
+      </div>
+
+      {/* Sidebar */}
+      <div className={`
+        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
+        transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:transform-none transition-transform duration-200 z-30
+        h-full md:h-auto
+      `}>
+        <div className="flex flex-col items-center justify-center mb-10">
+          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <img 
+              src="src\\assets\\logo.png" 
+              alt="School Logo" 
+              className="w-20 h-20 object-contain"
+            />
+          </div>
+          <div className="text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-white">Student Portal</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">{studentData?.studentClass?.name || "Student"}</p>
+          </div>
+        </div>
+
+        <nav className="flex-grow">
+          <ul className="space-y-2">
+            {navItems.map(({ icon: Icon, label, view, path }) => (
+              <li key={path}>
+                <Link 
+                  to={path} 
+                  className={`flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
+                    activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
+                  }`}
+                  onClick={() => {
+                    setActiveView(view);
+                    setIsSidebarOpen(false);
+                  }}
+                >
+                  <Icon className="mr-3 text-xl" />
+                  <span className="font-medium">{label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Logout button */}
+        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
+          >
+            <FaSignOutAlt className="mr-3 text-xl" />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main content area */}
+      <div className="flex-1 p-4 md:p-8 bg-light">
+        <header className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-dark">Academic Grades</h2>
+          <div className="flex items-center">
+            <div className="flex items-center">
+            </div>
+          </div>
+        </header>
+        
+        {renderGradesContent()}
       </div>
     </div>
   );

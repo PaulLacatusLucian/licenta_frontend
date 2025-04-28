@@ -1,9 +1,33 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../axiosConfig";
-import { FaUserCircle, FaMedal, FaTrophy, FaStar, FaGraduationCap, FaCalendarCheck, 
-         FaBookReader, FaAward, FaChalkboardTeacher, FaUserGraduate, FaChartLine,
-         FaClipboardCheck, FaBell, FaCalendarAlt, FaEdit, FaChevronRight, FaClock, FaArrowLeft  } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { 
+  FaUserCircle, 
+  FaMedal, 
+  FaTrophy, 
+  FaStar, 
+  FaGraduationCap, 
+  FaCalendarCheck, 
+  FaBookReader, 
+  FaAward, 
+  FaChalkboardTeacher, 
+  FaUserGraduate, 
+  FaChartLine,
+  FaClipboardCheck, 
+  FaBell, 
+  FaCalendarAlt, 
+  FaEdit, 
+  FaChevronRight, 
+  FaClock, 
+  FaArrowLeft,
+  FaHome,
+  FaCalendarTimes,
+  FaUtensils,
+  FaRobot,
+  FaBars,
+  FaSignOutAlt
+} from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom";
 
 const StudentProfile = () => {
   const [studentData, setStudentData] = useState(null);
@@ -15,6 +39,9 @@ const StudentProfile = () => {
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeView, setActiveView] = useState("profile");
+  
   const navigate = useNavigate();
 
   // Calculate average grade from grades array
@@ -125,7 +152,6 @@ const StudentProfile = () => {
         return 'bg-light border-gray-200';
     }
   };
-  
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -181,15 +207,32 @@ const StudentProfile = () => {
     }
   };
 
+  const handleLogout = () => {
+    Cookies.remove("jwt-token");
+    Cookies.remove("username");
+    navigate("/login");
+  };
+
+  // Navigation items
+  const navItems = [
+    { icon: FaHome, label: "Dashboard", view: "home", path: "/stud" },
+    { icon: FaUserCircle, label: "My Profile", view: "profile", path: "/stud/profile" },
+    { icon: FaChartLine, label: "Grades", view: "grades", path: "/stud/grades" },
+    { icon: FaCalendarTimes, label: "Absences", view: "absences", path: "/stud/absences" },
+    { icon: FaCalendarAlt, label: "Schedule", view: "calendar", path: "/stud/calendar" },
+    { icon: FaUtensils, label: "Food", view: "food", path: "/food" },
+    { icon: FaRobot, label: "Ask Schoolie", view: "ask", path: "/ask-schoolie" }
+  ];
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-light">
-        <div className="text-xl text-primary flex items-center">
-          <svg className="animate-spin -ml-1 mr-3 h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <div className="flex items-center justify-center min-h-screen bg-light">
+        <div className="flex flex-col items-center space-y-4">
+          <svg className="animate-spin -ml-1 mr-3 h-12 w-12 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Loading your profile...
+          <p className="text-dark2 font-medium">Loading your profile...</p>
         </div>
       </div>
     );
@@ -198,12 +241,12 @@ const StudentProfile = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-light">
-        <div className="text-xl text-red-500 p-8 bg-white rounded-xl shadow-lg max-w-lg">
+        <div className="text-xl text-red-500 p-8 bg-light rounded-xl shadow-md border border-gray-200 max-w-lg">
           <h2 className="font-bold text-2xl mb-4">Something went wrong</h2>
           <p>{error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="mt-6 bg-primary text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="mt-6 bg-primary text-dark px-6 py-2 rounded-lg hover:opacity-90 transition"
           >
             Try Again
           </button>
@@ -215,11 +258,11 @@ const StudentProfile = () => {
   const averageGrade = calculateAverageGrade(grades);
   const earnedAchievements = achievements.filter(achievement => achievement.condition());
 
-  return (
-    <div className="min-h-screen bg-light">
-      <div className="max-w-6xl mx-auto">
+  const renderProfileContent = () => {
+    return (
+      <div className="space-y-6">
         {/* Hero Header */}
-        <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-b-xl shadow-md">
+        <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-md">
           <div className="p-6 md:p-8">
             <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
               <div className="relative group">
@@ -269,20 +312,8 @@ const StudentProfile = () => {
           </div>
         </div>
 
-        {/* Back Button */}
-        <div className="mt-6 px-4">
-          <button
-            onClick={() => navigate("/stud")}
-            className="flex items-center text-dark2 hover:text-primary transition-colors duration-200"
-          >
-            <FaArrowLeft className="mr-2" />
-            <span>Back to Dashboard</span>
-          </button>
-        </div>
-
-
         {/* Navigation Tabs */}
-        <div className="bg-white rounded-xl shadow-sm mt-6">
+        <div className="bg-light rounded-xl shadow-md border border-gray-200">
           <div className="px-4">
             <nav className="flex space-x-8">
               {[
@@ -306,12 +337,12 @@ const StudentProfile = () => {
           </div>
         </div>
         
-        <div className="py-6">
+        <div className="space-y-6">
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Personal Information */}
               <div className="md:col-span-1">
-                <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6">
                   <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
                     <FaUserCircle className="text-primary mr-3" />
                     Personal Information
@@ -324,7 +355,7 @@ const StudentProfile = () => {
                       { label: "Phone", value: studentData?.phoneNumber || "N/A", icon: "📱" },
                       { label: "Student ID", value: studentData?.id || "N/A", icon: "🪪" }
                     ].map((item, index) => (
-                      <div key={index} className="flex items-center p-3 bg-light rounded-lg">
+                      <div key={index} className="flex items-center p-3 bg-white rounded-lg border border-gray-200">
                         <div className="flex-shrink-0 text-xl mr-3">{item.icon}</div>
                         <div className="flex-1">
                           <p className="text-gray-500 text-sm">{item.label}</p>
@@ -336,27 +367,27 @@ const StudentProfile = () => {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="bg-white rounded-xl shadow-sm p-6 mt-6">
+                <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6 mt-6">
                   <h2 className="text-xl font-bold text-dark mb-4 flex items-center">
                     <FaChartLine className="text-primary mr-3" />
                     Quick Stats
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-primary bg-opacity-10 p-4 rounded-lg text-center">
+                    <div className="bg-primary bg-opacity-10 p-4 rounded-lg text-center border border-primary border-opacity-20">
                       <p className="text-primary text-sm mb-1">Total Grades</p>
                       <p className="text-3xl font-bold text-primary">{grades.length}</p>
                     </div>
-                    <div className="bg-secondary bg-opacity-10 p-4 rounded-lg text-center">
+                    <div className="bg-secondary bg-opacity-10 p-4 rounded-lg text-center border border-secondary border-opacity-20">
                       <p className="text-secondary text-sm mb-1">Absences</p>
                       <p className="text-3xl font-bold text-secondary">{totalAbsences}</p>
                     </div>
-                    <div className="bg-blue-50 p-4 rounded-lg text-center">
+                    <div className="bg-blue-50 p-4 rounded-lg text-center border border-blue-200">
                       <p className="text-blue-600 text-sm mb-1">Highest Grade</p>
                       <p className="text-3xl font-bold text-blue-600">
                         {grades.length > 0 ? Math.max(...grades.map(g => g.grade)).toFixed(2) : "N/A"}
                       </p>
                     </div>
-                    <div className="bg-green-50 p-4 rounded-lg text-center">
+                    <div className="bg-green-50 p-4 rounded-lg text-center border border-green-200">
                       <p className="text-green-600 text-sm mb-1">Perfect Subjects</p>
                       <p className="text-3xl font-bold text-green-600">
                         {grades
@@ -372,7 +403,7 @@ const StudentProfile = () => {
               {/* Main Content */}
               <div className="md:col-span-2">
                 {/* Top Achievements */}
-                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6 mb-6">
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-dark flex items-center">
                       <FaTrophy className="text-primary mr-3" />
@@ -410,7 +441,7 @@ const StudentProfile = () => {
                     ))}
 
                     {earnedAchievements.length === 0 && (
-                      <div className="text-center p-8 bg-light rounded-lg">
+                      <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                         <FaTrophy className="text-gray-400 text-4xl mx-auto mb-3" />
                         <p className="text-gray-500">No achievements earned yet. Keep working!</p>
                       </div>
@@ -419,7 +450,7 @@ const StudentProfile = () => {
                 </div>
 
                 {/* Recent Grades */}
-                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6 mb-6">
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-dark flex items-center">
                       <FaGraduationCap className="text-primary mr-3" />
@@ -434,38 +465,40 @@ const StudentProfile = () => {
                   </div>
 
                   {grades.length > 0 ? (
-                    <div className="overflow-x-auto -mx-4 px-4">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b">
-                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
-                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
-                            <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                          {grades.slice(0, 3).map((grade, index) => (
-                            <tr key={index}>
-                              <td className="py-3 px-4 text-sm text-dark">{grade.subject}</td>
-                              <td className="py-3 px-4">
-                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                  grade.grade >= 9 ? 'bg-green-100 text-green-800' : 
-                                  grade.grade >= 7 ? 'bg-yellow-100 text-yellow-800' : 
-                                  'bg-red-100 text-red-800'
-                                }`}>
-                                  {grade.grade.toFixed(2)}
-                                </span>
-                              </td>
-                              <td className="py-3 px-4 text-sm text-gray-600">{grade.teacherName}</td>
-                              <td className="py-3 px-4 text-sm text-gray-600">{new Date(grade.sessionDate).toLocaleDateString()}</td>
+                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="bg-light bg-opacity-50">
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {grades.slice(0, 3).map((grade, index) => (
+                              <tr key={index} className={index % 2 === 0 ? "bg-light bg-opacity-30" : ""}>
+                                <td className="py-3 px-4 text-sm text-dark">{grade.subject}</td>
+                                <td className="py-3 px-4">
+                                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                    grade.grade >= 9 ? 'bg-green-100 text-green-800' : 
+                                    grade.grade >= 7 ? 'bg-yellow-100 text-yellow-800' : 
+                                    'bg-red-100 text-red-800'
+                                  }`}>
+                                    {grade.grade.toFixed(2)}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-4 text-sm text-gray-600">{grade.teacherName}</td>
+                                <td className="py-3 px-4 text-sm text-gray-600">{new Date(grade.sessionDate).toLocaleDateString()}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   ) : (
-                    <div className="text-center p-8 bg-light rounded-lg">
+                    <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                       <FaGraduationCap className="text-gray-400 text-4xl mx-auto mb-3" />
                       <p className="text-gray-500">No grades available yet.</p>
                     </div>
@@ -473,7 +506,7 @@ const StudentProfile = () => {
                 </div>
 
                 {/* Upcoming Classes/Calendar */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6">
                   <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
                     <FaCalendarAlt className="text-primary mr-3" />
                     Upcoming Schedule
@@ -482,7 +515,7 @@ const StudentProfile = () => {
                   <div className="space-y-4">
                     {upcomingClasses && upcomingClasses.length > 0 ? (
                       upcomingClasses.slice(0, 3).map((classSession, index) => (
-                        <div key={index} className="flex items-center p-4 bg-light rounded-lg border-l-4 border-primary">
+                        <div key={index} className="flex items-center p-4 bg-white rounded-lg border border-gray-200 border-l-4 border-l-primary">
                           <div className="bg-primary bg-opacity-10 p-3 rounded-lg mr-4">
                             <FaClock className="text-primary text-xl" />
                           </div>
@@ -499,7 +532,7 @@ const StudentProfile = () => {
                         </div>
                       ))
                     ) : (
-                      <div className="text-center p-8 bg-light rounded-lg">
+                      <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                         <FaCalendarAlt className="text-gray-400 text-4xl mx-auto mb-3" />
                         <p className="text-gray-500">No upcoming classes scheduled.</p>
                       </div>
@@ -511,7 +544,7 @@ const StudentProfile = () => {
           )}
 
           {activeTab === "achievements" && (
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6">
               <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
                 <FaTrophy className="text-primary mr-3" />
                 All Achievements
@@ -563,6 +596,99 @@ const StudentProfile = () => {
             </div>
           )}
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen bg-light">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="text-white text-2xl"
+        >
+          <FaBars />
+        </button>
+        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
+          Student Profile
+        </h2>
+      </div>
+
+      {/* Sidebar */}
+      <div className={`
+        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
+        transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:transform-none transition-transform duration-200 z-30
+        h-full md:h-auto
+      `}>
+        <div className="flex flex-col items-center justify-center mb-10">
+          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <img 
+              src="src\\assets\\logo.png" 
+              alt="School Logo" 
+              className="w-20 h-20 object-contain"
+            />
+          </div>
+          <div className="text-center">
+            <h2 className="text-xl md:text-2xl font-bold text-white">Student Portal</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">{studentData?.className || "Student"}</p>
+          </div>
+        </div>
+
+        <nav className="flex-grow">
+          <ul className="space-y-2">
+            {navItems.map(({ icon: Icon, label, view, path }) => (
+              <li key={path}>
+                <Link 
+                  to={path} 
+                  className={`flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
+                    activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
+                  }`}
+                  onClick={() => {
+                    setActiveView(view);
+                    setIsSidebarOpen(false);
+                  }}
+                >
+                  <Icon className="mr-3 text-xl" />
+                  <span className="font-medium">{label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Logout button */}
+        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
+          >
+            <FaSignOutAlt className="mr-3 text-xl" />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main content area */}
+      <div className="flex-1 p-4 md:p-8 bg-light">
+        <header className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-dark">Student Profile</h2>
+          <div className="flex items-center">
+            <div className="flex items-center">
+            </div>
+          </div>
+        </header>
+        
+        {renderProfileContent()}
       </div>
     </div>
   );

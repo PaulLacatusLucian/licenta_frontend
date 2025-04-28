@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
-import { FaSearch, FaUserCircle, FaHome, FaChartLine, FaCalendarTimes, FaCalendarAlt, FaUtensils, FaRobot, FaBars, FaSignOutAlt } from "react-icons/fa";
+import { FaSearch, FaUserCircle, FaHome, FaChartLine, FaCalendarTimes, FaCalendarAlt, FaUtensils, FaRobot, FaBars, FaSignOutAlt, FaArrowRight } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 
 const StudentDashboard = () => {
@@ -13,6 +13,7 @@ const StudentDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
   const [studentOrders, setStudentOrders] = useState([]); 
   const [grades, setGrades] = useState([]);
+  const [activeView, setActiveView] = useState("home");
 
   const navigate = useNavigate();
 
@@ -64,12 +65,12 @@ const StudentDashboard = () => {
     const fetchStudentOrders = async () => {
       try {  
         const now = new Date();
-        const month = now.getMonth() + 1; // Lunile încep de la 0 în JS
+        const month = now.getMonth() + 1; // Months start at 0 in JS
         const year = now.getFullYear();
   
-        const response = await axios.get(`/menu/orders/student/me/${month}/${year}`);
-        console.log("Student orders:", response.data);
-        setStudentOrders(response.data || []);
+        const orderResponse = await axios.get(`/menu/orders/student/me/${month}/${year}`);
+        console.log("Student orders:", orderResponse.data);
+        setStudentOrders(orderResponse.data || []);
       } catch (error) {
         console.error("Error fetching student orders:", error);
       }
@@ -105,13 +106,13 @@ const StudentDashboard = () => {
   };
 
   const navItems = [
-    { icon: FaHome, label: "Home", path: "/" },
-    { icon: FaUserCircle, label: "My Profile", path: "/stud/profile" },
-    { icon: FaChartLine, label: "Grades", path: "/stud/grades" },
-    { icon: FaCalendarTimes, label: "Absences", path: "/stud/absences" },
-    { icon: FaCalendarAlt, label: "Schedule", path: "/stud/calendar" },
-    { icon: FaUtensils, label: "Food", path: "/food" },
-    { icon: FaRobot, label: "Ask Schoolie", path: "/ask-schoolie" }
+    { icon: FaHome, label: "Dashboard", view: "home", path: "/stud" },
+    { icon: FaUserCircle, label: "My Profile", view: "profile", path: "/stud/profile" },
+    { icon: FaChartLine, label: "Grades", view: "grades", path: "/stud/grades" },
+    { icon: FaCalendarTimes, label: "Absences", view: "absences", path: "/stud/absences" },
+    { icon: FaCalendarAlt, label: "Schedule", view: "calendar", path: "/stud/calendar" },
+    { icon: FaUtensils, label: "Food", view: "food", path: "/food" },
+    { icon: FaRobot, label: "Ask Schoolie", view: "ask", path: "/ask-schoolie" }
   ];
 
   const handleLogout = () => {
@@ -125,11 +126,11 @@ const StudentDashboard = () => {
   const renderHomeContent = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Welcome Card */}
-      <div className="col-span-1 md:col-span-3 bg-white p-6 rounded-xl shadow-md">
-        <h3 className="text-2xl font-bold text-dark mb-2">
+      <div className="col-span-1 md:col-span-3 bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
+        <h3 className="text-2xl font-bold mb-2">
           Welcome back, {studentData?.name || "Student"}!
         </h3>
-        <p className="text-dark2 mb-4">Today is {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        <p className="text-indigo-100 mb-4">Today is {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         
         {error && (
           <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg">
@@ -138,29 +139,32 @@ const StudentDashboard = () => {
         )}
         
         {/* Summary Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-          <div className="bg-primary p-4 rounded-lg text-center">
-            <p className="text-3xl font-bold text-dark">{calculateGPA(grades)}</p>
-            <p className="text-dark2">GPA</p>
+        <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
+          <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+            <p className="text-xs text-indigo-100">GPA</p>
+            <p className="text-3xl font-bold">{calculateGPA(grades)}</p>
           </div>
-          <div className="bg-primary p-4 rounded-lg text-center">
-            <p className="text-3xl font-bold text-dark">{absences?.total || 0}</p>
-            <p className="text-dark2">Absences</p>
+          <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+            <p className="text-xs text-indigo-100">Absences</p>
+            <p className="text-3xl font-bold">{absences?.total || 0}</p>
           </div>
-          <div className="bg-primary p-4 rounded-lg text-center">
-            <p className="text-3xl font-bold text-dark">{upcomingClasses.length}</p>
-            <p className="text-dark2">Classes Today</p>
+          <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
+            <p className="text-xs text-indigo-100">Classes Today</p>
+            <p className="text-3xl font-bold">{upcomingClasses.length}</p>
           </div>
-          <div className="bg-primary p-4 rounded-lg text-center">
-            <p className="text-3xl font-bold text-dark">{studentData?.className || "N/A"}</p>
-            <p className="text-dark2">Class</p>
+          <div className="text-center px-6 py-2">
+            <p className="text-xs text-indigo-100">Class</p>
+            <p className="text-3xl font-bold">{studentData?.className || "N/A"}</p>
           </div>
         </div>
       </div>
 
       {/* Quick Actions Card */}
-      <div className="col-span-1 md:col-span-2 bg-white p-6 rounded-xl shadow-md">
-        <h4 className="text-xl font-semibold text-dark mb-4">Quick Actions</h4>
+      <div className="col-span-1 md:col-span-2 bg-light p-6 rounded-xl shadow-md border border-gray-200">
+        <h4 className="text-xl font-semibold text-dark mb-4 flex items-center">
+          <FaRobot className="text-primary mr-3" />
+          Quick Actions
+        </h4>
         <div className="grid grid-cols-2 gap-4">
           <button 
             className="bg-primary text-dark font-semibold p-4 rounded-lg hover:opacity-90 transition flex items-center justify-center"
@@ -190,11 +194,15 @@ const StudentDashboard = () => {
       </div>
 
       {/* Today's Schedule */}
-      <div className="bg-white p-6 rounded-xl shadow-md">
+      <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-xl font-semibold text-dark">Today's Schedule</h4>
-          <Link to="/stud/calendar" className="text-secondary hover:underline">
+          <h4 className="text-xl font-semibold text-dark flex items-center">
+            <FaCalendarAlt className="text-primary mr-3" />
+            Today's Schedule
+          </h4>
+          <Link to="/stud/calendar" className="text-secondary hover:underline flex items-center">
             Full Schedule
+            <FaArrowRight className="ml-2 text-xs" />
           </Link>
         </div>
         <div className="space-y-4">
@@ -224,11 +232,15 @@ const StudentDashboard = () => {
       </div>
 
       {/* Absences Overview */}
-      <div className="col-span-1 md:col-span-1 bg-white p-6 rounded-xl shadow-md">
+      <div className="col-span-1 md:col-span-1 bg-light p-6 rounded-xl shadow-md border border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-xl font-semibold text-dark">Absences</h4>
-          <Link to="/stud/absences" className="text-secondary hover:underline">
+          <h4 className="text-xl font-semibold text-dark flex items-center">
+            <FaCalendarTimes className="text-primary mr-3" />
+            Absences
+          </h4>
+          <Link to="/stud/absences" className="text-secondary hover:underline flex items-center">
             View All
+            <FaArrowRight className="ml-2 text-xs" />
           </Link>
         </div>
         <div className="flex justify-between items-center mb-4">
@@ -250,11 +262,15 @@ const StudentDashboard = () => {
       </div>
 
       {/* Food Orders */}
-      <div className="col-span-1 md:col-span-1 bg-white p-6 rounded-xl shadow-md">
+      <div className="col-span-1 md:col-span-1 bg-light p-6 rounded-xl shadow-md border border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-xl font-semibold text-dark">Food Orders</h4>
-          <Link to="/food" className="text-secondary hover:underline">
+          <h4 className="text-xl font-semibold text-dark flex items-center">
+            <FaUtensils className="text-primary mr-3" />
+            Food Orders
+          </h4>
+          <Link to="/food" className="text-secondary hover:underline flex items-center">
             Order Now
+            <FaArrowRight className="ml-2 text-xs" />
           </Link>
         </div>
         <div className="space-y-4">
@@ -282,11 +298,15 @@ const StudentDashboard = () => {
       </div>
 
       {/* Grades Overview */}
-      <div className="col-span-1 md:col-span-1 bg-white p-6 rounded-xl shadow-md">
+      <div className="col-span-1 md:col-span-1 bg-light p-6 rounded-xl shadow-md border border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-xl font-semibold text-dark">Grades</h4>
-          <Link to="/stud/grades" className="text-secondary hover:underline">
+          <h4 className="text-xl font-semibold text-dark flex items-center">
+            <FaChartLine className="text-primary mr-3" />
+            Grades
+          </h4>
+          <Link to="/stud/grades" className="text-secondary hover:underline flex items-center">
             All Grades
+            <FaArrowRight className="ml-2 text-xs" />
           </Link>
         </div>
         <div className="flex justify-between items-center mb-4">
@@ -312,9 +332,9 @@ const StudentDashboard = () => {
       </div>
 
       {/* Ask Schoolie */}
-      <div className="col-span-1 md:col-span-3 bg-white p-6 rounded-xl shadow-md">
+      <div className="col-span-1 md:col-span-3 bg-light p-6 rounded-xl shadow-md border border-gray-200">
         <div className="flex items-center mb-4">
-          <FaRobot className="text-xl md:text-2xl text-secondary mr-3" />
+          <FaRobot className="text-xl md:text-2xl text-primary mr-3" />
           <h4 className="text-lg md:text-xl font-semibold text-dark">Ask Schoolie</h4>
         </div>
         <div className="flex flex-col md:flex-row">
@@ -338,45 +358,52 @@ const StudentDashboard = () => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
       {/* Mobile Header */}
-      <div className="md:hidden bg-primary p-4 flex justify-between items-center relative">
+      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="text-dark text-2xl"
+          className="text-white text-2xl"
         >
           <FaBars />
         </button>
-        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold">
+        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
           Student Portal
         </h2>
       </div>
 
       {/* Sidebar */}
       <div className={`
-        fixed md:static w-72 bg-primary text-dark p-6 shadow-xl flex flex-col
+        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
         transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         md:transform-none transition-transform duration-200 z-30
         h-full md:h-auto
       `}>
         <div className="flex flex-col items-center justify-center mb-10">
-          <img 
-            src="src\\assets\\logo.png" 
-            alt="School Logo" 
-            className="w-24 h-24 mb-4"
-          />
+          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
+            <img 
+              src="src\\assets\\logo.png" 
+              alt="School Logo" 
+              className="w-20 h-20 object-contain"
+            />
+          </div>
           <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold">Student Portal</h2>
-            <p className="text-sm text-dark2">{studentData?.studentClass?.name || "Student"}</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white">Student Portal</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">{studentData?.studentClass?.name || "Student"}</p>
           </div>
         </div>
 
-        <nav className="flex-1">
+        <nav className="flex-grow">
           <ul className="space-y-2">
-            {navItems.map(({ icon: Icon, label, path }) => (
+            {navItems.map(({ icon: Icon, label, view, path }) => (
               <li key={path}>
                 <Link 
                   to={path} 
-                  className="flex items-center p-3 hover:bg-secondary hover:text-white rounded-lg transition-colors duration-200"
-                  onClick={() => setIsSidebarOpen(false)}
+                  className={`flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
+                    activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
+                  }`}
+                  onClick={() => {
+                    setActiveView(view);
+                    setIsSidebarOpen(false);
+                  }}
                 >
                   <Icon className="mr-3 text-xl" />
                   <span className="font-medium">{label}</span>
@@ -387,10 +414,10 @@ const StudentDashboard = () => {
         </nav>
 
         {/* Logout button */}
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center p-3 text-red-700 hover:bg-red-100 hover:text-red-800 rounded-lg transition-colors duration-200"
+            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
           >
             <FaSignOutAlt className="mr-3 text-xl" />
             <span className="font-medium">Logout</span>
@@ -412,11 +439,6 @@ const StudentDashboard = () => {
           <h2 className="text-2xl font-bold text-dark">Dashboard</h2>
           <div className="flex items-center">
             <div className="flex items-center">
-              <FaUserCircle className="text-3xl text-dark2 mr-3" />
-              <div>
-                <p className="font-semibold text-dark">{studentData?.name || "Student"}</p>
-                <p className="text-sm text-dark2">{studentData?.studentClass?.name || "No Class"}</p>
-              </div>
             </div>
           </div>
         </header>
@@ -424,7 +446,10 @@ const StudentDashboard = () => {
         {isLoading ? (
           <div className="flex items-center justify-center min-h-screen">
             <div className="flex flex-col items-center space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <svg className="animate-spin -ml-1 mr-3 h-12 w-12 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
               <p className="text-dark2 font-medium">Loading your dashboard...</p>
             </div>
           </div>

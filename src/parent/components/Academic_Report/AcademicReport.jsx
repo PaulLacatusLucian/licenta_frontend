@@ -19,8 +19,12 @@ import {
   FaClipboardList,
   FaCalendarAlt,
   FaUtensils,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaSpinner
 } from "react-icons/fa";
+
+// Import the StructuredPDFButton component
+import StructuredPDFButton from "./StructuredPDFExport";
 
 const AcademicReportPage = () => {
   const [studentData, setStudentData] = useState(null);
@@ -33,7 +37,15 @@ const AcademicReportPage = () => {
   const [activeView, setActiveView] = useState("report");
   const [parentData, setParentData] = useState(null);
   
+  // Notification system
+  const [notification, setNotification] = useState(null);
+  
   const navigate = useNavigate();
+
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   useEffect(() => {
     const token = Cookies.get("jwt-token");
@@ -120,10 +132,6 @@ const AcademicReportPage = () => {
     navigate("/parent");
   };
 
-  const handlePrintReport = () => {
-    window.print();
-  };
-
   const handleLogout = () => {
     Cookies.remove("jwt-token");
     Cookies.remove("username");
@@ -135,7 +143,7 @@ const AcademicReportPage = () => {
     { icon: FaHome, label: "Dashboard", view: "home", path: "/parent" },
     { icon: FaUserCircle, label: "Profile", view: "profile", path: "/parent/profile" },
     { icon: FaChartLine, label: "Academic Report", view: "report", path: "/parent/academic-report" },
-    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: null },
+    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: "/parent/calendar" },
     { icon: FaUtensils, label: "Meal Services", view: "food", path: "/cafeteria/profile" },
   ];
 
@@ -267,32 +275,58 @@ const AcademicReportPage = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
-        <header className="flex justify-between items-center mb-6">
+        {/* Desktop Header */}
+        <header className="relative flex justify-center items-center mb-6 hidden md:flex">
+          <button 
+            onClick={() => navigate("/parent")}
+            className="absolute left-0 text-primary hover:text-secondary"
+          >
+            <FaArrowLeft className="text-xl" />
+          </button>
           <h2 className="text-2xl font-bold text-dark">Academic Performance Report</h2>
           
-          <div className="flex space-x-3 print:hidden">
-            <button 
-              onClick={handlePrintReport}
-              className="flex items-center space-x-2 bg-primary text-dark py-2 px-4 rounded-lg hover:opacity-90"
-            >
-              <FaPrint className="mr-2" />
-              <span>Print</span>
-            </button>
-            <button className="flex items-center space-x-2 bg-secondary text-white py-2 px-4 rounded-lg hover:opacity-90">
-              <FaFilePdf className="mr-2" />
-              <span>Save as PDF</span>
-            </button>
+          <div className="absolute right-0 flex space-x-3 print:hidden">
+            <StructuredPDFButton 
+              studentData={studentData}
+              grades={grades}
+              absences={absences}
+              teachers={teachers}
+            />
           </div>
         </header>
 
-        {/* Page Title - visible in print */}
-        <div className="hidden print:block mb-8">
-          <h1 className="text-3xl font-bold text-center">Academic Performance Report</h1>
-          <p className="text-center text-dark2">Generated on {new Date().toLocaleDateString()}</p>
+        {/* Mobile Header (different layout) */}
+        <div className="md:hidden mb-6">
+          <div className="flex items-center mb-4">
+            <button 
+              onClick={() => navigate("/parent")}
+              className="text-primary hover:text-secondary mr-4"
+            >
+              <FaArrowLeft className="text-xl" />
+            </button>
+            <h2 className="text-xl font-bold text-dark">Academic Performance Report</h2>
+          </div>
+          
+          <div className="flex space-x-3 print:hidden">
+            <div className="flex-1">
+              <StructuredPDFButton 
+                studentData={studentData}
+                grades={grades}
+                absences={absences}
+                teachers={teachers}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Report Content */}
         <div className="space-y-6">
+          {/* Page Title - visible in print */}
+          <div className="hidden print:block mb-8">
+            <h1 className="text-3xl font-bold text-center">Academic Performance Report</h1>
+            <p className="text-center text-dark2">Generated on {new Date().toLocaleDateString()}</p>
+          </div>
+
           {/* Hero Header */}
           <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
@@ -463,6 +497,40 @@ const AcademicReportPage = () => {
             )}
           </div>
         </div>
+        
+        {/* Notification Toast */}
+        {notification && (
+          <div className={`fixed bottom-4 right-4 max-w-md z-50 rounded-lg shadow-lg p-4 flex items-start space-x-4 ${
+            notification.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+          }`}>
+            <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
+              notification.type === "success" ? "bg-green-200" : "bg-red-200"
+            }`}>
+              {notification.type === "success" ? (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"></path>
+                </svg>
+              )}
+            </div>
+            <div className="flex-1 pt-1">
+              <p className="text-sm font-medium">
+                {notification.message}
+              </p>
+            </div>
+            <button 
+              className="flex-shrink-0 ml-1 text-gray-400 hover:text-gray-600"
+              onClick={() => setNotification(null)}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

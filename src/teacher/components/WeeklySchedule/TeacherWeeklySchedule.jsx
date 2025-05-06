@@ -106,7 +106,8 @@ const WeeklySchedule = () => {
     { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
     { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
     { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
-    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" }
+    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" },
+    { icon: FaUserGraduate, label: "Catalog", view: "catalog", path: "/teacher/catalog" }
   ];
 
   return (
@@ -189,19 +190,25 @@ const WeeklySchedule = () => {
 
       {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
-        <header className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-dark">
-            {currentView === "week" ? "Weekly Schedule" : `Classes for ${selectedDay}`}
-          </h2>
-          {currentView === "day" && (
-            <button
-              onClick={backToWeekView}
-              className="flex items-center text-dark hover:text-secondary transition font-medium"
-            >
-              <FaCalendarAlt className="mr-2" />
-              Back to Week View
-            </button>
-          )}
+      <header className="flex items-center mb-6 relative">
+        <button 
+          onClick={() => navigate("/teacher")}
+          className="text-primary hover:text-secondary z-10 absolute left-0"
+        >
+          <FaArrowLeft className="text-xl" />
+        </button>
+        <h2 className="text-2xl font-bold text-dark w-full text-center">
+          {currentView === "week" ? "Weekly Schedule" : `Classes for ${selectedDay}`}
+        </h2>
+        {currentView === "day" && (
+          <button
+            onClick={backToWeekView}
+            className="flex items-center text-dark hover:text-secondary transition font-medium z-10 absolute right-0"
+          >
+            <FaCalendarAlt className="mr-2" />
+            Back to Week View
+          </button>
+        )}
         </header>
 
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">

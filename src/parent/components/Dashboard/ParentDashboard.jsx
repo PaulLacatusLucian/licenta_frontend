@@ -86,7 +86,7 @@ const ParentDashboard = () => {
 
       try {
         const now = new Date();
-        const month = now.getMonth() + 1; // Months start at 0 in JS
+        const month = now.getMonth() + 1;
         const year = now.getFullYear();
 
         const response = await axios.get(`/parents/me/child/orders`, {
@@ -324,10 +324,6 @@ const ParentDashboard = () => {
             </h5>
             <div className="space-y-2">
               <div className="flex items-center text-sm">
-                <span className="text-gray-500 w-24">Name:</span>
-                <span className="font-medium">{parentData?.name || "N/A"}</span>
-              </div>
-              <div className="flex items-center text-sm">
                 <span className="text-gray-500 w-24">Email:</span>
                 <span className="font-medium">{parentData?.email || "N/A"}</span>
               </div>
@@ -360,7 +356,6 @@ const ParentDashboard = () => {
               <p className="font-semibold text-dark">Current GPA</p>
               <div className="flex items-end">
                 <p className="text-3xl font-bold text-dark">{calculateGPA(grades)}</p>
-                <p className="ml-2 text-sm text-dark2">out of 10</p>
               </div>
             </div>
             
@@ -492,8 +487,8 @@ const ParentDashboard = () => {
                 className="w-full p-2 border rounded"
               >
                 <option value="">Select a teacher</option>
-                {teachers.map(teacher => (
-                  <option key={teacher.id} value={teacher.email}>
+                {teachers.map((teacher, index) => (
+                  <option key={teacher.id || `teacher-${index}`} value={teacher.email}>
                     {teacher.name} - {teacher.subject}
                   </option>
                 ))}
@@ -533,7 +528,7 @@ const ParentDashboard = () => {
     { icon: FaHome, label: "Dashboard", view: "home", path: "/parent" },
     { icon: FaUserCircle, label: "Profile", view: "profile", path: "/parent/profile" },
     { icon: FaChartLine, label: "Academic Report", view: "report", path: "/parent/academic-report" },
-    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: null },
+    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: "/parent/calendar" },
     { icon: FaUtensils, label: "Meal Services", view: "food", path: "/cafeteria/profile" },
   ];
 

@@ -240,7 +240,7 @@ const AdminMenuList = () => {
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-primary focus:border-primary"
                             >
                                 <option value="all">All Items</option>
-                                <option value="inStock">In Stock</option>
+                                <option value="inStock">Hight Stock</option>
                                 <option value="lowStock">Low Stock</option>
                                 <option value="outOfStock">Out of Stock</option>
                             </select>

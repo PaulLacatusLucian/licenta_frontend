@@ -15,6 +15,7 @@ import ParentProfile from "./parent/components/Profile/Profile.jsx";
 import StudentDashboard from "./stud/components/Dashboard/StudentDashboard";
 import TeacherMeeting from "./teacher/components/Meeting/TeacherMeeting";
 import TeacherDashboard from "./teacher/components/Dashboard/TeacherDashboard";
+import ClassCatalog from "./teacher/components/Catalog/DigitalCatalog.jsx";
 import AdminDashboard from "./admin/components/Dashboard/AdminDashboard";
 import StudentProfile from "./stud/components/Profile/StudentProfile";
 import StudentCalendar from "./stud/components/Calendar/StudentCalendar";
@@ -50,6 +51,9 @@ import AddFood from "./chef/components/AddFood/AddFood";
 import MenuList from "./Cafeteria/MenuList";
 import ParentProfileCafeteria from "./Cafeteria/Profile/ParentProfile";
 import CafeteriaStats from "./Cafeteria/Statistics.jsx";
+import ParentCalendar from "./parent/components/Calendar/ParentTimetable.jsx";
+import StudentFoodOrders from "./stud/components/Food/StudentFoodOrders.jsx";
+import EditMenuItem from "./chef/components/EditFood/EditMenuItem.jsx";
 
 const App = () => {
   return (
@@ -68,7 +72,9 @@ const App = () => {
         <Route path="/parent" element={<ProtectedRoute><ParentDashboard /></ProtectedRoute>} />
         <Route path="/parent/academic-report" element={<ProtectedRoute><AcademicReport /></ProtectedRoute>} />
         <Route path="/parent/profile" element={<ProtectedRoute><ParentProfile /></ProtectedRoute>} />
+        <Route path="/parent/calendar" element={<ProtectedRoute><ParentCalendar /></ProtectedRoute>} />
         <Route path="/cafeteria/profile" element={<ProtectedRoute><ParentProfileCafeteria /></ProtectedRoute>} />
+
         
         {/* Student Routes */}
         <Route path="/stud" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
@@ -76,6 +82,7 @@ const App = () => {
         <Route path="/stud/calendar" element={<ProtectedRoute><StudentCalendar /></ProtectedRoute>} />
         <Route path="/stud/grades" element={<ProtectedRoute><StudentGrades /></ProtectedRoute>} />
         <Route path="/stud/absences" element={<ProtectedRoute><StudentAbsences /></ProtectedRoute>} />
+        <Route path="/stud/food-orders" element={<ProtectedRoute><StudentFoodOrders /></ProtectedRoute>} />
         
         {/* Teacher Routes */}
         <Route path="/teacher" element={<ProtectedRoute><TeacherDashboard /></ProtectedRoute>} />
@@ -83,7 +90,9 @@ const App = () => {
         <Route path="/teacher/schedule" element={<ProtectedRoute><TeacherWeeklySchedule /></ProtectedRoute>} />
         <Route path="/teacher/grades" element={<ProtectedRoute><GradeEntry /></ProtectedRoute>} />
         <Route path="/teacher/attendance" element={<ProtectedRoute><AbsenceEntry /></ProtectedRoute>} />
-        <Route path="/teacher/meetings/new" element={<ProtectedRoute><TeacherMeeting /></ProtectedRoute>} />        
+        <Route path="/teacher/meetings/new" element={<ProtectedRoute><TeacherMeeting /></ProtectedRoute>} />  
+        <Route path="/teacher/catalog/:classId?" element={<ProtectedRoute><ClassCatalog /></ProtectedRoute>} />
+
         {/* Admin Routes */}
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/create-student" element={<ProtectedRoute><AdminUserCreator /></ProtectedRoute>} />
@@ -110,6 +119,8 @@ const App = () => {
         {/* Chef Routes */}
         <Route path="/chef" element={<ProtectedRoute><ChefDashboard /></ProtectedRoute>} />
         <Route path="/add-food" element={<ProtectedRoute><AddFood /></ProtectedRoute>} />
+        <Route path="/edit-food/:id" element={<ProtectedRoute><EditMenuItem /> </ProtectedRoute>} />
+
         
         {/* Cafeteria Routes */}
         <Route path="/cafeteria" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />

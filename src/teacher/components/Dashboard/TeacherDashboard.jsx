@@ -65,7 +65,8 @@ const TeacherDashboard = () => {
     { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
     { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
     { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
-    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" }
+    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" },
+    { icon: FaUserGraduate, label: "Catalog", view: "catalog", path: "/teacher/catalog" }
   ];
 
   const today = new Date().toLocaleString("en-US", { weekday: "long" });
@@ -201,7 +202,7 @@ const TeacherDashboard = () => {
                 <div>
                   <p className="font-semibold text-dark">{student.name}</p>
                   <p className="text-dark2 text-sm">
-                    {student.studentClass?.name} - {student.studentClass?.specialization}
+                    {student.studentClass?.name} {student.className}
                   </p>
                 </div>
               </div>

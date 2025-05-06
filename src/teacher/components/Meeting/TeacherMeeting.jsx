@@ -143,7 +143,8 @@ const TeacherMeeting = () => {
     { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
     { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
     { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
-    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" }
+    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" },
+    { icon: FaUserGraduate, label: "Catalog", view: "catalog", path: "/teacher/catalog" }
   ];
 
   return (
@@ -226,9 +227,17 @@ const TeacherMeeting = () => {
 
       {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
-        <header className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-dark">Create New Meeting</h2>
-        </header>
+      <header className="flex items-center mb-6 relative">
+        <button 
+          onClick={() => navigate("/teacher")}
+          className="text-primary hover:text-secondary z-10 absolute left-0"
+        >
+          <FaArrowLeft className="text-xl" />
+        </button>
+        <h2 className="text-2xl font-bold text-dark w-full text-center">
+          Create New Meeting
+        </h2>
+      </header>
 
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">
           <h3 className="text-2xl font-bold mb-2">

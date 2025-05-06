@@ -161,7 +161,7 @@ const ParentProfile = () => {
     { icon: FaHome, label: "Dashboard", view: "home", path: "/parent" },
     { icon: FaUserCircle, label: "Profile", view: "profile", path: "/parent/profile" },
     { icon: FaChartLine, label: "Academic Report", view: "report", path: "/parent/academic-report" },
-    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: null },
+    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: "/parent/calendar" },
     { icon: FaUtensils, label: "Meal Services", view: "food", path: "/cafeteria/profile" },
   ];
 
@@ -205,11 +205,15 @@ const ParentProfile = () => {
             <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
               <div className="relative group">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white shadow-xl">
+                {imagePreview ? (
                   <img
-                    src={imagePreview ? `http://localhost:8080${imagePreview}` : "/api/placeholder/160/160"}
-                    alt="Profile"
+                    src={`http://localhost:8080${imagePreview}`}
+                    alt="Child Profile"
                     className="w-full h-full object-cover"
                   />
+                ) : (
+                <FaUserCircle className="text-4xl text-gray-300 bg-gray-100 w-full h-full p-2" />
+                )}
                 </div>
                 <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-all duration-300 transform">
                   <div className="text-center">
@@ -290,7 +294,7 @@ const ParentProfile = () => {
                     { label: "Email", value: parentData?.email || "N/A", icon: "📧" },
                     { label: "Father's Name", value: parentData?.fatherName || "N/A", icon: "👨" },
                     { label: "Father's Email", value: parentData?.fatherEmail || "N/A", icon: "📧" },
-                    { label: "Father's Phone Number", value: parentData?.phoneNumber || "N/A", icon: "📱" },
+                    { label: "Father's Phone Number", value: parentData?.fatherPhoneNumber || "N/A", icon: "📱" },
                     { label: "Mother's Name", value: parentData?.motherName || "N/A", icon: "👩" },
                     { label: "Mother's Email", value: parentData?.motherEmail || "N/A", icon: "📧" },
                     { label: "Mother's Phone Number", value: parentData?.motherPhoneNumber || "N/A", icon: "📱" },
@@ -324,26 +328,6 @@ const ParentProfile = () => {
                     </span>
                     <FaArrowLeft className="transform rotate-180" />
                   </button>
-                  
-                  <button 
-                    className="w-full bg-secondary text-white py-3 px-4 rounded-lg flex items-center justify-between hover:bg-opacity-90 transition-all"
-                  >
-                    <span className="flex items-center">
-                      <FaCalendarAlt className="mr-3" />
-                      Schedule Teacher Meeting
-                    </span>
-                    <FaArrowLeft className="transform rotate-180" />
-                  </button>
-                  
-                  <button 
-                    className="w-full bg-light text-dark py-3 px-4 rounded-lg flex items-center justify-between hover:bg-gray-200 transition-all border border-gray-200"
-                  >
-                    <span className="flex items-center">
-                      <FaEnvelope className="mr-3" />
-                      Contact School Administration
-                    </span>
-                    <FaArrowLeft className="transform rotate-180" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -369,11 +353,15 @@ const ParentProfile = () => {
                 <div className="bg-white rounded-xl p-6">
                   <div className="flex flex-col md:flex-row items-start gap-6">
                     <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gradient-to-r from-primary to-secondary border-4 border-white border-opacity-20">
-                     <img 
-                        src={childData?.profileImage ? `http://localhost:8080${childData.profileImage}` : "/api/placeholder/128/128"} 
-                        alt="Child" 
-                        className="w-full h-full object-cover"
-                      />
+                      {childData?.profileImage ? (
+                        <img
+                          src={`http://localhost:8080${childData.profileImage}`}
+                          alt="Child Profile"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                      <FaUserCircle className="text-4xl text-gray-300 bg-gray-100 w-full h-full p-2" />
+                      )}
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-dark mb-2">{childData?.name || "Student Name"}</h3>
@@ -495,11 +483,15 @@ const ParentProfile = () => {
               <div>
                 <div className="flex items-center mb-6">
                   <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gradient-to-r from-primary to-secondary border-4 border-white border-opacity-20 mr-4">
-                   <img 
-                      src={childData?.profileImage ? `http://localhost:8080${childData.profileImage}` : "/api/placeholder/128/128"} 
-                      alt="Child" 
-                      className="w-full h-full object-cover"
-                    />
+                     {childData?.profileImage ? (
+                      <img
+                        src={`http://localhost:8080${childData.profileImage}`}
+                        alt="Child Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                    <FaUserCircle className="text-4xl text-gray-300 bg-gray-100 w-full h-full p-2" />
+                    )}
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-dark">{childData?.name || "Student Name"}</h3>
@@ -740,7 +732,13 @@ const ParentProfile = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
-        <header className="flex justify-between items-center mb-6">
+        <header className="relative flex justify-center items-center mb-6">
+          <button 
+            onClick={() => navigate("/parent")}
+            className="absolute left-0 text-primary hover:text-secondary"
+          >
+            <FaArrowLeft className="text-xl" />
+          </button>
           <h2 className="text-2xl font-bold text-dark">Parent Profile</h2>
         </header>
 

@@ -1,9 +1,9 @@
 import React from "react";
-import Navbar from "../Navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import Blob from "../../assets/blob.svg";
 import HeroPng from "../../assets/homeImg.png";
-import { animate, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 export const FadeUp = (delay) => {
   return {
@@ -26,6 +26,12 @@ export const FadeUp = (delay) => {
 };
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate("/contact-us");
+  };
+
   return (
     <section className="bg-light overflow-hidden relative">
       <div className="container grid grid-cols-1 md:grid-cols-2 min-h-[650px]">
@@ -47,7 +53,10 @@ const Hero = () => {
               animate="animate"
               className="flex justify-center md:justify-start"
             >
-              <button className="primary-btn flex items-center gap-2 group">
+              <button 
+                className="primary-btn flex items-center gap-2 group"
+                onClick={handleGetStarted}
+              >
                 Get Started
                 <IoIosArrowRoundForward className="text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300" />
               </button>

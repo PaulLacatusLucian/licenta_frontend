@@ -95,7 +95,8 @@ const StudentsOverview = () => {
     { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
     { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
     { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
-    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" }
+    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" },
+    { icon: FaUserGraduate, label: "Catalog", view: "catalog", path: "/teacher/catalog" }
   ];
 
   // Find unique class profiles
@@ -192,6 +193,12 @@ const StudentsOverview = () => {
       {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
+        <button 
+              onClick={() => navigate("/teacher")}
+              className="mr-3 text-primary hover:text-secondary"
+            >
+              <FaArrowLeft className="text-xl" />
+            </button>
           <h2 className="text-2xl font-bold text-dark">Students Overview</h2>
           <div className="flex items-center">
           </div>

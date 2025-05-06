@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
+import logo from "../../../assets/logo.png"
 import { 
   FaBook, 
   FaUserTie, 
@@ -137,7 +138,7 @@ const StudentGrades = () => {
     { icon: FaChartLine, label: "Grades", view: "grades", path: "/stud/grades" },
     { icon: FaCalendarTimes, label: "Absences", view: "absences", path: "/stud/absences" },
     { icon: FaCalendarAlt, label: "Schedule", view: "calendar", path: "/stud/calendar" },
-    { icon: FaUtensils, label: "Food", view: "food", path: "/food" },
+    { icon: FaUtensils, label: "Food", view: "food", path: "/stud/food-orders" },
     { icon: FaRobot, label: "Ask Schoolie", view: "ask", path: "/ask-schoolie" }
   ];
 
@@ -380,14 +381,14 @@ const StudentGrades = () => {
         <div className="flex flex-col items-center justify-center mb-10">
           <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
             <img 
-              src="src\\assets\\logo.png" 
+              src={logo}
               alt="School Logo" 
               className="w-20 h-20 object-contain"
             />
           </div>
           <div className="text-center">
             <h2 className="text-xl md:text-2xl font-bold text-white">Student Portal</h2>
-            <p className="text-sm text-white text-opacity-80 mt-1">{studentData?.studentClass?.name || "Student"}</p>
+            <p className="text-sm text-white text-opacity-80 mt-1">{studentData?.className|| "Student"}</p>
           </div>
         </div>
 
@@ -436,6 +437,12 @@ const StudentGrades = () => {
       {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
+        <button 
+          onClick={() => navigate("/stud")}
+          className="mr-3 text-primary hover:text-secondary"
+        >
+          <FaArrowLeft className="text-xl" />
+        </button>
           <h2 className="text-2xl font-bold text-dark">Academic Grades</h2>
           <div className="flex items-center">
             <div className="flex items-center">

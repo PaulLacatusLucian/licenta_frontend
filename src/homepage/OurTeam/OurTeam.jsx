@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { BsPersonCircle } from "react-icons/bs";
 
 const FadeUp = (delay) => {
   return {
@@ -30,11 +31,17 @@ const StaffCard = ({ name, role, subject, description, imageUrl, delay, featured
       ${featured ? 'md:col-span-2 lg:col-span-3' : ''}`}
   >
     <div className={`flex ${featured ? 'md:flex-row' : 'flex-col'} items-center gap-6`}>
-      <img
-        src={`/api/placeholder/200/200`}
-        alt={name}
-        className={`${featured ? 'w-48 h-48' : 'w-40 h-40'} rounded-full object-cover border-4 border-secondary`}
-      />
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={name}
+          className={`${featured ? 'w-48 h-48' : 'w-40 h-40'} rounded-full object-cover border-4 border-secondary`}
+        />
+      ) : (
+        <div className={`${featured ? 'w-48 h-48' : 'w-40 h-40'} rounded-full border-4 border-secondary flex items-center justify-center bg-gray-100`}>
+          <BsPersonCircle className="text-secondary text-5xl" />
+        </div>
+      )}
       <div className={`flex flex-col ${featured ? 'text-left' : 'items-center text-center'}`}>
         <h3 className={`${featured ? 'text-2xl' : 'text-xl'} font-semibold mb-1`}>{name}</h3>
         <p className="text-secondary font-medium mb-1">{role}</p>
@@ -49,94 +56,112 @@ const OurTeam = () => {
   const staffMembers = {
     leadership: [
       {
-        name: "Dr. Maria Schmidt",
+        name: "Maria Raiz",
         role: "School Principal",
-        subject: "German Language and Literature",
-        description: "Leading our school with dedication and innovation for over 10 years. Dr. Schmidt has been instrumental in developing our bilingual curriculum and strengthening international partnerships.",
+        description: "Leading our school with dedication and commitment to educational excellence.",
         delay: 0.3,
         featured: true
       }
     ],
     viceprincipals: [
       {
-        name: "Prof. Hans Weber",
-        role: "Vice Principal of Academic Affairs",
-        subject: "Mathematics",
-        description: "Passionate about developing strong STEM programs and student initiatives.",
+        name: "Elek Norbert",
+        role: "Vice Principal",
+        description: "Supporting school administration and coordinating educational programs.",
         delay: 0.4
-      },
-      {
-        name: "Prof. Elena Müller",
-        role: "Vice Principal of International Relations",
-        subject: "English Language",
-        description: "Coordinating international exchange programs and language certifications.",
-        delay: 0.5
-      }
-    ],
-    administration: [
-      {
-        name: "Ana Popescu",
-        role: "Head Secretary",
-        description: "Ensuring smooth administrative operations and student support services.",
-        delay: 0.6
-      },
-      {
-        name: "Monica Ionescu",
-        role: "School Counselor",
-        description: "Supporting students' emotional and academic well-being through guidance and counseling.",
-        delay: 0.7
-      },
-      {
-        name: "Laura Nagy",
-        role: "Head Librarian",
-        description: "Managing our bilingual library and promoting reading culture.",
-        delay: 0.8
-      }
-    ],
-    departmentHeads: [
-      {
-        name: "Dr. Johann Fischer",
-        role: "Head of Science Department",
-        subject: "Physics & Chemistry",
-        description: "Leading our science department with innovative teaching methods.",
-        delay: 0.9
-      },
-      {
-        name: "Prof. Stefan Bauer",
-        role: "Head of Social Studies",
-        subject: "History & Geography",
-        description: "Coordinating social studies curriculum and international projects.",
-        delay: 1.0
-      },
-      {
-        name: "Prof. Carmen Schneider",
-        role: "Head of Arts Department",
-        subject: "Arts & Music",
-        description: "Directing our school's cultural and artistic programs.",
-        delay: 1.1
       }
     ],
     teachers: [
       {
-        name: "Prof. Michael Klein",
+        name: "Zsolt Kuki",
+        role: "Teacher",
+        subject: "Music",
+        description: "Inspiring students through music education and cultural activities.",
+        delay: 0.5
+      },
+      {
+        name: "Maria Tompos",
+        role: "Teacher",
+        subject: "Romanian Language",
+        description: "Dedicated to developing students' language proficiency and literary appreciation.",
+        delay: 0.6
+      },
+      {
+        name: "Manuela Dan",
+        role: "Teacher",
+        subject: "Romanian Language",
+        description: "Passionate about Romanian literature and cultural studies.",
+        delay: 0.7
+      },
+      {
+        name: "Renata Hodor",
+        role: "Teacher",
+        subject: "Romanian Language",
+        description: "Specialized in Romanian language teaching methodologies.",
+        delay: 0.8
+      },
+      {
+        name: "Renata Veron",
+        role: "Teacher",
+        subject: "Chemistry",
+        description: "Making the world of chemistry accessible and exciting for students.",
+        delay: 0.9
+      },
+      {
+        name: "Ildiko Bodnar",
         role: "Teacher",
         subject: "German Language",
-        description: "Specializing in German literature and cultural studies.",
+        description: "Promoting German language skills and cultural understanding.",
+        delay: 1.0
+      },
+      {
+        name: "Anzik Ester",
+        role: "Teacher",
+        subject: "German Language",
+        description: "Specializing in German language instruction and literature.",
+        delay: 1.1
+      },
+      {
+        name: "Erika Gazsa",
+        role: "Teacher",
+        subject: "Mathematics",
+        description: "Dedicated to developing strong mathematical foundations and problem-solving skills.",
         delay: 1.2
       },
       {
-        name: "Prof. Alexandra Popa",
+        name: "Mr. Pop",
         role: "Teacher",
         subject: "Mathematics",
-        description: "Preparing students for national and international competitions.",
+        description: "Helping students discover the beauty and logic of mathematics.",
         delay: 1.3
       },
       {
-        name: "Prof. Robert Wagner",
+        name: "Mr. Szekely",
         role: "Teacher",
-        subject: "Computer Science",
-        description: "Leading digital literacy initiatives and programming clubs.",
+        subject: "Philosophy",
+        description: "Encouraging critical thinking and philosophical inquiry.",
         delay: 1.4
+      },
+      {
+        name: "Adrian Tascu",
+        role: "Teacher",
+        subject: "Physical Education",
+        description: "Promoting physical fitness and team sports.",
+        delay: 1.5
+      },
+      {
+        name: "Sebi",
+        role: "Teacher",
+        subject: "Physical Education",
+        description: "Dedicated to students' physical development and sports excellence.",
+        delay: 1.6
+      },
+      {
+        name: "Bogdan Stana",
+        role: "Teacher",
+        subject: "History",
+        description: "Making history come alive through engaging teaching methods.",
+        delay: 1.7
       }
     ]
   };
@@ -175,29 +200,9 @@ const OurTeam = () => {
 
         {/* Vice Principals */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold mb-6 text-center">Vice Principals</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <h3 className="text-2xl font-semibold mb-6 text-center">Vice Principal</h3>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
             {staffMembers.viceprincipals.map((member, index) => (
-              <StaffCard key={index} {...member} />
-            ))}
-          </div>
-        </div>
-
-        {/* Administration */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-semibold mb-6 text-center">Administration</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {staffMembers.administration.map((member, index) => (
-              <StaffCard key={index} {...member} />
-            ))}
-          </div>
-        </div>
-
-        {/* Department Heads */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-semibold mb-6 text-center">Department Heads</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {staffMembers.departmentHeads.map((member, index) => (
               <StaffCard key={index} {...member} />
             ))}
           </div>

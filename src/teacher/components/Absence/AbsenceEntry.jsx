@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaCalendarAlt, FaUserAlt, FaExclamationCircle, FaHistory, FaArrowLeft, 
-  FaSearch, FaFilter, FaSortAlphaDown, FaHome, FaUserGraduate, FaChartLine, 
-  FaClipboardList, FaVideo, FaBars, FaSignOutAlt, FaArrowRight } from "react-icons/fa";
+  FaSearch, FaFilter, FaSortAlphaDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../../axiosConfig";
 import logo from "../../../assets/logo.png"
 import Cookies from 'js-cookie';
+import TeacherNavbar from '../TeacherNavbar'; // Importăm componenta de navbar
 
 const AbsenceEntry = () => {
   const navigate = useNavigate();
@@ -148,120 +148,119 @@ const AbsenceEntry = () => {
             return;
           }
           
+          // Obține clasa asociată acestei sesiuni folosind numele clasei
+          const className = sessionObj.className || "Unknown";
+  
           console.log("Selected session details:", {
             id: sessionObj.id,
             subject: sessionObj.subject,
             teacherId: sessionObj.teacher?.id,
             startTime: sessionObj.startTime,
-            endTime: sessionObj.endTime
+            endTime: sessionObj.endTime,
+            className: className
           });
-          
-          const response = await axios.get(`/class-sessions/session/${selectedSession}/students`, {
-            timeout: 15000 // 15 second timeout to prevent hanging
-          });
-          
-          // Handle empty or invalid responses
-          if (!response.data) {
-            console.error("Response has no data");
+  
+          // Verificăm dacă avem numele clasei
+          if (!className || className === "Unknown") {
+            console.error("Class name is missing for this session");
             setMessageType("error");
-            setMessage("No student data received. The class may have no enrolled students.");
-            setFilteredStudents([]);
-            setStudents([]);
+            setMessage("Class information is missing for this session. Please contact administrator.");
             setIsLoading(false);
             return;
           }
-          
-          console.log("Students for session (raw):", response.data);
-          
-          // Identificăm clasele asociate cu această sesiune specifică
-          // Această informație ar trebui să existe în backend, dar dacă nu o avem,
-          // o putem deduce din log-uri
-          const sessionClasses = [
-            { id: 14, name: "6B" }, 
-            { id: 22, name: "12A" }
-          ];
-          
-          // Determinăm care clasă ar trebui să fie folosită pentru această sesiune specifică
-          // În acest caz, vom folosi ID-ul sesiunii pentru a determina clasa
-          // Sesiunea 1 = clasa 6B, Sesiunea 2 = clasa 12A
-          const targetClassId = sessionObj.id === 1 ? 14 : 22;
-          const targetClassName = sessionObj.id === 1 ? "6B" : "12A";
-          
-          console.log(`Pentru sesiunea ${sessionObj.id} vom filtra studenții doar din clasa ${targetClassName}`);
-          
-          // Îmbunătățim datele studenților și filtrăm doar pe cei din clasa țintă
-          const enhancedStudents = response.data.map((student, index) => {
-            // Dacă studentul nu are informații despre clasă, le adăugăm
-            if (!student.studentClass || !student.studentClass.name) {
-              // Decidem clasa în funcție de poziția în listă și de clasa țintă
-              // Atribuim alternativ clasele în funcție de index, dar ne asigurăm că
-              // studentul este marcat în clasa corectă pentru filtru
-              const className = index % 2 === 0 ? "6B" : "12A";
-              const classId = index % 2 === 0 ? 14 : 22;
+  
+          // Mai întâi, obținem lista completă de clase pentru a găsi ID-ul
+          try {
+            // Obține toate clasele
+            const classesResponse = await axios.get('/classes');
+            
+            // Caută clasa după nume
+            const classObj = classesResponse.data.find(cls => cls.name === className);
+            
+            if (!classObj || !classObj.id) {
+              console.error(`Class with name ${className} not found`);
+              setMessageType("error");
+              setMessage(`Class ${className} not found in the system. Please contact administrator.`);
+              setIsLoading(false);
+              return;
+            }
+            
+            const classId = classObj.id;
+            console.log(`Found class ID ${classId} for class name ${className}`);
+            
+            // Acum folosim endpoint-ul tău implementat cu ID-ul clasei
+            const studentsResponse = await axios.get(`/classes/${classId}/students`, {
+              timeout: 15000
+            });
+            
+            // Handle empty or invalid responses
+            if (!studentsResponse.data) {
+              console.error("Response has no data");
+              setMessageType("error");
+              setMessage("No student data received. The class may have no enrolled students.");
+              setFilteredStudents([]);
+              setStudents([]);
+              setIsLoading(false);
+              return;
+            }
+            
+            console.log("Students for class (raw):", studentsResponse.data);
+            
+            // Folosim direct rezultatul API-ului fără modificări
+            const studentsData = studentsResponse.data;
+            
+            // If no students were found, show a message
+            if (studentsData.length === 0) {
+              setMessageType("warning");
+              setMessage(`No students found for ${sessionObj.subject} session in class ${className}. Please check class assignments.`);
+            } else {
+              // Show success message with count
+              setMessageType("success");
+              setMessage(`Found ${studentsData.length} students in class ${className} for this session.`);
+            }
+            
+            // Update the students state directly with the API data
+            setFilteredStudents(studentsData);
+            setStudents(studentsData);
+            
+            // Also update available classes for filtering
+            const classes = [...new Set(studentsData
+              .filter(student => student.studentClass?.name)
+              .map(student => student.studentClass.name))];
+            setAvailableClasses(classes.sort());
+            
+          } catch (error) {
+            console.error("Error fetching data:", error);
+            
+            // Enhanced error handling
+            if (error.response) {
+              console.error("Error data:", error.response.data);
+              console.error("Error status:", error.response.status);
               
-              return {
-                ...student,
-                studentClass: {
-                  id: classId,
-                  name: className,
-                }
-              };
+              if (error.response.status === 404) {
+                setMessageType("error");
+                setMessage("Class not found. It may have been deleted.");
+              } else if (error.response.status === 403) {
+                setMessageType("error");
+                setMessage("You don't have permission to access students for this class.");
+              } else {
+                setMessageType("error");
+                setMessage(`Server error: ${error.response.status} - ${error.response.data || 'Unknown error'}`);
+              }
+            } else if (error.request) {
+              console.error("No response received:", error.request);
+              setMessageType("error");
+              setMessage("No response from server. Please check your connection.");
+            } else {
+              console.error("Error message:", error.message);
+              setMessageType("error");
+              setMessage(`Error: ${error.message}`);
             }
-            return student;
-          });
-          
-          console.log("Enhanced students with class info:", enhancedStudents);
-          
-          // Acum filtrăm efectiv studenții doar pentru clasa țintă
-          const filteredBySessionClass = enhancedStudents.filter(student => {
-            // Dacă studentul are un ID de clasă existent, îl folosim
-            if (student.studentClass && student.studentClass.id) {
-              return student.studentClass.id === targetClassId;
-            }
-            // Dacă studentul are doar un nume de clasă, folosim numele
-            else if (student.studentClass && student.studentClass.name) {
-              return student.studentClass.name === targetClassName;
-            }
-            // Altfel, îl filtrăm afară
-            return false;
-          });
-          
-          console.log(`Filtrați ${filteredBySessionClass.length} studenți din clasa ${targetClassName}:`, filteredBySessionClass);
-          
-          // Group students by class for debugging and better user feedback
-          const studentsByClass = filteredBySessionClass.reduce((acc, student) => {
-            const className = student.studentClass?.name || 'Unassigned';
-            if (!acc[className]) acc[className] = [];
-            acc[className].push(student);
-            return acc;
-          }, {});
-          
-          const classGroups = Object.keys(studentsByClass).map(className => ({
-            className,
-            count: studentsByClass[className].length
-          }));
-          console.log("Students by class after filtering:", classGroups);
-          
-          // If no students were found, show a message
-          if (filteredBySessionClass.length === 0) {
-            setMessageType("warning");
-            setMessage(`No students found for ${sessionObj.subject} session in class ${targetClassName}. Please check class assignments.`);
-          } else {
-            // Show success message with count
-            setMessageType("success");
-            setMessage(`Found ${filteredBySessionClass.length} students in class ${targetClassName} for this session.`);
+            
+            // Clear student lists on error
+            setFilteredStudents([]);
+            setStudents([]);
           }
-          
-          // Update the students state with filtered students
-          setFilteredStudents(filteredBySessionClass);
-          setStudents(filteredBySessionClass);
-          
-          // Also update available classes for filtering
-          const classes = [...new Set(filteredBySessionClass
-            .filter(student => student.studentClass?.name)
-            .map(student => student.studentClass.name))];
-          setAvailableClasses(classes.sort());
-          
         } catch (error) {
           console.error("Error fetching students for session:", error);
           
@@ -361,8 +360,19 @@ const AbsenceEntry = () => {
         },
       });
   
+      // Restul codului pentru gestionarea succes rămâne neschimbat
       const session = sessions.find(s => s.id === Number(selectedSession));
       const student = students.find(s => s.id === selectedStudent);
+      
+      // Obține numele clasei
+      let className = session?.className || "Unknown Class";
+      
+      if (className === "Unknown Class") {
+        const studentData = filteredStudents.find(s => s.id === selectedStudent);
+        if (studentData?.studentClass?.name) {
+          className = studentData.studentClass.name;
+        }
+      }
   
       setRecentAbsences(prev => [
         {
@@ -372,7 +382,7 @@ const AbsenceEntry = () => {
           sessionName: session?.subject || "Unknown",
           date: session?.date || new Date().toISOString(),
           timestamp: new Date(),
-          className: student?.studentClass?.name || "Unknown Class"
+          className: className
         },
         ...prev.slice(0, 9)
       ]);
@@ -385,12 +395,31 @@ const AbsenceEntry = () => {
     } catch (error) {
       console.error("Error submitting absence:", error);
   
+      // Verifică toate posibilele surse ale mesajului de eroare
+      const errorMessage = 
+        error.response?.data || 
+        error.message || 
+        "An unknown error occurred";
+      
+      // Verifică pentru diferite scenarii de eroare
       if (error.response?.status === 409) {
-        setMessageType("error");
-        setMessage(error.response.data || "This student already has a grade and cannot be marked absent.");
-      } else {
-        setMessageType("error");
-        setMessage("Failed to submit absence. Please try again.");
+        const errorMessage = error.response?.data || "";
+        
+        if (errorMessage.includes("notă") || errorMessage.includes("grade")) {
+          // It's a grade conflict
+          setMessageType("error");
+          setMessage("This student already has a grade and cannot be marked absent.");
+        } 
+        else if (errorMessage.includes("absență") || errorMessage.includes("absence")) {
+          // It's an absence conflict
+          setMessageType("warning");
+          setMessage("This student already has an absence recorded for this session.");
+        }
+        else {
+          // Generic conflict
+          setMessageType("error");
+          setMessage("Conflict: " + errorMessage);
+        }
       }
     } finally {
       setIsSubmitting(false);
@@ -428,101 +457,18 @@ const AbsenceEntry = () => {
   const formatTime = (date) => {
     return new Date(date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   };
-  
-  const handleLogout = () => {
-    Cookies.remove("jwt-token");
-    Cookies.remove("username");
-    navigate("/login");
-  };
-  
-  // Match the navItems from TeacherDashboard
-  const navItems = [
-    { icon: FaHome, label: "Dashboard", view: "home", path: "/teacher" },
-    { icon: FaUserGraduate, label: "Students", view: "students", path: "/teacher/students" },
-    { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
-    { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
-    { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
-    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" },
-    { icon: FaUserGraduate, label: "Catalog", view: "catalog", path: "/teacher/catalog" }
-  ];
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Mobile Header */}
-      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
-        <button 
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="text-white text-2xl"
-        >
-          <FaBars />
-        </button>
-        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
-          Record Attendance
-        </h2>
-      </div>
-
-      {/* Sidebar - Matched styling from TeacherDashboard */}
-      <div className={`
-        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
-        transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:transform-none transition-transform duration-200 z-30
-        h-full md:h-auto
-      `}>
-        <div className="flex flex-col items-center justify-center mb-10">
-          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
-            <img 
-              src={logo}
-              alt="School Logo" 
-              className="w-20 h-20 object-contain"
-            />
-          </div>
-          <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-white">Teacher Portal</h2>
-            <p className="text-sm text-white text-opacity-80 mt-1">{teacherData?.subject || 'Teacher'}</p>
-          </div>
-        </div>
-
-        <nav className="flex-grow">
-          <ul className="space-y-2">
-            {navItems.map(({ icon: Icon, label, view, path }) => (
-              <li key={path}>
-                <Link 
-                  to={path} 
-                  className={`flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
-                    activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
-                  }`}
-                  onClick={() => {
-                    setActiveView(view);
-                    setIsSidebarOpen(false);
-                  }}
-                >
-                  <Icon className="mr-3 text-xl" />
-                  <span className="font-medium">{label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Logout button */}
-        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
-          >
-            <FaSignOutAlt className="mr-3 text-xl" />
-            <span className="font-medium">Logout</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Overlay for mobile sidebar */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+      {/* Folosim componenta TeacherNavbar */}
+      <TeacherNavbar 
+        teacherData={teacherData}
+        activeView={activeView}
+        setActiveView={setActiveView}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+        logo={logo}
+      />
 
       {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
@@ -541,7 +487,6 @@ const AbsenceEntry = () => {
             >
               <FaHistory className="mr-2" />
               {showRecentAbsences ? "Hide Recent" : "Recent Absences"}
-              {!showRecentAbsences && <FaArrowRight className="ml-2" />}
             </button>
           </div>
         </header>
@@ -786,7 +731,6 @@ const AbsenceEntry = () => {
                           </div>
                           <div className="flex-1">
                             <div className="font-medium">{student.name}</div>
-                            <div className="text-sm text-dark2">{student.studentClass?.name || 'No class'}</div>
                           </div>
                           {student.absenceCount > 0 && (
                             <div className="text-sm bg-red-50 px-2 py-1 rounded-lg text-red-800">

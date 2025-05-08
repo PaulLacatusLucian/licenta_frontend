@@ -15,7 +15,8 @@ import {
     FaFilter,
     FaCheck,
     FaSignOutAlt,
-    FaUser
+    FaUser,
+    FaArrowLeft
 } from "react-icons/fa";
 
 const ALLERGENS = [
@@ -207,6 +208,10 @@ const MenuList = () => {
         navigate("/cafeteria/profile");
     };
     
+    const goToDashboard = () => {
+        navigate("/parent");
+    };
+    
     // Render loading state
     if (loading) {
         return (
@@ -393,34 +398,44 @@ const MenuList = () => {
                             </p>
                         </div>
                         
-                        {/* Sort Options */}
-                        <div className="relative" ref={sortDropdownRef}>
-                            <button
-                                onClick={() => setShowSortOptions(!showSortOptions)}
-                                className="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                        <div className="flex items-center gap-4">
+                            {/* Back to Dashboard Button */}
+                            <button 
+                                onClick={goToDashboard}
+                                className="flex items-center text-white bg-primary hover:bg-primary-dark transition-colors text-sm px-4 py-2 rounded-lg shadow-sm"
                             >
-                                <span>Sort by: {sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}</span>
-                                {sortDirection === "asc" ? <FaSortAmountUp /> : <FaSortAmountDown />}
+                                <FaArrowLeft className="mr-2" /> Back to Dashboard
                             </button>
                             
-                            {showSortOptions && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-10">
-                                    <ul className="py-2">
-                                        {["name", "price", "quantity"].map((option) => (
-                                            <li key={option}>
-                                                <button
-                                                    onClick={() => handleSortChange(option)}
-                                                    className={`w-full text-left px-4 py-2 hover:bg-gray-50 ${
-                                                        sortBy === option ? "font-semibold text-primary" : ""
-                                                    }`}
-                                                >
-                                                    Sort by {option.charAt(0).toUpperCase() + option.slice(1)}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
+                            {/* Sort Options */}
+                            <div className="relative" ref={sortDropdownRef}>
+                                <button
+                                    onClick={() => setShowSortOptions(!showSortOptions)}
+                                    className="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+                                >
+                                    <span>Sort by: {sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}</span>
+                                    {sortDirection === "asc" ? <FaSortAmountUp /> : <FaSortAmountDown />}
+                                </button>
+                                
+                                {showSortOptions && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-10">
+                                        <ul className="py-2">
+                                            {["name", "price", "quantity"].map((option) => (
+                                                <li key={option}>
+                                                    <button
+                                                        onClick={() => handleSortChange(option)}
+                                                        className={`w-full text-left px-4 py-2 hover:bg-gray-50 ${
+                                                            sortBy === option ? "font-semibold text-primary" : ""
+                                                        }`}
+                                                    >
+                                                        Sort by {option.charAt(0).toUpperCase() + option.slice(1)}
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -500,7 +515,7 @@ const MenuList = () => {
                 </div>
             )}
             
-            {/* Footer - removed the 24 hours advance notice message */}
+            {/* Footer */}
             <footer className="bg-white shadow-inner py-6 mt-auto">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row justify-between items-center">

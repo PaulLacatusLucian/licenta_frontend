@@ -19,7 +19,8 @@ import {
   FaUtensils,
   FaRobot,
   FaBars,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaCheckCircle
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -31,6 +32,7 @@ const StudentAbsences = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState("absences");
   const [studentData, setStudentData] = useState(null);
+  const [filter, setFilter] = useState("all"); // "all", "justified", "unjustified"
   
   const navigate = useNavigate();
 
@@ -46,6 +48,10 @@ const StudentAbsences = () => {
         ]);
         
         setStudentData(studentResponse.data);
+        
+        // Log the absences data to see the structure
+        console.log("Absences data received:", absencesResponse.data);
+        
         setAbsences(absencesResponse.data);
         setMessage("");
       } catch (error) {
@@ -60,32 +66,66 @@ const StudentAbsences = () => {
   }, []);
 
   const sortedAbsences = useMemo(() => {
-    let sortableAbsences = [...absences];
+    // Filter absences based on selected filter
+    let filteredAbsences = [...absences];
+    if (filter === "justified") {
+      filteredAbsences = absences.filter(absence => absence.justified);
+    } else if (filter === "unjustified") {
+      filteredAbsences = absences.filter(absence => !absence.justified);
+    }
+    
+    let sortableAbsences = [...filteredAbsences];
     if (sortConfig.key !== null) {
       sortableAbsences.sort((a, b) => {
         // Handle nested properties for sorting
-        const aValue = sortConfig.key.includes('.') 
-          ? sortConfig.key.split('.').reduce((obj, key) => obj && obj[key], a)
-          : a[sortConfig.key];
-        const bValue = sortConfig.key.includes('.')
-          ? sortConfig.key.split('.').reduce((obj, key) => obj && obj[key], b)
-          : b[sortConfig.key];
+        if (sortConfig.key === 'subject') {
+          // Pentru sortarea după subject, folosim teacherWhoMarkedAbsence.subject
+          const aValue = a.teacherWhoMarkedAbsence?.subject || "";
+          const bValue = b.teacherWhoMarkedAbsence?.subject || "";
           
-        if (aValue < bValue) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
+          if (aValue < bValue) {
+            return sortConfig.direction === 'ascending' ? -1 : 1;
+          }
+          if (aValue > bValue) {
+            return sortConfig.direction === 'ascending' ? 1 : -1;
+          }
+          return 0;
+        } else {
+          // Pentru alte sortări, folosim metoda standard
+          const aValue = sortConfig.key.includes('.') 
+            ? sortConfig.key.split('.').reduce((obj, key) => obj && obj[key], a)
+            : a[sortConfig.key];
+          const bValue = sortConfig.key.includes('.')
+            ? sortConfig.key.split('.').reduce((obj, key) => obj && obj[key], b)
+            : b[sortConfig.key];
+            
+          if (aValue < bValue) {
+            return sortConfig.direction === 'ascending' ? -1 : 1;
+          }
+          if (aValue > bValue) {
+            return sortConfig.direction === 'ascending' ? 1 : -1;
+          }
+          return 0;
         }
-        if (aValue > bValue) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
       });
     }
     return sortableAbsences;
-  }, [absences, sortConfig]);
+  }, [absences, sortConfig, filter]);
+
+  // Calculăm doar absențele nemotivate pentru statistici
+  const unjustifiedAbsences = useMemo(() => {
+    return absences.filter(absence => !absence.justified);
+  }, [absences]);
+
+  // Calculăm absențele motivate separat
+  const justifiedAbsences = useMemo(() => {
+    return absences.filter(absence => absence.justified);
+  }, [absences]);
 
   const subjectAbsences = useMemo(() => {
-    const counts = absences.reduce((acc, absence) => {
-      const subject = absence.student?.classTeacher?.subject || "Unknown Subject";
+    // Folosim doar absențele nemotivate pentru statistici pe materii
+    const counts = unjustifiedAbsences.reduce((acc, absence) => {
+      const subject = absence.teacherWhoMarkedAbsence?.subject || "Unknown Subject";
       if (!acc[subject]) {
         acc[subject] = 0;
       }
@@ -97,11 +137,17 @@ const StudentAbsences = () => {
       subject,
       count
     }));
-  }, [absences]);
+  }, [unjustifiedAbsences]);
 
-  const totalAbsences = useMemo(() => {
-    return absences.length;
-  }, [absences]);
+  // Total pentru absențe nemotivate
+  const totalUnjustifiedAbsences = useMemo(() => {
+    return unjustifiedAbsences.length;
+  }, [unjustifiedAbsences]);
+
+  // Total pentru absențe motivate
+  const totalJustifiedAbsences = useMemo(() => {
+    return justifiedAbsences.length;
+  }, [justifiedAbsences]);
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -150,7 +196,7 @@ const StudentAbsences = () => {
   const renderAbsencesContent = () => {
     return (
       <div className="space-y-6">
-        {/* Main Stats */}
+        {/* Main Stats - Modified to show both justified and unjustified */}
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
           <div className="flex items-center mb-6">
             <FaCalendarTimes className="text-3xl mr-3" />
@@ -158,61 +204,96 @@ const StudentAbsences = () => {
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Total Absences</p>
-              <p className="text-3xl font-bold">{totalAbsences}</p>
+              <p className="text-xs text-indigo-100">Unjustified Absences</p>
+              <p className="text-3xl font-bold">{totalUnjustifiedAbsences}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Subjects Affected</p>
-              <p className="text-3xl font-bold">{subjectAbsences.length}</p>
+              <p className="text-xs text-indigo-100">Justified Absences</p>
+              <p className="text-3xl font-bold">{totalJustifiedAbsences}</p>
             </div>
             <div className="text-center px-6 py-2">
               <p className="text-xs text-indigo-100">Attendance Status</p>
               <p className="text-3xl font-bold">
-                {totalAbsences <= 5 ? "Excellent" : totalAbsences <= 15 ? "Good" : "At Risk"}
+                {totalUnjustifiedAbsences <= 5 ? "Excellent" : totalUnjustifiedAbsences <= 15 ? "Good" : "At Risk"}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Subject Absences */}
+        {/* Subject Absences - Now showing only unjustified absences */}
         <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
             <FaBook className="text-primary mr-3" />
-            Absences by Subject
+            Unjustified Absences by Subject
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {subjectAbsences.map((subjectData) => (
-              <div key={subjectData.subject} className="bg-white p-4 rounded-lg border border-gray-200">
-                <div className="flex justify-between items-center">
-                  <div className="overflow-hidden">
-                    <p className="font-medium text-dark truncate">{subjectData.subject}</p>
-                  </div>
-                  <div className="flex items-center">
-                    <p className={`text-xl font-bold ${subjectData.count > 5 ? "text-red-600" : "text-yellow-600"}`}>
-                      {subjectData.count}
-                    </p>
-                    <span className="ml-2">{subjectData.count > 5 ? "⚠️" : "⚠️"}</span>
+          {subjectAbsences.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-dark2">
+              <FaCheckCircle className="text-5xl mb-4 text-green-500" />
+              <p className="text-xl">No unjustified absences!</p>
+              <p className="text-sm mt-2">Great job maintaining excellent attendance!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {subjectAbsences.map((subjectData) => (
+                <div key={subjectData.subject} className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <div className="overflow-hidden">
+                      <p className="font-medium text-dark truncate">{subjectData.subject}</p>
+                    </div>
+                    <div className="flex items-center">
+                      <p className={`text-xl font-bold ${subjectData.count > 5 ? "text-red-600" : "text-yellow-600"}`}>
+                        {subjectData.count}
+                      </p>
+                      <span className="ml-2">{subjectData.count > 5 ? "⚠️" : "⚠️"}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Absences Table */}
+        {/* Absences Table with Filter */}
         <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
-          <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
-            <FaCalendarTimes className="text-primary mr-3" />
-            Absence History
-          </h3>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-dark flex items-center mb-3 md:mb-0">
+              <FaCalendarTimes className="text-primary mr-3" />
+              Absence History
+            </h3>
+            
+            {/* Filter controls */}
+            <div className="flex items-center space-x-2 bg-white p-2 rounded-lg border border-gray-200">
+              <span className="text-dark2 text-sm mr-2">Show:</span>
+              <button 
+                className={`px-3 py-1 rounded-lg text-sm ${filter === 'all' ? 'bg-primary text-white' : 'text-dark2 hover:bg-light'}`}
+                onClick={() => setFilter('all')}
+              >
+                All
+              </button>
+              <button 
+                className={`px-3 py-1 rounded-lg text-sm ${filter === 'unjustified' ? 'bg-red-500 text-white' : 'text-dark2 hover:bg-light'}`}
+                onClick={() => setFilter('unjustified')}
+              >
+                Unjustified
+              </button>
+              <button 
+                className={`px-3 py-1 rounded-lg text-sm ${filter === 'justified' ? 'bg-green-500 text-white' : 'text-dark2 hover:bg-light'}`}
+                onClick={() => setFilter('justified')}
+              >
+                Justified
+              </button>
+            </div>
+          </div>
           
           {message ? (
             <div className="text-red-500 p-4 bg-red-50 rounded-lg mb-4">{message}</div>
           ) : sortedAbsences.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-dark2">
               <FaCalendarTimes className="text-5xl mb-4 text-primary opacity-50" />
-              <p className="text-xl">No absences found</p>
-              <p className="text-sm mt-2">Great job maintaining perfect attendance!</p>
+              <p className="text-xl">No {filter !== 'all' ? filter : ''} absences found</p>
+              {filter === 'unjustified' && (
+                <p className="text-sm mt-2">Great job maintaining perfect attendance!</p>
+              )}
             </div>
           ) : (
             <div>
@@ -224,11 +305,11 @@ const StudentAbsences = () => {
                       <th className="p-4 text-left">
                         <button
                           className="flex items-center text-dark2 font-medium hover:text-primary"
-                          onClick={() => requestSort('student.classTeacher.subject')}
+                          onClick={() => requestSort('subject')}
                         >
                           <FaBook className="mr-2" />
                           <span>Subject</span>
-                          {getSortIcon('student.classTeacher.subject')}
+                          {getSortIcon('subject')}
                         </button>
                       </th>
                       <th className="p-4 text-left">
@@ -258,14 +339,14 @@ const StudentAbsences = () => {
                         }`}
                       >
                         <td className="p-4 font-medium text-dark">
-                          {absence.student?.classTeacher?.subject || "Unknown Subject"}
+                          {absence.teacherWhoMarkedAbsence?.subject || "Unknown Subject"}
                         </td>
                         <td className="p-4 text-dark2">
-                          {absence.student?.classTeacher?.name || "Unknown Teacher"}
+                          {absence.teacherWhoMarkedAbsence?.name || "Unknown Teacher"}
                         </td>
                         <td className="p-4 text-center text-dark2">
-                          {absence.date 
-                            ? new Date(absence.date).toLocaleString("ro-RO", { 
+                          {absence.sessionDate 
+                            ? new Date(absence.sessionDate).toLocaleString("ro-RO", { 
                                 year: "numeric", 
                                 month: "long", 
                                 day: "numeric"
@@ -290,10 +371,10 @@ const StudentAbsences = () => {
                 <div className="flex justify-between mb-3 px-2">
                   <button
                     className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
-                    onClick={() => requestSort('student.classTeacher.subject')}
+                    onClick={() => requestSort('subject')}
                   >
                     <span>Sort by Subject</span>
-                    {getSortIcon('student.classTeacher.subject')}
+                    {getSortIcon('subject')}
                   </button>
                   <button
                     className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
@@ -312,7 +393,7 @@ const StudentAbsences = () => {
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div className="font-medium text-dark truncate max-w-[70%]">
-                        {absence.student?.classTeacher?.subject || "Unknown Subject"}
+                        {absence.teacherWhoMarkedAbsence?.subject || "Unknown Subject"}
                       </div>
                       <div>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -325,13 +406,13 @@ const StudentAbsences = () => {
                     <div className="flex flex-col space-y-1 text-sm">
                       <div className="flex items-center text-dark2">
                         <FaUserTie className="mr-2 text-xs" />
-                        <span className="truncate">{absence.student?.classTeacher?.name || "Unknown Teacher"}</span>
+                        <span className="truncate">{absence.teacherWhoMarkedAbsence?.name || "Unknown Teacher"}</span>
                       </div>
                       <div className="flex items-center text-dark2">
                         <FaCalendarTimes className="mr-2 text-xs" />
                         <span>
-                          {absence.date 
-                            ? new Date(absence.date).toLocaleString("ro-RO", { 
+                          {absence.sessionDate 
+                            ? new Date(absence.sessionDate).toLocaleString("ro-RO", { 
                                 year: "numeric", 
                                 month: "short", 
                                 day: "numeric"

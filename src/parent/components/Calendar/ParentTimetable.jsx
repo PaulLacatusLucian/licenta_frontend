@@ -86,7 +86,7 @@ const ParentCalendar = () => {
     { icon: FaUserCircle, label: "Profile", view: "profile", path: "/parent/profile" },
     { icon: FaChartLine, label: "Academic Report", view: "report", path: "/parent/academic-report" },
     { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: "/parent/calendar" },
-    { icon: FaUtensils, label: "Meal Services", view: "food", path: "/cafeteria/profile" },
+    { icon: FaUtensils, label: "Meal Services", view: "food", path: "/cafeteria" },
   ];
 
   const weekdays = ["Luni", "Marți", "Miercuri", "Joi", "Vineri"];

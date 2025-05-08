@@ -54,6 +54,7 @@ import CafeteriaStats from "./Cafeteria/Statistics.jsx";
 import ParentCalendar from "./parent/components/Calendar/ParentTimetable.jsx";
 import StudentFoodOrders from "./stud/components/Food/StudentFoodOrders.jsx";
 import EditMenuItem from "./chef/components/EditFood/EditMenuItem.jsx";
+import JustifyAbsences from "./teacher/components/Absence/JustifyAbsences.jsx";
 
 const App = () => {
   return (
@@ -92,6 +93,8 @@ const App = () => {
         <Route path="/teacher/attendance" element={<ProtectedRoute><AbsenceEntry /></ProtectedRoute>} />
         <Route path="/teacher/meetings/new" element={<ProtectedRoute><TeacherMeeting /></ProtectedRoute>} />  
         <Route path="/teacher/catalog/:classId?" element={<ProtectedRoute><ClassCatalog /></ProtectedRoute>} />
+        <Route path="/teacher/justify" element={<ProtectedRoute><JustifyAbsences /></ProtectedRoute>} />
+
 
         {/* Admin Routes */}
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />

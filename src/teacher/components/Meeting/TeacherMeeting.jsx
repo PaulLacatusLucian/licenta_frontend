@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserCircle, FaVideo, FaCalendarAlt, FaClock, FaEnvelope, FaCheckSquare, 
-  FaRegSquare, FaArrowLeft, FaHome, FaUserGraduate, FaChartLine, FaClipboardList, 
-  FaBars, FaSignOutAlt } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { FaVideo, FaCalendarAlt, FaClock, FaEnvelope, FaCheckSquare, 
+  FaRegSquare, FaArrowLeft } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../../axiosConfig';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import logo from "../../../assets/logo.png"
+import logo from "../../../assets/logo.png";
 import Cookies from 'js-cookie';
+import TeacherNavbar from '../TeacherNavbar';
 
 const TeacherMeeting = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [parentEmails, setParentEmails] = useState([]);
   const [selectedEmails, setSelectedEmails] = useState([]);
-  const [className, setClassName] = useState("5B"); // Default class or you could fetch available classes
   const [meetingType, setMeetingType] = useState("immediate"); // "immediate" or "scheduled"
   const [startDateTime, setStartDateTime] = useState(new Date());
   const [endDateTime, setEndDateTime] = useState(new Date(new Date().getTime() + 60 * 60 * 1000)); // Default 1 hour later
@@ -61,18 +60,12 @@ const TeacherMeeting = () => {
   };
   
   const getOffsetString = (date) => {
-    const offsetMinutes = date.getTimezoneOffset(); // ex: -180 pentru România (UTC+3)
+    const offsetMinutes = date.getTimezoneOffset();
     const abs = Math.abs(offsetMinutes);
     const hours = String(Math.floor(abs / 60)).padStart(2, '0');
     const minutes = String(abs % 60).padStart(2, '0');
     const sign = offsetMinutes <= 0 ? '+' : '-';
     return `${sign}${hours}:${minutes}`;
-  };
-  
-  const handleLogout = () => {
-    Cookies.remove("jwt-token");
-    Cookies.remove("username");
-    navigate("/login");
   };
 
   const toggleEmailSelection = (email) => {
@@ -102,7 +95,6 @@ const TeacherMeeting = () => {
       setError(null);
 
       let requestBody = {
-        className: className,
         parentEmails: selectedEmails
       };
 
@@ -135,97 +127,18 @@ const TeacherMeeting = () => {
     }
     return true;
   };
-  
-  // Match the navItems from TeacherDashboard
-  const navItems = [
-    { icon: FaHome, label: "Dashboard", view: "home", path: "/teacher" },
-    { icon: FaUserGraduate, label: "Students", view: "students", path: "/teacher/students" },
-    { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
-    { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
-    { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
-    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" },
-    { icon: FaUserGraduate, label: "Catalog", view: "catalog", path: "/teacher/catalog" }
-  ];
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Mobile Header */}
-      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
-        <button 
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="text-white text-2xl"
-        >
-          <FaBars />
-        </button>
-        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
-          Create Meeting
-        </h2>
-      </div>
+      <TeacherNavbar 
+        teacherData={teacherData}
+        activeView={activeView}
+        setActiveView={setActiveView}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+        logo={logo}
+      />
 
-      {/* Sidebar - Matched styling from TeacherDashboard */}
-      <div className={`
-        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
-        transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:transform-none transition-transform duration-200 z-30
-        h-full md:h-auto
-      `}>
-        <div className="flex flex-col items-center justify-center mb-10">
-          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
-            <img 
-              src={logo}
-              alt="School Logo" 
-              className="w-20 h-20 object-contain"
-            />
-          </div>
-          <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-white">Teacher Portal</h2>
-            <p className="text-sm text-white text-opacity-80 mt-1">{teacherData?.subject || 'Teacher'}</p>
-          </div>
-        </div>
-
-        <nav className="flex-grow">
-          <ul className="space-y-2">
-            {navItems.map(({ icon: Icon, label, view, path }) => (
-              <li key={path}>
-                <Link 
-                  to={path} 
-                  className={`flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
-                    activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
-                  }`}
-                  onClick={() => {
-                    setActiveView(view);
-                    setIsSidebarOpen(false);
-                  }}
-                >
-                  <Icon className="mr-3 text-xl" />
-                  <span className="font-medium">{label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Logout button */}
-        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
-          >
-            <FaSignOutAlt className="mr-3 text-xl" />
-            <span className="font-medium">Logout</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Overlay for mobile sidebar */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
       <header className="flex items-center mb-6 relative">
         <button 
@@ -249,10 +162,6 @@ const TeacherMeeting = () => {
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
               <p className="text-xs text-indigo-100">Meeting Type</p>
               <p className="text-lg font-bold">{meetingType === "immediate" ? "Start in 5 min" : "Scheduled"}</p>
-            </div>
-            <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Class</p>
-              <p className="text-lg font-bold">{className}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
               <p className="text-xs text-indigo-100">Parents</p>
@@ -326,17 +235,6 @@ const TeacherMeeting = () => {
                   Schedule for later
                 </button>
               </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-dark font-semibold mb-2">Class</label>
-              <input 
-                type="text"
-                value={className}
-                onChange={(e) => setClassName(e.target.value)}
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
-                placeholder="Enter class name"
-              />
             </div>
 
             {meetingType === "scheduled" && (

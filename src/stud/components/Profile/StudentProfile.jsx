@@ -171,6 +171,10 @@ const StudentProfile = () => {
         setAbsences(absencesResponse.data || []);
         setGrades(gradesResponse.data || []);
         setTotalAbsences(totalAbsencesResponse.data.total);
+        
+        // Pentru debugging
+        console.log("Upcoming classes data:", upcomingClassesResponse.data);
+        
         setUpcomingClasses(upcomingClassesResponse.data || []);
         setImagePreview(studentResponse.data?.profileImage);
       } catch (error) {
@@ -258,6 +262,19 @@ const StudentProfile = () => {
 
   const averageGrade = calculateAverageGrade(grades);
   const earnedAchievements = achievements.filter(achievement => achievement.condition());
+
+  // Funcție pentru formatarea datei și orei
+  const formatTimeFromISO = (isoString) => {
+    if (!isoString) return "";
+    if (typeof isoString !== 'string') return isoString;
+    
+    // Verificăm dacă string-ul conține un 'T' care separă data de oră
+    if (isoString.includes('T')) {
+      return isoString.split('T')[1].substring(0, 5);
+    }
+    
+    return isoString;
+  };
 
   const renderProfileContent = () => {
     return (
@@ -519,23 +536,36 @@ const StudentProfile = () => {
                   
                   <div className="space-y-4">
                     {upcomingClasses && upcomingClasses.length > 0 ? (
-                      upcomingClasses.slice(0, 3).map((classSession, index) => (
-                        <div key={index} className="flex items-center p-4 bg-white rounded-lg border border-gray-200 border-l-4 border-l-primary">
-                          <div className="bg-primary bg-opacity-10 p-3 rounded-lg mr-4">
-                            <FaClock className="text-primary text-xl" />
+                      upcomingClasses.slice(0, 3).map((classSession, index) => {
+                        // Pentru debugging
+                        console.log("Class session data:", classSession);
+                        
+                        return (
+                          <div key={index} className="flex items-center p-4 bg-white rounded-lg border border-gray-200 border-l-4 border-l-primary">
+                            <div className="bg-primary bg-opacity-10 p-3 rounded-lg mr-4">
+                              <FaClock className="text-primary text-xl" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-dark">
+                                {classSession.subject || 
+                                classSession.classDiscipline?.subject ||
+                                classSession.classSession?.subject || 
+                                (classSession.subjects && classSession.subjects.length > 0 ? classSession.subjects[0] : "Class Session")}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {classSession.scheduleDay ? `${classSession.scheduleDay}, ` : ""}
+                                {classSession.startTime ? formatTimeFromISO(classSession.startTime) : ""}
+                                {classSession.startTime && classSession.endTime ? " - " : ""}
+                                {classSession.endTime ? formatTimeFromISO(classSession.endTime) : ""}
+                                {(classSession.scheduleDay || classSession.startTime) ? "" : "Schedule TBD"}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                {classSession.teacher?.name || classSession.teacherName || ""}
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-dark">{classSession.subject || "Class Session"}</p>
-                            <p className="text-sm text-gray-500">
-                              {classSession.date ? 
-                                new Date(classSession.date).toLocaleDateString() + " • " + 
-                                (classSession.startTime || "TBD") : 
-                                "Date TBD"
-                              }
-                            </p>
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
                       <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                         <FaCalendarAlt className="text-gray-400 text-4xl mx-auto mb-3" />

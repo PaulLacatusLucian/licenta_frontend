@@ -30,7 +30,6 @@ const ViewClasses = () => {
     classItem.specialization.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to toggle visibility of action buttons on mobile
   const toggleMobileMenu = (classId) => {
     setShowMobileMenu(showMobileMenu === classId ? null : classId);
   };

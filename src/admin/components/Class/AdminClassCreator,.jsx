@@ -4,7 +4,7 @@ import { Users, School, BookOpen, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
 
 const CreateClass = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const [formData, setFormData] = React.useState({
     name: "",
@@ -27,9 +27,9 @@ const CreateClass = () => {
 
   const isClassNameValid = (name, level) => {
     const patternMap = {
-      PRIMARY: /^[0-4][A-Z]$/,   // Exemple valide: 0A, 4Z
-      MIDDLE: /^[5-8][A-Z]$/,    // Exemple valide: 5A, 8Z
-      HIGH: /^(9|1[0-2])[A-Z]$/, // Exemple valide: 9A, 10B, 12Z
+      PRIMARY: /^[0-4][A-Z]$/,
+      MIDDLE: /^[5-8][A-Z]$/,
+      HIGH: /^(9|1[0-2])[A-Z]$/,
     };
   
     const pattern = patternMap[level];

@@ -12,7 +12,6 @@ const CreateSchedule = ({
   editMode = false,
   scheduleData = null
 }) => {
-  // Initialize form data based on edit mode
   const initialFormData = editMode && scheduleData ? 
     {
       id: scheduleData.id,
@@ -45,7 +44,6 @@ const CreateSchedule = ({
     Altele: ["Religie", "Psihologie", "Economie", "Filosofie"],
   };
 
-  // Fetch teachers
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
@@ -63,14 +61,12 @@ const CreateSchedule = ({
     fetchTeachers();
   }, []);
 
-  // Fetch class details
   useEffect(() => {
     const fetchClassDetails = async () => {
       try {
         const response = await axios.get(`/classes/${selectedClass}`);
         setEducationLevel(response.data.educationLevel);
         
-        // If we're in primary education and in edit mode, try to maintain the same subject
         if (response.data.educationLevel === "PRIMARY" && editMode && scheduleData) {
           setFormData(prev => ({
             ...prev,
@@ -87,7 +83,6 @@ const CreateSchedule = ({
     if (selectedClass) fetchClassDetails();
   }, [selectedClass, editMode, scheduleData]);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -108,7 +103,6 @@ const CreateSchedule = ({
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -130,7 +124,6 @@ const CreateSchedule = ({
     try {
       let response;
       
-      // Prepare request data
       const requestData = {
         studentClass: { id: parseInt(formData.classId) },
         scheduleDay: formData.scheduleDay,
@@ -144,12 +137,10 @@ const CreateSchedule = ({
       }
       
       if (editMode && formData.id) {
-        // Update existing schedule
         requestData.id = formData.id;
         response = await axios.put(`/schedules/${formData.id}`, requestData);
         setMessage({ type: "success", text: "Orarul a fost actualizat cu succes!" });
       } else {
-        // Create new schedule
         response = await axios.post("/schedules", requestData);
         setMessage({ type: "success", text: "Orarul a fost creat cu succes!" });
       }

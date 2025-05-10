@@ -37,8 +37,8 @@ const MenuList = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [sortBy, setSortBy] = useState("name"); // name, price, quantity
-    const [sortDirection, setSortDirection] = useState("asc"); // asc, desc
+    const [sortBy, setSortBy] = useState("name");
+    const [sortDirection, setSortDirection] = useState("asc");
     const [showSortOptions, setShowSortOptions] = useState(false);
     const [notification, setNotification] = useState(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -47,7 +47,6 @@ const MenuList = () => {
     const dropdownRef = useRef(null);
     const sortDropdownRef = useRef(null);
 
-    // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -95,7 +94,6 @@ const MenuList = () => {
     }, [searchTerm, selectedAllergens, menuItems, sortBy, sortDirection]);
 
     const filterAndSortItems = () => {
-        // First filter the items
         let filtered = menuItems.filter((item) => {
             const matchesSearch = item.name?.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesAllergens =
@@ -106,7 +104,6 @@ const MenuList = () => {
             return matchesSearch && matchesAllergens;
         });
         
-        // Then sort the filtered items
         filtered.sort((a, b) => {
             let comparison = 0;
             
@@ -117,7 +114,7 @@ const MenuList = () => {
                 case "quantity":
                     comparison = (a.quantity || 0) - (b.quantity || 0);
                     break;
-                default: // "name"
+                default:
                     comparison = (a.name || "").localeCompare(b.name || "");
                     break;
             }
@@ -144,12 +141,10 @@ const MenuList = () => {
 
     const handlePurchase = async (menuItemId, quantity) => {
         try {
-            // Using the new endpoint that extracts parent and student info from the token
             await axios.post(`/menu/me/purchase/${menuItemId}`, null, {
                 params: { quantity }
             });
             
-            // Update the menu item quantity locally
             const updatedItems = menuItems.map(item => {
                 if (item.id === menuItemId) {
                     return { ...item, quantity: item.quantity - quantity };
@@ -212,7 +207,6 @@ const MenuList = () => {
         navigate("/parent");
     };
     
-    // Render loading state
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -241,7 +235,6 @@ const MenuList = () => {
         );
     }
 
-    // Render error state
     if (error) {
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col">

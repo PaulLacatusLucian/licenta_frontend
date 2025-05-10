@@ -77,7 +77,7 @@ const AdminUserCreator = () => {
             fatherName: formData.fatherName,
             fatherEmail: formData.fatherEmail,
             fatherPhoneNumber: formData.fatherPhoneNumber,
-            email: formData.motherEmail || formData.fatherEmail, // dacă ai un email general
+            email: formData.motherEmail || formData.fatherEmail,
           },
         },
       });

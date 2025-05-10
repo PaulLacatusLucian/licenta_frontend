@@ -44,7 +44,6 @@ const ViewStudents = () => {
     (student.className || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to toggle visibility of action buttons on mobile
   const toggleMobileMenu = (studentId) => {
     setShowMobileMenu(showMobileMenu === studentId ? null : studentId);
   };

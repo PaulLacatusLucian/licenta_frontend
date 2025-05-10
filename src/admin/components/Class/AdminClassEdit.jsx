@@ -59,7 +59,6 @@ const EditClass = () => {
     setFormData((prev) => {
       const updated = { ...prev, [name]: value };
   
-      // Live validation doar pentru numele clasei
       if (name === "name" || name === "educationLevel") {
         const namePattern = /^(\d{1,2})([A-Z])$/;
         const match = updated.name.match(namePattern);

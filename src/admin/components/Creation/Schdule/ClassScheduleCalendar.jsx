@@ -20,7 +20,6 @@ const ClassScheduleCalendar = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch the list of classes
   useEffect(() => {
     const fetchClasses = async () => {
       setIsLoading(true);
@@ -45,11 +44,9 @@ const ClassScheduleCalendar = () => {
     fetchClasses();
   }, []);
 
-  // Fetch the schedule for a specific class
   const fetchClassSchedule = async (classId) => {
     setIsLoading(true);
     try {
-      // Using the endpoint from your backend: /schedules/class/{classId}
       const response = await axios.get(`/schedules/class/${classId}`);
       setClassSchedule(response.data || []);
       setError(null);
@@ -61,7 +58,6 @@ const ClassScheduleCalendar = () => {
     }
   };
 
-  // Handle class change from dropdown
   const handleClassChange = (e) => {
     const classId = parseInt(e.target.value);
     setSelectedClass(classId);
@@ -72,7 +68,6 @@ const ClassScheduleCalendar = () => {
     }
   };
 
-  // Handle slot click to open the modal
   const handleSlotClick = (day, time, existingSchedule = null) => {
     if (existingSchedule) {
       setScheduleModal({ 
@@ -93,7 +88,6 @@ const ClassScheduleCalendar = () => {
     }
   };
 
-  // Close the modal
   const closeScheduleModal = () => {
     setScheduleModal({ 
       open: false, 
@@ -104,14 +98,12 @@ const ClassScheduleCalendar = () => {
     });
   };
 
-  // Refresh schedule data
   const refreshSchedule = () => {
     if (selectedClass) {
       fetchClassSchedule(selectedClass);
     }
   };
 
-  // Generate time slots
   const timeSlots = [
     { start: "8:00", end: "8:50", display: "8:00 - 8:50" },
     { start: "9:00", end: "9:50", display: "9:00 - 9:50" },
@@ -124,16 +116,12 @@ const ClassScheduleCalendar = () => {
     { start: "16:00", end: "16:50", display: "16:00 - 16:50" }
   ];
 
-  // Days of the week
   const weekDays = ["Luni", "Marți", "Miercuri", "Joi", "Vineri"];
 
-  // Handle delete schedule
   const handleDeleteSchedule = async (scheduleId) => {
     if (window.confirm("Ești sigur că vrei să ștergi această programare?")) {
       try {
-        // Using the DELETE endpoint from your backend: /schedules/{id}
         await axios.delete(`/schedules/${scheduleId}`);
-        // Refresh schedule after deletion
         fetchClassSchedule(selectedClass);
       } catch (error) {
         console.error("Error deleting schedule:", error);

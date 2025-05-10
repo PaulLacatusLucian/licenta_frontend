@@ -14,14 +14,12 @@ const PurchaseModal = ({ isOpen, onClose, item, onPurchase }) => {
     const [quantity, setQuantity] = useState(1);
     const [totalPrice, setTotalPrice] = useState(0);
     
-    // Calculate total price whenever quantity or item changes
     useEffect(() => {
         if (item) {
             setTotalPrice(item.price * quantity);
         }
     }, [quantity, item]);
     
-    // Reset quantity whenever modal opens with new item
     useEffect(() => {
         if (isOpen && item) {
             setQuantity(1);

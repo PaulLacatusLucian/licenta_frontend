@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
-import logo from "../../../assets/logo.png"
+import { useNavigate } from "react-router-dom";
 import { 
-  FaHome, 
   FaUserCircle, 
   FaChartLine, 
-  FaClipboardList, 
-  FaCalendarAlt, 
+  FaClipboardList,  
   FaUtensils, 
-  FaSignOutAlt, 
   FaChalkboardTeacher,
   FaClock,
   FaBook,
   FaEnvelope,
-  FaHandHoldingMedical,
-  FaBars,
   FaCalendarTimes,
   FaExclamationTriangle,
   FaComments,
-  FaChild,
   FaArrowLeft,
   FaTrophy,
   FaIdCard
 } from "react-icons/fa";
-import { useNavigate, Link } from "react-router-dom";
+
+// Import the ParentNavbar component
+import ParentNavbar from "../ParentNavbar";
 
 const ParentDashboard = () => {
   const [activeView, setActiveView] = useState("home");
@@ -158,17 +154,6 @@ const ParentDashboard = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const options = { month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("jwt-token");
-    Cookies.remove("username");
-    navigate("/login");
-  };
-
   const handleSendMessage = async () => {
     if (!selectedTeacher) {
       setError("Please select a teacher to send your message to.");
@@ -245,7 +230,7 @@ const ParentDashboard = () => {
       );
     }
 
-          return (
+    return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Hero Header */}
         <div className="col-span-1 md:col-span-3 bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
@@ -515,112 +500,18 @@ const ParentDashboard = () => {
             </button>
           </div>
         </div>
-
-        {/* Child Overview Preview - REMOVED */}
-
-       
       </div>
     );
   };
 
-  // Updated navigation items with proper routes
-  const navItems = [
-    { icon: FaHome, label: "Dashboard", view: "home", path: "/parent" },
-    { icon: FaUserCircle, label: "Profile", view: "profile", path: "/parent/profile" },
-    { icon: FaChartLine, label: "Academic Report", view: "report", path: "/parent/academic-report" },
-    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: "/parent/calendar" },
-    { icon: FaUtensils, label: "Meal Services", view: "food", path: "/cafeteria" },
-  ];
-
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Mobile Header */}
-      <div className="md:hidden bg-gradient-to-r from-primary to-secondary p-4 flex justify-between items-center relative">
-        <button 
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="text-white text-2xl"
-        >
-          <FaBars />
-        </button>
-        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
-          Parent Portal
-        </h2>
-      </div>
-
-      {/* Sidebar Navigation */}
-      <div className={`
-        fixed md:static w-72 bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-xl flex flex-col
-        transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:transform-none transition-transform duration-200 z-30
-        h-full md:h-auto
-      `}>
-        <div className="flex flex-col items-center justify-center mb-10">
-          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
-            <img 
-              src={logo}
-              alt="School Logo" 
-              className="w-20 h-20 object-contain"
-            />
-          </div>
-          <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-white">Parent Portal</h2>
-            <p className="text-sm text-white text-opacity-80 mt-1">Parent of: {studentData?.name || "Loading..."}</p>
-          </div>
-        </div>
-
-        <nav className="flex-grow">
-          <ul className="space-y-2">
-            {navItems.map(({ icon: Icon, label, view, path }) => (
-              <li key={view}>
-                {path ? (
-                  <Link
-                    to={path}
-                    className={`w-full text-left flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
-                      activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
-                    }`}
-                  >
-                    <Icon className="mr-3 text-xl" />
-                    <span className="font-medium">{label}</span>
-                  </Link>
-                ) : (
-                  <Link 
-                    to="/parent"
-                    onClick={() => {
-                      setActiveView(view);
-                      setIsSidebarOpen(false);
-                    }}
-                    className={`w-full text-left flex items-center p-3 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors duration-200 ${
-                      activeView === view ? "bg-white bg-opacity-20 text-white" : "text-white"
-                    }`}
-                  >
-                    <Icon className="mr-3 text-xl" />
-                    <span className="font-medium">{label}</span>
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Logout button */}
-        <div className="mt-auto pt-6 border-t border-white border-opacity-30">
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
-          >
-            <FaSignOutAlt className="mr-3 text-xl" />
-            <span className="font-medium">Logout</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Overlay for mobile sidebar */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+      {/* Use the ParentNavbar component */}
+      <ParentNavbar 
+        activeView={activeView} 
+        childName={studentData?.name}
+        onToggleSidebar={setIsSidebarOpen}
+      />
 
       {/* Main Content Area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
@@ -636,35 +527,6 @@ const ParentDashboard = () => {
 
         {/* Dynamic Content */}
         {activeView === "home" && renderHomeContent()}
-        
-        {activeView === "calendar" && studentData?.studentClass?.schedules && (
-          <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
-            <h3 className="text-xl font-bold mb-4 flex items-center">
-              <FaCalendarAlt className="text-primary mr-3" />
-              School Calendar
-            </h3>
-            <div className="mb-6">
-              <div className="flex space-x-2 mb-4">
-                <button className="px-4 py-2 bg-primary text-dark rounded">Classes</button>
-                <button className="px-4 py-2 bg-secondary text-white rounded">Events</button>
-              </div>
-              {studentData.studentClass.schedules.length > 0 ? (
-                studentData.studentClass.schedules.map((schedule, index) => (
-                  <div key={index} className="border-l-4 border-secondary pl-3 py-2 mb-3">
-                    <p className="font-semibold text-dark">
-                      {schedule.subjects?.join(", ") || "N/A"}
-                    </p>
-                    <p className="text-sm text-dark2">
-                      {schedule.teacher?.name || "Teacher"} | {schedule.day} {schedule.startTime} - {schedule.endTime}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-dark2 italic">No class schedule available.</p>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

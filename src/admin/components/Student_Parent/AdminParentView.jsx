@@ -10,12 +10,11 @@ const ViewParents = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch parents data
   useEffect(() => {
     const fetchParents = async () => {
       try {
         const response = await axios.get("/parents");
-        console.log("API Response:", response.data); // Debugging API response
+        console.log("API Response:", response.data);
         setParents(response.data);
         setError(null);
       } catch (err) {
@@ -27,13 +26,12 @@ const ViewParents = () => {
     fetchParents();
   }, []);
 
-  // Handle delete action
   const handleDelete = async (id) => {
     if (window.confirm("Ești sigur că vrei să ștergi acest părinte?")) {
       try {
         await axios.delete(`/parents/${id}`);
         setParents((prev) => prev.filter((parent) => parent.id !== id));
-        console.log(`Părinte cu ID ${id} a fost șters.`); // Debugging
+        console.log(`Părinte cu ID ${id} a fost șters.`);
       } catch (err) {
         console.error("Error deleting parent:", err);
         alert("A apărut o eroare la ștergerea părintelui.");
@@ -41,14 +39,12 @@ const ViewParents = () => {
     }
   };
 
-  // Filter parents based on search term
   const filteredParents = parents.filter((parent) =>
     [parent.motherName, parent.fatherName, parent.motherEmail, parent.fatherEmail]
-      .filter(Boolean) // Ensure values are not null or undefined
+      .filter(Boolean)
       .some((field) => field.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Function to toggle visibility of action buttons on mobile
   const toggleMobileMenu = (parentId) => {
     setShowMobileMenu(showMobileMenu === parentId ? null : parentId);
   };

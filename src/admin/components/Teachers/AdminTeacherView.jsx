@@ -31,7 +31,6 @@ const ViewTeachers = () => {
     teacher.subject.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to toggle visibility of action buttons on mobile
   const toggleMobileMenu = (teacherId) => {
     setShowMobileMenu(showMobileMenu === teacherId ? null : teacherId);
   };

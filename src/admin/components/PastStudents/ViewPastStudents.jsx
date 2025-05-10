@@ -9,7 +9,6 @@ const ViewPastStudents = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch past students on mount
   useEffect(() => {
     const fetchPastStudents = async () => {
       try {
@@ -25,7 +24,6 @@ const ViewPastStudents = () => {
     fetchPastStudents();
   }, []);
 
-  // Handle delete
   const handleDelete = async (id) => {
     if (window.confirm("Ești sigur că vrei să ștergi acest absolvent?")) {
       try {
@@ -39,7 +37,6 @@ const ViewPastStudents = () => {
     }
   };
 
-  // Filtering logic
   const filteredPastStudents = pastStudents.filter((student) =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.profile.toLowerCase().includes(searchTerm.toLowerCase())

@@ -4,7 +4,7 @@ import { User, BookOpen, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
 
 const CreateTeacher = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const [formData, setFormData] = React.useState({
     name: "",
@@ -135,7 +135,7 @@ const CreateTeacher = () => {
                 <select
                   value={formData.subject}
                   onChange={handleSubjectChange}
-                  required={formData.type !== "EDUCATOR"} // doar dacă nu e educator
+                  required={formData.type !== "EDUCATOR"}
                   className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                 >
                   <option value="">Selectează Materia</option>

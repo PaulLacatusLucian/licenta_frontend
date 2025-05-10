@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./routes/ProtectedRoute"; // Adjust the path as needed
+import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./homepage/Layouts/MainLayout";
 import AuthLayout from "./homepage/Layouts/AuthLayout";
 import Home from "./homepage/Home/Home";
@@ -55,6 +55,14 @@ import ParentCalendar from "./parent/components/Calendar/ParentTimetable.jsx";
 import StudentFoodOrders from "./stud/components/Food/StudentFoodOrders.jsx";
 import EditMenuItem from "./chef/components/EditFood/EditMenuItem.jsx";
 import JustifyAbsences from "./teacher/components/Absence/JustifyAbsences.jsx";
+import AdminGradeView from "./admin/components/Grade/AdminGradeView";
+import AdminGradeCreate from "./admin/components/Grade/AdminGradeCreate";
+import AdminGradeEdit from "./admin/components/Grade/AdminGradeEdit";
+import AdminAbsenceView from "./admin/components/Absence/AdminAbsenceView";
+import AdminAbsenceCreate from "./admin/components/Absence/AdminAbsenceCreate";
+import AdminAbsenceEdit from "./admin/components/Absence/AdminAbsenceEdit";
+import AdminJustifyAbsences from "./admin/components/Absence/AdminJustifyAbsence.jsx";
+import AdminCatalog from "./admin/components/Catalog/AdminCatalog";
 
 const App = () => {
   return (
@@ -118,6 +126,21 @@ const App = () => {
         <Route path="/admin/edit-chef/:id" element={<ProtectedRoute><AdminChefEdit /></ProtectedRoute>} />
         <Route path="/admin/chefs/" element={<ProtectedRoute><AdminChefView /></ProtectedRoute>} />
         <Route path="/admin/delete-chef/:id" element={<ProtectedRoute><AdminChefDelete /></ProtectedRoute>} />
+        {/* Grade routes */}
+        <Route path="admin/grades" element={<AdminGradeView />} />
+        <Route path="admin/grades/create" element={<AdminGradeCreate />} />
+        <Route path="admin/grades/edit/:id" element={<AdminGradeEdit />} />
+      
+       {/* Absence routes */}
+        <Route path="admin/absences" element={<AdminAbsenceView />} />
+        <Route path="admin/absences/create" element={<AdminAbsenceCreate />} />
+        <Route path="admin/absences/edit/:id" element={<AdminAbsenceEdit />} />
+        <Route path="admin/absences/justify" element={<AdminJustifyAbsences />} />
+      
+        {/* Catalog routes */}
+        <Route path="admin/catalog" element={<AdminCatalog />} />
+        <Route path="admin/catalog/:classId" element={<AdminCatalog />} />
+
         
         {/* Chef Routes */}
         <Route path="/chef" element={<ProtectedRoute><ChefDashboard /></ProtectedRoute>} />

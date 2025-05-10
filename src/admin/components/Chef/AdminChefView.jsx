@@ -32,7 +32,6 @@ const ViewChefs = () => {
     chef.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to toggle visibility of action buttons on mobile
   const toggleMobileMenu = (chefId) => {
     setShowMobileMenu(showMobileMenu === chefId ? null : chefId);
   };

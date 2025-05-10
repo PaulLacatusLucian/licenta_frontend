@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, GraduationCap, School, Calendar, Plus, Eye, Edit, Trash, X, UserPlus, UtensilsCrossed } from 'lucide-react';
+import { 
+  FaUsers, FaGraduationCap, FaSchool, FaCalendar, FaPlus, FaEye, 
+  FaEdit, FaTrash, FaTimes, FaUserPlus, FaUtensils,
+  FaStar, FaFileAlt, FaCheckSquare
+} from 'react-icons/fa';
 import axios from "../../../axiosConfig";
-
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -20,7 +23,7 @@ const Modal = ({ isOpen, onClose, children }) => {
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
         >
-          <X className="w-5 h-5" />
+          <FaTimes className="w-5 h-5" />
         </button>
         {children}
       </div>
@@ -36,24 +39,24 @@ const AdminDashboard = () => {
     {
       id: 'student',
       title: 'Student/Parent',
-      icon: UserPlus,
+      icon: FaUserPlus,
       color: 'bg-indigo-500',
       hoverColor: 'hover:bg-indigo-600',
       lightColor: 'bg-indigo-50',
       operations: [
         { 
           name: 'Create Student/Parent', 
-          icon: Plus,
+          icon: FaPlus,
           path: '/admin/create-student'
         },
         { 
           name: 'View Students', 
-          icon: Eye,
+          icon: FaEye,
           path: '/admin/students'
         },
         { 
           name: 'View Parents', 
-          icon: Eye,
+          icon: FaEye,
           path: '/admin/parents'
         }
       ]
@@ -61,19 +64,19 @@ const AdminDashboard = () => {
     {
       id: 'professor',
       title: 'Professor',
-      icon: GraduationCap,
+      icon: FaGraduationCap,
       color: 'bg-emerald-500',
       hoverColor: 'hover:bg-emerald-600',
       lightColor: 'bg-emerald-50',
       operations: [
         { 
           name: 'Create Professor', 
-          icon: Plus,
+          icon: FaPlus,
           path: '/admin/create-teacher'
         },
         { 
           name: 'View Professors', 
-          icon: Eye,
+          icon: FaEye,
           path: '/admin/teachers'
         }
       ]
@@ -81,59 +84,119 @@ const AdminDashboard = () => {
     {
       id: 'class',
       title: 'Class',
-      icon: School,
+      icon: FaSchool,
       color: 'bg-violet-500',
       hoverColor: 'hover:bg-violet-600',
       lightColor: 'bg-violet-50',
       operations: [
         { 
           name: 'Create Class', 
-          icon: Plus,
+          icon: FaPlus,
           path: '/admin/create-class'
         },
         { 
           name: 'View Classes', 
-          icon: Eye,
-          path: '/admin/classes'  // Placeholder route
+          icon: FaEye,
+          path: '/admin/classes'
         },
         { 
           name: 'Go to Next Year', 
-          icon: Calendar,
-          action: () => handleGoToNextYear() // Acțiune specifică pentru acest buton
+          icon: FaCalendar,
+          action: () => handleGoToNextYear()
         }
       ]
     },
     {
       id: 'timetable',
       title: 'Timetable',
-      icon: Calendar,
+      icon: FaCalendar,
       color: 'bg-rose-500',
       hoverColor: 'hover:bg-rose-600',
       lightColor: 'bg-rose-50',
       operations: [
         { 
           name: 'Create Timetable', 
-          icon: Plus,
+          icon: FaPlus,
           path: '/admin/class-schedule'
         },
         { 
           name: 'View Timetables', 
-          icon: Eye,
+          icon: FaEye,
           path: '/admin/class-schedule'
+        }
+      ]
+    },
+    {
+      id: 'grades',
+      title: 'Grades',
+      icon: FaStar,
+      color: 'bg-yellow-500',
+      hoverColor: 'hover:bg-yellow-600',
+      lightColor: 'bg-yellow-50',
+      operations: [
+        { 
+          name: 'Create Grade', 
+          icon: FaPlus,
+          path: '/admin/grades/create'
+        },
+        { 
+          name: 'Manage Grades', 
+          icon: FaEye,
+          path: '/admin/grades'
+        }
+      ]
+    },
+    {
+      id: 'absences',
+      title: 'Absences',
+      icon: FaCalendar,
+      color: 'bg-red-500',
+      hoverColor: 'hover:bg-red-600',
+      lightColor: 'bg-red-50',
+      operations: [
+        { 
+          name: 'Create Absence', 
+          icon: FaPlus,
+          path: '/admin/absences/create'
+        },
+        { 
+          name: 'Manage Absences', 
+          icon: FaEye,
+          path: '/admin/absences'
+        },
+        { 
+          name: 'Justify Absences', 
+          icon: FaCheckSquare,
+          path: '/admin/absences/justify'
+        }
+      ]
+    },
+    {
+      id: 'catalog',
+      title: 'Catalog',
+      icon: FaFileAlt,
+      color: 'bg-cyan-500',
+      hoverColor: 'hover:bg-cyan-600',
+      lightColor: 'bg-cyan-50',
+      operations: [
+        { 
+          name: 'View Catalog', 
+          icon: FaEye,
+          path: '/admin/catalog'
         }
       ]
     },
     {
       id: 'pastStudents',
       title: 'Past Students',
-      icon: GraduationCap,
+      icon: FaGraduationCap,
       color: 'bg-blue-500',
       hoverColor: 'hover:bg-blue-600',
       lightColor: 'bg-blue-50',
       operations: [
         { 
           name: 'View Past Students', 
-          icon: Eye,
+          icon: FaEye,
           path: '/admin/past-students'
         }
       ]
@@ -141,33 +204,32 @@ const AdminDashboard = () => {
     {
       id: "chef",
       title: "Bucătari",
-      icon: UtensilsCrossed,
+      icon: FaUtensils,
       color: "bg-orange-500",
       hoverColor: "hover:bg-orange-600",
       lightColor: "bg-orange-50",
       operations: [
         {
           name: "Înregistrează Bucătar",
-          icon: Plus,
+          icon: FaPlus,
           path: "/admin/create-chef",
         },
         {
           name: "Vizualizează Bucătari",
-          icon: Eye,
+          icon: FaEye,
           path: "/admin/chefs",
         }
       ],
     }
-    
   ];
 
   const handleOperationClick = (section, operation) => {
     if (operation.action) {
-      operation.action(); // Apelează funcția personalizată
+      operation.action();
     } else if (operation.path) {
-      navigate(operation.path); // Navighează către ruta specificată
+      navigate(operation.path);
     }
-    setSelectedSection(null); // Închide modalul după execuție
+    setSelectedSection(null);
   };
   
 
@@ -186,7 +248,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Panou de Administrare</h1>
-        <p className="text-gray-500 mb-8">Gestionează elevii, profesorii, clasele și orarele</p>
+        <p className="text-gray-500 mb-8">Gestionează elevii, profesorii, clasele, notele și absențele</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sections.map((section) => (

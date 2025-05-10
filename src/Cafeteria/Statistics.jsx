@@ -44,7 +44,6 @@ const CafeteriaStats = () => {
       setError(null);
       
       try {
-        // Fetch all statistics in parallel
         const [
           popularItemsRes, 
           revenueRes, 
@@ -67,7 +66,6 @@ const CafeteriaStats = () => {
         setTopStudents(topStudentsRes.data);
         setInventory(inventoryRes.data);
         
-        // Transform allergen data for the chart
         const allergenData = Object.entries(allergensRes.data).map(([name, value]) => ({
           name,
           value

@@ -94,7 +94,6 @@ const EditTeacher = () => {
         type: "success",
         text: "Profesorul a fost actualizat cu succes!",
       });
-      // Optionally navigate back after successful update
       setTimeout(() => {
         navigate("/admin/teachers");
       }, 1500);
@@ -180,7 +179,7 @@ const EditTeacher = () => {
                 <select
                   value={formData.subject}
                   onChange={handleSubjectChange}
-                  required={formData.type !== "EDUCATOR"} // required doar dacă nu e educator
+                  required={formData.type !== "EDUCATOR"}
                   className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950"
                 >
                   <option value="">Selectează Materia</option>

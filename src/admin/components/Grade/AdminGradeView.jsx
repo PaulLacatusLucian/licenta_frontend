@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FaStar, FaArrowLeft, FaPencilAlt, FaTrash, FaSearch, FaBars as Menu, FaSync } from 'react-icons/fa';
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
+import { useTranslation } from 'react-i18next';
 
 const ViewGrades = () => {
+  const { t } = useTranslation();
   const [grades, setGrades] = useState([]);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +18,14 @@ const ViewGrades = () => {
   const [classes, setClasses] = useState([]);
   
   const navigate = useNavigate();
+
+  // Funcție pentru a traduce subiectele
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
 
   const fetchGrades = async () => {
     try {
@@ -42,7 +52,7 @@ const ViewGrades = () => {
       setError(null);
     } catch (err) {
       console.error("Error fetching grades:", err);
-      setError("Failed to load grades. Please try again later.");
+      setError(t('admin.grades.list.errorLoading'));
     } finally {
       setLoading(false);
     }
@@ -67,10 +77,10 @@ const ViewGrades = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return "Data necunoscută";
+    if (!dateString) return t('admin.grades.list.unknownDate');
     
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Data invalidă";
+    if (isNaN(date.getTime())) return t('admin.grades.list.invalidDate');
     
     return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
   };
@@ -81,13 +91,13 @@ const ViewGrades = () => {
       return;
     }
     
-    if (window.confirm("Sunteți sigur că doriți să ștergeți această notă?")) {
+    if (window.confirm(t('admin.grades.list.confirmDelete'))) {
       try {
         await axios.delete(`/grades/${gradeId}`);
         setGrades(grades.filter(grade => grade.id !== gradeId));
       } catch (err) {
         console.error("Error deleting grade:", err);
-        setError("Failed to delete grade. Please try again.");
+        setError(t('admin.grades.list.deleteError'));
       }
     }
   };
@@ -105,14 +115,14 @@ const ViewGrades = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 mb-2 sm:mb-0"
           >
             <FaArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi
+            {t('common.back')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto mr-2">Administrare Note</h2>
+          <h2 className="text-lg font-semibold ml-auto mr-2">{t('admin.grades.list.title')}</h2>
           
           <button
             onClick={handleRefresh}
             className="text-gray-500 hover:text-gray-700 transition ml-2"
-            title="Reîncarcă datele"
+            title={t('admin.grades.list.refresh')}
           >
             <FaSync className="h-4 w-4" />
           </button>
@@ -130,7 +140,7 @@ const ViewGrades = () => {
               <FaSearch className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
                 type="text"
-                placeholder="Caută după descriere sau profesor..."
+                placeholder={t('admin.grades.list.searchPlaceholder')}
                 className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -143,9 +153,9 @@ const ViewGrades = () => {
                 value={subjectFilter}
                 onChange={(e) => setSubjectFilter(e.target.value)}
               >
-                <option value="all">Toate materiile</option>
+                <option value="all">{t('admin.grades.list.allSubjects')}</option>
                 {subjects.map((subject, index) => (
-                  <option key={index} value={subject}>{subject}</option>
+                  <option key={index} value={subject}>{getTranslatedSubject(subject)}</option>
                 ))}
               </select>
             </div>
@@ -156,7 +166,7 @@ const ViewGrades = () => {
                 value={classFilter}
                 onChange={(e) => setClassFilter(e.target.value)}
               >
-                <option value="all">Toți profesorii</option>
+                <option value="all">{t('admin.grades.list.allTeachers')}</option>
                 {classes.map((teacher, index) => (
                   <option key={index} value={teacher}>{teacher}</option>
                 ))}
@@ -175,22 +185,22 @@ const ViewGrades = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Profesor
+                        {t('admin.grades.fields.teacher')}
                       </th>
                       <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Materie
+                        {t('admin.grades.fields.subject')}
                       </th>
                       <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nota
+                        {t('admin.grades.fields.grade')}
                       </th>
                       <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Data
+                        {t('admin.grades.fields.date')}
                       </th>
                       <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Descriere
+                        {t('admin.grades.fields.description')}
                       </th>
                       <th className="px-4 sm:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Acțiuni
+                        {t('admin.grades.fields.actions')}
                       </th>
                     </tr>
                   </thead>
@@ -198,10 +208,10 @@ const ViewGrades = () => {
                     {filteredGrades.map((grade) => (
                       <tr key={grade.id} className="hover:bg-gray-50">
                         <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                          {grade.teacherName || "Necunoscut"}
+                          {grade.teacherName || t('admin.grades.list.unknown')}
                         </td>
                         <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                          {grade.subject || "Necunoscută"}
+                          {getTranslatedSubject(grade.subject) || t('admin.grades.list.notAvailable')}
                         </td>
                         <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
                           <span className={`inline-flex items-center justify-center w-10 h-6 rounded-full ${
@@ -227,14 +237,14 @@ const ViewGrades = () => {
                             className="text-gray-600 hover:text-gray-900 mr-4 inline-flex items-center"
                           >
                             <FaPencilAlt className="h-4 w-4 mr-1" />
-                            <span className="hidden sm:inline">Edit</span>
+                            <span className="hidden sm:inline">{t('common.edit')}</span>
                           </button>
                           <button
                             onClick={() => handleDeleteGrade(grade.id)}
                             className="text-red-600 hover:text-red-900 inline-flex items-center"
                           >
                             <FaTrash className="h-4 w-4 mr-1" />
-                            <span className="hidden sm:inline">Delete</span>
+                            <span className="hidden sm:inline">{t('common.delete')}</span>
                           </button>
                         </td>
                       </tr>
@@ -248,7 +258,7 @@ const ViewGrades = () => {
                   <div key={grade.id} className="bg-white rounded-lg border mb-3 overflow-hidden">
                     <div className="p-4 border-b">
                       <div className="flex justify-between items-center">
-                        <h3 className="font-medium text-gray-900">{grade.teacherName || "Necunoscut"}</h3>
+                        <h3 className="font-medium text-gray-900">{grade.teacherName || t('admin.grades.list.unknown')}</h3>
                         <button
                           onClick={() => toggleMobileMenu(grade.id)}
                           className="text-gray-500 hover:text-gray-900"
@@ -260,11 +270,11 @@ const ViewGrades = () => {
                     
                     <div className="p-4 space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Materie:</span>
-                        <span className="text-gray-900">{grade.subject || "Necunoscută"}</span>
+                        <span className="text-gray-500">{t('admin.grades.fields.subject')}:</span>
+                        <span className="text-gray-900">{getTranslatedSubject(grade.subject) || t('admin.grades.list.notAvailable')}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Nota:</span>
+                        <span className="text-gray-500">{t('admin.grades.fields.grade')}:</span>
                         <span className={`inline-flex items-center justify-center w-10 h-6 rounded-full ${
                           grade.grade >= 9 ? 'bg-green-100 text-green-800' :
                           grade.grade >= 7 ? 'bg-blue-100 text-blue-800' :
@@ -275,12 +285,12 @@ const ViewGrades = () => {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Data:</span>
+                        <span className="text-gray-500">{t('admin.grades.fields.date')}:</span>
                         <span className="text-gray-900">{formatDate(grade.sessionDate)}</span>
                       </div>
                       {grade.description && (
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Descriere:</span>
+                          <span className="text-gray-500">{t('admin.grades.fields.description')}:</span>
                           <span className="text-gray-900">{grade.description}</span>
                         </div>
                       )}
@@ -295,14 +305,14 @@ const ViewGrades = () => {
                           className="bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded text-sm inline-flex items-center"
                         >
                           <FaPencilAlt className="h-4 w-4 mr-1" />
-                          Edit
+                          {t('common.edit')}
                         </button>
                         <button
                           onClick={() => handleDeleteGrade(grade.id)}
                           className="bg-white text-red-600 border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded text-sm inline-flex items-center"
                         >
                           <FaTrash className="h-4 w-4 mr-1" />
-                          Delete
+                          {t('common.delete')}
                         </button>
                       </div>
                     )}
@@ -313,22 +323,22 @@ const ViewGrades = () => {
               {filteredGrades.length === 0 && (
                 <div className="text-center py-6 sm:py-8 text-gray-500">
                   {searchTerm || subjectFilter !== "all" || classFilter !== "all" 
-                    ? "Nu s-au găsit note care să îndeplinească criteriile de filtrare." 
-                    : "Nu există note disponibile."}
+                    ? t('admin.grades.list.noGradesFound')
+                    : t('admin.grades.list.noGrades')}
                 </div>
               )}
 
               <div className="mt-4 flex justify-between items-center">
                 <div className="text-sm text-gray-500">
                   {filteredGrades.length > 0 && 
-                    `Afișare ${filteredGrades.length} din ${grades.length} note`}
+                    t('admin.grades.list.showing', { count: filteredGrades.length, total: grades.length })}
                 </div>
                 <button
                   onClick={() => navigate("/admin/grades/create")}
                   className="inline-flex items-center bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
                 >
                   <FaStar className="mr-2 h-4 w-4" />
-                  Adaugă Notă
+                  {t('admin.grades.create.title')}
                 </button>
               </div>
             </>

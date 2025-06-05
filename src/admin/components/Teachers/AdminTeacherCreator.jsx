@@ -2,9 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { User, BookOpen, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const CreateTeacher = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = React.useState({
     name: "",
@@ -16,10 +18,10 @@ const CreateTeacher = () => {
   const [message, setMessage] = React.useState(null);
 
   const subjectsByCategory = {
-    Reale: ["Informatica", "Matematica", "Fizica", "Chimie", "Biologie"],
-    Umane: ["Istorie", "Geografie", "Romana", "Engleza", "Germana", "Italiana", "Latina", "Franceza"],
-    "Arte și Sport": ["Educatie Fizica", "Arte Vizuale", "Muzica"],
-    Altele: ["Religie", "Psihologie", "Economie", "Filosofie"],
+    [t('admin.teachers.subjects.categories.sciences')]: ["informatica", "matematica", "fizica", "chimie", "biologie"],
+    [t('admin.teachers.subjects.categories.humanities')]: ["istorie", "geografie", "romana", "engleza", "germana", "italiana", "latina", "franceza"],
+    [t('admin.teachers.subjects.categories.artsAndSports')]: ["educatieFizica", "arteVizuale", "muzica"],
+    [t('admin.teachers.subjects.categories.others')]: ["religie", "psihologie", "economie", "filosofie"],
   };
 
   const handleNameChange = (e) => {
@@ -37,8 +39,6 @@ const CreateTeacher = () => {
       subject: selectedType === "EDUCATOR" ? "" : prev.subject,
     }));
   };
-  
-  
 
   const handleSubjectChange = (e) => {
     setFormData((prev) => ({
@@ -54,7 +54,10 @@ const CreateTeacher = () => {
       const response = await axios.post("/auth/register-teacher", formData);
       setMessage({
         type: "success",
-        text: `Profesorul a fost creat cu succes! Username: ${response.data.username}, Parola: ${response.data.password}`,
+        text: t('admin.teachers.create.successMessage', { 
+          username: response.data.username, 
+          password: response.data.password 
+        }),
       });
   
       setFormData({
@@ -66,7 +69,7 @@ const CreateTeacher = () => {
       console.error("Error creating teacher:", error);
       setMessage({
         type: "error",
-        text: error.response?.data?.message || "Eroare la crearea profesorului. Te rog încearcă din nou.",
+        text: error.response?.data?.message || t('admin.teachers.create.errors.createTeacher'),
       });
     }
   };
@@ -75,15 +78,14 @@ const CreateTeacher = () => {
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg border shadow-sm">
         <div className="p-6 pb-4 border-b flex items-center">
-          {/* Back Button */}
           <button
             onClick={() => navigate("/admin")}
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi
+            {t('common.back')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Creează Profesor</h2>
+          <h2 className="text-lg font-semibold ml-auto">{t('admin.teachers.create.title')}</h2>
         </div>
 
         <div className="p-6">
@@ -101,12 +103,12 @@ const CreateTeacher = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Nume Profesor</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.teachers.fields.teacherName')}</label>
               <div className="relative">
                 <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Ex: Mr. Smith"
+                  placeholder={t('admin.teachers.placeholders.teacherName')}
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                   value={formData.name}
                   onChange={handleNameChange}
@@ -116,10 +118,10 @@ const CreateTeacher = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Email Profesor</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.teachers.fields.teacherEmail')}</label>
               <input
                 type="email"
-                placeholder="exemplu@domeniu.com"
+                placeholder={t('admin.teachers.placeholders.teacherEmail')}
                 className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950"
                 value={formData.email}
                 onChange={(e) =>
@@ -131,19 +133,19 @@ const CreateTeacher = () => {
 
             {formData.type !== "EDUCATOR" && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-900">Materie Predată</label>
+                <label className="text-sm font-medium text-gray-900">{t('admin.teachers.fields.subjectTaught')}</label>
                 <select
                   value={formData.subject}
                   onChange={handleSubjectChange}
                   required={formData.type !== "EDUCATOR"}
                   className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                 >
-                  <option value="">Selectează Materia</option>
+                  <option value="">{t('admin.teachers.placeholders.selectSubject')}</option>
                   {Object.entries(subjectsByCategory).map(([category, subjects]) => (
                     <optgroup key={category} label={category} className="font-medium">
                       {subjects.map((subject) => (
                         <option key={subject} value={subject}>
-                          {subject}
+                          {t(`admin.teachers.subjects.list.${subject}`)}
                         </option>
                       ))}
                     </optgroup>
@@ -152,17 +154,16 @@ const CreateTeacher = () => {
               </div>
             )}
 
-
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Tip Profesor</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.teachers.fields.teacherType')}</label>
               <select
                 value={formData.type}
                 onChange={handleTypeChange}
                 required
                 className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <option value="TEACHER">Profesor (clase 5–12)</option>
-                <option value="EDUCATOR">Educator (clase 0–4)</option>
+                <option value="TEACHER">{t('admin.teachers.types.teacher')}</option>
+                <option value="EDUCATOR">{t('admin.teachers.types.educator')}</option>
               </select>
             </div>
 
@@ -170,8 +171,8 @@ const CreateTeacher = () => {
               type="submit"
               className="inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-4 h-9 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
             >
-              <BookOpen className="mr-12 h-4 w-4" />
-              Creează Profesor
+              <BookOpen className="mr-2 h-4 w-4" />
+              {t('admin.teachers.create.submitButton')}
             </button>
           </form>
         </div>

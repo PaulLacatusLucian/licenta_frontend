@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../../../axiosConfig";
 import CreateSchedule from "./AdminScheduleCreator";
 import { ArrowLeft, RefreshCw, Book } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 const ClassScheduleCalendar = () => {
+  const { t, i18n } = useTranslation();
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedClassName, setSelectedClassName] = useState("");
@@ -19,6 +21,32 @@ const ClassScheduleCalendar = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  // Mapare pentru zile în engleză (pentru backend)
+  const dayMapping = {
+    [t('admin.schedule.days.monday')]: 'Luni',
+    [t('admin.schedule.days.tuesday')]: 'Marți',
+    [t('admin.schedule.days.wednesday')]: 'Miercuri',
+    [t('admin.schedule.days.thursday')]: 'Joi',
+    [t('admin.schedule.days.friday')]: 'Vineri'
+  };
+
+  // Mapare inversă pentru afișare
+  const reverseDayMapping = {
+    'Luni': t('admin.schedule.days.monday'),
+    'Marți': t('admin.schedule.days.tuesday'),
+    'Miercuri': t('admin.schedule.days.wednesday'),
+    'Joi': t('admin.schedule.days.thursday'),
+    'Vineri': t('admin.schedule.days.friday')
+  };
+
+  // Funcție pentru a traduce subiectele
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -36,13 +64,13 @@ const ClassScheduleCalendar = () => {
         setError(null);
       } catch (error) {
         console.error("Error fetching classes:", error);
-        setError("Nu s-au putut încărca clasele. Verificați conexiunea.");
+        setError(t('admin.schedule.errors.fetchClasses'));
         setIsLoading(false);
       }
     };
 
     fetchClasses();
-  }, []);
+  }, [t]);
 
   const fetchClassSchedule = async (classId) => {
     setIsLoading(true);
@@ -52,7 +80,7 @@ const ClassScheduleCalendar = () => {
       setError(null);
     } catch (error) {
       console.error("Error fetching class schedule:", error);
-      setError("Nu s-a putut încărca orarul pentru această clasă.");
+      setError(t('admin.schedule.errors.fetchSchedule'));
     } finally {
       setIsLoading(false);
     }
@@ -69,10 +97,13 @@ const ClassScheduleCalendar = () => {
   };
 
   const handleSlotClick = (day, time, existingSchedule = null) => {
+    // Convertim ziua înapoi la română pentru backend
+    const romanianDay = dayMapping[day] || day;
+    
     if (existingSchedule) {
       setScheduleModal({ 
         open: true, 
-        day, 
+        day: romanianDay, 
         time,
         edit: true,
         scheduleData: existingSchedule 
@@ -80,7 +111,7 @@ const ClassScheduleCalendar = () => {
     } else {
       setScheduleModal({ 
         open: true, 
-        day, 
+        day: romanianDay, 
         time,
         edit: false,
         scheduleData: null 
@@ -116,16 +147,22 @@ const ClassScheduleCalendar = () => {
     { start: "16:00", end: "16:50", display: "16:00 - 16:50" }
   ];
 
-  const weekDays = ["Luni", "Marți", "Miercuri", "Joi", "Vineri"];
+  const weekDays = [
+    t('admin.schedule.days.monday'),
+    t('admin.schedule.days.tuesday'),
+    t('admin.schedule.days.wednesday'),
+    t('admin.schedule.days.thursday'),
+    t('admin.schedule.days.friday')
+  ];
 
   const handleDeleteSchedule = async (scheduleId) => {
-    if (window.confirm("Ești sigur că vrei să ștergi această programare?")) {
+    if (window.confirm(t('admin.schedule.confirmDelete'))) {
       try {
         await axios.delete(`/schedules/${scheduleId}`);
         fetchClassSchedule(selectedClass);
       } catch (error) {
         console.error("Error deleting schedule:", error);
-        alert("A apărut o eroare la ștergerea programării.");
+        alert(t('admin.schedule.errors.deleteSchedule'));
       }
     }
   };
@@ -140,13 +177,13 @@ const ClassScheduleCalendar = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi
+            {t('common.back')}
           </button>
           
-          <h2 className="text-lg font-medium text-center flex-grow">Orar Clasă</h2>
+          <h2 className="text-lg font-medium text-center flex-grow">{t('admin.schedule.title')}</h2>
           
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-600">Clasă:</span>
+            <span className="text-sm text-gray-600">{t('admin.schedule.class')}:</span>
             <div className="relative">
               <select
                 value={selectedClass}
@@ -169,7 +206,7 @@ const ClassScheduleCalendar = () => {
             <button 
               onClick={refreshSchedule}
               className="p-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50"
-              title="Reîmprospătează datele"
+              title={t('admin.schedule.refresh')}
             >
               <RefreshCw className="h-4 w-4" />
             </button>
@@ -194,7 +231,7 @@ const ClassScheduleCalendar = () => {
                 <thead>
                   <tr>
                     <th className="p-2 border text-left text-sm font-medium bg-gray-50 text-gray-600 w-24 uppercase">
-                      ZIUA / ORA
+                      {t('admin.schedule.dayHour')}
                     </th>
                     {timeSlots.map((slot, index) => (
                       <th key={index} className="p-2 border text-center text-sm font-medium bg-gray-50 text-gray-600 w-24">
@@ -205,70 +242,76 @@ const ClassScheduleCalendar = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {weekDays.map((day) => (
-                    <tr key={day}>
-                      <td className="p-2 border text-sm font-medium text-gray-700">
-                        {day}
-                      </td>
-                      {timeSlots.map((timeSlot) => {
-                        const scheduleForSlot = classSchedule.find(
-                          (schedule) =>
-                            schedule.scheduleDay === day &&
-                            schedule.startTime === timeSlot.start
-                        );
+                  {weekDays.map((day) => {
+                    const romanianDay = dayMapping[day] || day;
+                    
+                    return (
+                      <tr key={day}>
+                        <td className="p-2 border text-sm font-medium text-gray-700">
+                          {day}
+                        </td>
+                        {timeSlots.map((timeSlot) => {
+                          const scheduleForSlot = classSchedule.find(
+                            (schedule) =>
+                              schedule.scheduleDay === romanianDay &&
+                              schedule.startTime === timeSlot.start
+                          );
 
-                        return (
-                          <td
-                            key={`${day}-${timeSlot.start}`}
-                            className="p-0 border relative group"
-                          >
-                            {scheduleForSlot ? (
-                              <div 
-                                className="p-1 h-full flex flex-col cursor-pointer hover:bg-gray-50"
-                                onClick={() => handleSlotClick(day, timeSlot.display, scheduleForSlot)}
-                              >
-                                <div className="text-xs font-medium flex items-start mb-1">
-                                  <Book className="h-3.5 w-3.5 mr-1 text-gray-700 flex-shrink-0 mt-0.5" />
-                                  <span className="line-clamp-2">{scheduleForSlot.subjects.join(", ")}</span>
-                                </div>
-                                {scheduleForSlot.teacher && (
-                                  <div className="text-xs text-gray-600 ml-4">
-                                    {scheduleForSlot.teacher.name}
+                          return (
+                            <td
+                              key={`${day}-${timeSlot.start}`}
+                              className="p-0 border relative group"
+                            >
+                              {scheduleForSlot ? (
+                                <div 
+                                  className="p-1 h-full flex flex-col cursor-pointer hover:bg-gray-50"
+                                  onClick={() => handleSlotClick(day, timeSlot.display, scheduleForSlot)}
+                                >
+                                  <div className="text-xs font-medium flex items-start mb-1">
+                                    <Book className="h-3.5 w-3.5 mr-1 text-gray-700 flex-shrink-0 mt-0.5" />
+                                    <span className="line-clamp-2">
+                                      {scheduleForSlot.subjects.map(subject => getTranslatedSubject(subject)).join(", ")}
+                                    </span>
                                   </div>
-                                )}
-                                <div className="hidden group-hover:flex absolute top-1 right-1 space-x-1">
-                                  <button
-                                    className="p-0.5 rounded bg-gray-100 text-gray-500 hover:bg-gray-200"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDeleteSchedule(scheduleForSlot.id);
-                                    }}
-                                    title="Șterge"
-                                  >
-                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                  </button>
+                                  {scheduleForSlot.teacher && (
+                                    <div className="text-xs text-gray-600 ml-4">
+                                      {scheduleForSlot.teacher.name}
+                                    </div>
+                                  )}
+                                  <div className="hidden group-hover:flex absolute top-1 right-1 space-x-1">
+                                    <button
+                                      className="p-0.5 rounded bg-gray-100 text-gray-500 hover:bg-gray-200"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteSchedule(scheduleForSlot.id);
+                                      }}
+                                      title={t('common.delete')}
+                                    >
+                                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                      </svg>
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            ) : (
-                              <div 
-                                className="flex items-center justify-center h-14 cursor-pointer text-xs text-gray-400 hover:bg-gray-50"
-                                onClick={() => handleSlotClick(day, timeSlot.display)}
-                              >
-                                <span className="w-4 h-4 flex items-center justify-center border border-gray-300 rounded-full mr-1">
-                                  <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                  </svg>
-                                </span>
-                                <span>Adaugă</span>
-                              </div>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                              ) : (
+                                <div 
+                                  className="flex items-center justify-center h-14 cursor-pointer text-xs text-gray-400 hover:bg-gray-50"
+                                  onClick={() => handleSlotClick(day, timeSlot.display)}
+                                >
+                                  <span className="w-4 h-4 flex items-center justify-center border border-gray-300 rounded-full mr-1">
+                                    <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                  </span>
+                                  <span>{t('admin.schedule.add')}</span>
+                                </div>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -278,7 +321,7 @@ const ClassScheduleCalendar = () => {
           <div className="mt-4 pt-2 border-t flex justify-end items-center text-sm text-gray-600 space-x-4">
             <div className="flex items-center">
               <Book className="h-4 w-4 text-gray-600 mr-1" />
-              <span>Programat</span>
+              <span>{t('admin.schedule.scheduled')}</span>
             </div>
             <div className="flex items-center">
               <span className="w-4 h-4 flex items-center justify-center border border-gray-300 rounded-full mr-1">
@@ -286,7 +329,7 @@ const ClassScheduleCalendar = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </span>
-              <span>Disponibil</span>
+              <span>{t('admin.schedule.available')}</span>
             </div>
           </div>
         </div>

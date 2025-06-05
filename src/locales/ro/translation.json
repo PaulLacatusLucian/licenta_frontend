@@ -250,5 +250,513 @@
       "title": "Bibliotecă",
       "description": "Colecție extinsă de literatură și resurse germane și românești."
     }
+  },
+    "class": {
+      "title": "Clase",
+      "createClass": "Creează o Clasă",
+      "editClass": "Editează Clasa",
+      "deleteClass": "Ștergere Clasă",
+      "classList": "Listă Clase",
+      "className": "Nume Clasă",
+      "classNamePlaceholder": "Ex: 10A",
+      "educationLevel": "Nivel Educațional",
+      "specialization": "Specializare",
+      "selectSpecialization": "Selectează o specializare",
+      "classTeacher": "Diriginte",
+      "educator": "Învățător",
+      "formTeacher": "Diriginte",
+      "selectEducator": "Selectează un învățător",
+      "selectTeacher": "Selectează un profesor",
+      "level": "Nivel",
+      "searchPlaceholder": "Caută după nume sau specializare...",
+      "classCreatedSuccess": "Clasa a fost creată cu succes!",
+      "classUpdatedSuccess": "Clasa a fost actualizată cu succes!",
+      "classDeletedSuccess": "Clasa a fost ștearsă cu succes.",
+      "createClassError": "Eroare la crearea clasei. Te rog încearcă din nou.",
+      "updateClassError": "Eroare la actualizarea clasei. Te rog încearcă din nou.",
+      "deleteClassError": "Eroare la ștergerea clasei. Te rog încearcă din nou.",
+      "loadClassError": "Eroare la încărcarea datelor clasei. Te rog încearcă din nou.",
+      "invalidClassName": "Numele clasei nu este valid pentru nivelul educațional selectat.",
+      "fillRequiredFields": "Te rog completează toate câmpurile necesare!",
+      "educationLevels": {
+        "PRIMARY": "Clasa 0–4 (Învățământ Primar)",
+        "MIDDLE": "Clasa 5–8 (Învățământ Gimnazial)",
+        "HIGH": "Clasa 9–12 (Învățământ Liceal)"
+      },
+      "specializations": {
+        "math-cs": "Matematica-Informatica",
+        "math-cs-bilingual": "Matematica-Informatica-Bilingv",
+        "philology": "Filologie",
+        "bio-chem": "Bio-Chimie"
+      },
+      "noClassesFound": "Nu s-au găsit clase care să corespundă căutării.",
+      "noClassesAvailable": "Nu există clase disponibile."
+    },
+    "teacher": {
+      "title": "Profesori",
+      "createTeacher": "Creează Profesor",
+      "editTeacher": "Editează Profesor",
+      "deleteTeacher": "Ștergere Profesor",
+      "teacherList": "Listă Profesori",
+      "teacherName": "Nume Profesor",
+      "teacherNamePlaceholder": "Ex: Mr. Smith",
+      "teacherEmail": "Email Profesor",
+      "emailPlaceholder": "exemplu@domeniu.com",
+      "subject": "Materie Predată",
+      "selectSubject": "Selectează Materia",
+      "teacherType": "Tip Profesor",
+      "selectType": "Selectează tipul",
+      "searchPlaceholder": "Caută după nume sau materie...",
+      "teacherCreatedSuccess": "Profesorul a fost creat cu succes! Username: {{username}}, Parola: {{password}}",
+      "teacherUpdatedSuccess": "Profesorul a fost actualizat cu succes!",
+      "teacherDeletedSuccess": "Profesor șters cu succes.",
+      "createTeacherError": "Eroare la crearea profesorului. Te rog încearcă din nou.",
+      "updateTeacherError": "Eroare la actualizarea profesorului. Te rog încearcă din nou.",
+      "deleteTeacherError": "Eroare la ștergerea profesorului.",
+      "loadTeacherError": "Eroare la încărcarea datelor profesorului. Te rog încearcă din nou.",
+      "loadTeachersError": "Nu s-au putut prelua profesorii.",
+      "cannotChangeType": "Profesorul este asignat clasei {{className}} (clasă primară) și nu poate fi transformat în TEACHER.",
+      "types": {
+        "TEACHER": "Profesor (clase 5–12)",
+        "EDUCATOR": "Educator (clase 0–4)"
+      },
+      "subjectCategories": {
+        "sciences": "Reale",
+        "humanities": "Umane",
+        "artsAndSports": "Arte și Sport",
+        "others": "Altele"
+      },
+      "subjects": {
+        "informatics": "Informatica",
+        "mathematics": "Matematica",
+        "physics": "Fizica",
+        "chemistry": "Chimie",
+        "biology": "Biologie",
+        "history": "Istorie",
+        "geography": "Geografie",
+        "romanian": "Romana",
+        "english": "Engleza",
+        "german": "Germana",
+        "italian": "Italiana",
+        "latin": "Latina",
+        "french": "Franceza",
+        "physicalEducation": "Educatie Fizica",
+        "visualArts": "Arte Vizuale",
+        "music": "Muzica",
+        "religion": "Religie",
+        "psychology": "Psihologie",
+        "economics": "Economie",
+        "philosophy": "Filosofie"
+      },
+      "noTeachersFound": "Nu s-au găsit profesori care să corespundă căutării.",
+      "noTeachersAvailable": "Nu există profesori disponibili."
+  },
+   "common": {
+    "back": "Înapoi",
+    "backToList": "Înapoi la Listă",
+    "edit": "Editează",
+    "delete": "Șterge",
+    "cancel": "Anulează",
+    "save": "Salvează",
+    "search": "Caută",
+    "actions": "Acțiuni",
+    "notSpecified": "Nespecificat",
+    "yes": "Da",
+    "no": "Nu"
+  },
+  "admin": {
+    "classes": {
+      "title": "Clase",
+      "list": {
+        "title": "Listă Clase",
+        "searchPlaceholder": "Caută după nume sau specializare...",
+        "noClasses": "Nu există clase disponibile.",
+        "noClassesFound": "Nu s-au găsit clase conform căutării.",
+        "errorLoading": "Nu s-au putut încărca clasele. Te rog încearcă mai târziu."
+      },
+      "specializations": {
+        "matematica-informatica": "Matematică-Informatică",
+        "matematica-informatica-bilingv": "Matematică-Informatică-Bilingv",
+        "filologie": "Filologie",
+        "bio-chimie": "Bio-Chimie"
+      },
+      "create": {
+        "title": "Creează o Clasă",
+        "submitButton": "Creează Clasă",
+        "success": "Clasa a fost creată cu succes!",
+        "errors": {
+          "fetchTeachers": "Nu s-au putut prelua profesorii.",
+          "invalidClassName": "Numele clasei nu este valid pentru nivelul educațional ales.",
+          "requiredFields": "Te rog completează toate câmpurile necesare!",
+          "invalidClassNameLevel": "Numele clasei nu este valid pentru nivelul educațional selectat.",
+          "createClass": "Eroare la crearea clasei. Te rog încearcă din nou."
+        }
+      },
+      "edit": {
+        "title": "Editează Clasa",
+        "submitButton": "Salvează",
+        "success": "Clasa a fost actualizată cu succes!",
+        "loading": "Se încarcă...",
+        "errors": {
+          "loadingData": "Eroare la încărcarea datelor clasei. Te rog încearcă din nou.",
+          "invalidClassName": "Nume clasă invalid pentru nivelul educațional selectat.",
+          "updateClass": "Eroare la actualizarea clasei. Te rog încearcă din nou."
+        }
+      },
+      "delete": {
+        "title": "Ștergere Clasă",
+        "confirmMessage": "Sunteți sigur că doriți să ștergeți această clasă?",
+        "confirmButton": "Da, Șterge",
+        "success": "Clasa a fost ștearsă cu succes.",
+        "error": "Eroare la ștergerea clasei. Te rog încearcă din nou."
+      },
+      "fields": {
+        "className": "Nume Clasă",
+        "educationLevel": "Nivel Educațional",
+        "classTeacher": "Diriginte",
+        "primaryTeacher": "Învățător",
+        "specialization": "Specializare",
+        "level": "Nivel"
+      },
+      "placeholders": {
+        "className": "Ex: 10A",
+        "selectTeacher": "Selectează un profesor",
+        "selectPrimaryTeacher": "Selectează un învățător",
+        "selectSpecialization": "Selectează o specializare"
+      },
+      "levels": {
+        "primary": "Clasa 0–4 (Învățământ Primar)",
+        "middle": "Clasa 5–8 (Învățământ Gimnazial)",
+        "high": "Clasa 9–12 (Învățământ Liceal)"
+      },
+      "columns": {
+        "name": "Nume Clasă",
+        "level": "Nivel",
+        "teacher": "Diriginte / Învățător",
+        "specialization": "Specializare",
+        "actions": "Acțiuni"
+      }
+    },
+      "teachers": {
+    "title": "Profesori",
+    "list": {
+      "title": "Listă Profesori",
+      "searchPlaceholder": "Caută după nume sau materie...",
+      "noTeachers": "Nu există profesori disponibili.",
+      "noTeachersFound": "Nu s-au găsit profesori conform căutării.",
+      "errorLoading": "Nu s-au putut încărca profesorii. Te rog încearcă mai târziu."
+    },
+    "create": {
+      "title": "Creează Profesor",
+      "submitButton": "Creează Profesor",
+      "successMessage": "Profesorul a fost creat cu succes! Username: {{username}}, Parola: {{password}}",
+      "errors": {
+        "createTeacher": "Eroare la crearea profesorului. Te rog încearcă din nou."
+      }
+    },
+    "edit": {
+      "title": "Editează Profesor",
+      "successMessage": "Profesorul a fost actualizat cu succes!",
+      "errors": {
+        "loadingData": "Eroare la încărcarea datelor profesorului. Te rog încearcă din nou.",
+        "updateTeacher": "Eroare la actualizarea profesorului. Te rog încearcă din nou.",
+        "teacherAssignedToPrimary": "Profesorul este asignat clasei {{className}} (clasă primară) și nu poate fi transformat în TEACHER."
+      }
+    },
+    "delete": {
+      "title": "Ștergere Profesor",
+      "confirmMessage": "Sunteți sigur că doriți să ștergeți acest profesor?",
+      "confirmButton": "Da, Șterge",
+      "successMessage": "Profesor șters cu succes.",
+      "errorMessage": "Eroare la ștergerea profesorului."
+    },
+    "fields": {
+      "teacherName": "Nume Profesor",
+      "teacherEmail": "Email Profesor",
+      "subjectTaught": "Materie Predată",
+      "teacherType": "Tip Profesor",
+      "name": "Nume",
+      "subject": "Materie",
+      "type": "Tip"
+    },
+    "placeholders": {
+      "teacherName": "Ex: Mr. Smith",
+      "teacherEmail": "exemplu@domeniu.com",
+      "selectSubject": "Selectează Materia",
+      "selectType": "Selectează tipul"
+    },
+    "types": {
+      "teacher": "Profesor (clase 5–12)",
+      "educator": "Educator (clase 0–4)",
+      "teacherLabel": "Profesor",
+      "educatorLabel": "Educator"
+    },
+    "subjects": {
+      "categories": {
+        "sciences": "Reale",
+        "humanities": "Umane",
+        "artsAndSports": "Arte și Sport",
+        "others": "Altele"
+      },
+      "list": {
+        "informatica": "Informatica",
+        "matematica": "Matematica",
+        "fizica": "Fizica",
+        "chimie": "Chimie",
+        "biologie": "Biologie",
+        "istorie": "Istorie",
+        "geografie": "Geografie",
+        "romana": "Romana",
+        "engleza": "Engleza",
+        "germana": "Germana",
+        "italiana": "Italiana",
+        "latina": "Latina",
+        "franceza": "Franceza",
+        "educatieFizica": "Educatie Fizica",
+        "arteVizuale": "Arte Vizuale",
+        "muzica": "Muzica",
+        "religie": "Religie",
+        "psihologie": "Psihologie",
+        "economie": "Economie",
+        "filosofie": "Filosofie"
+      }
+    },
+    "columns": {
+      "name": "Nume",
+      "subject": "Materie",
+      "type": "Tip"
+    }
+  },
+   "schedule": {
+      "title": "Orar Clasă",
+      "createTitle": "Creează Orarul",
+      "updateTitle": "Actualizează Orarul",
+      "class": "Clasă",
+      "dayHour": "ZIUA / ORA",
+      "add": "Adaugă",
+      "scheduled": "Programat",
+      "available": "Disponibil",
+      "refresh": "Reîmprospătează datele",
+      "processing": "Se procesează...",
+      "createButton": "Creează Orar",
+      "updateButton": "Actualizează Orar",
+      "createSuccess": "Orarul a fost creat cu succes!",
+      "updateSuccess": "Orarul a fost actualizat cu succes!",
+      "confirmDelete": "Ești sigur că vrei să ștergi această programare?",
+      "fields": {
+        "class": "Clasă",
+        "day": "Ziua",
+        "startTime": "Ora de început",
+        "endTime": "Ora de sfârșit",
+        "subject": "Materie",
+        "teacher": "Profesor"
+      },
+      "placeholders": {
+        "selectSubject": "Selectează Materia",
+        "selectTeacher": "Selectează un profesor"
+      },
+      "days": {
+        "monday": "Luni",
+        "tuesday": "Marți",
+        "wednesday": "Miercuri",
+        "thursday": "Joi",
+        "friday": "Vineri"
+      },
+      "errors": {
+        "fetchClasses": "Nu s-au putut încărca clasele. Verificați conexiunea.",
+        "fetchSchedule": "Nu s-a putut încărca orarul pentru această clasă.",
+        "fetchTeachers": "Nu s-au putut prelua datele profesorilor. Verifică conexiunea.",
+        "requiredFields": "Te rog completează toate câmpurile necesare.",
+        "createSchedule": "Eroare la crearea orarului. Te rog încearcă din nou.",
+        "updateSchedule": "Eroare la actualizarea orarului. Te rog încearcă din nou.",
+        "deleteSchedule": "A apărut o eroare la ștergerea programării."
+      }
+    },
+     "students": {
+      "title": "Studenți",
+      "list": {
+        "title": "Lista Studenți",
+        "searchPlaceholder": "Caută după nume, email sau clasă...",
+        "noStudents": "Nu există studenți disponibili.",
+        "noStudentsFound": "Nu au fost găsiți studenți care corespund căutării.",
+        "errorLoading": "Nu s-au putut prelua studenții. Încercați din nou.",
+        "confirmDelete": "Ești sigur că vrei să ștergi acest student?"
+      },
+      "edit": {
+        "title": "Editează Student",
+        "successMessage": "Studentul a fost actualizat cu succes!",
+        "errors": {
+          "loadingData": "Eroare la încărcarea datelor studentului. Te rog încearcă din nou.",
+          "loadingClasses": "Eroare la încărcarea claselor. Te rog încearcă din nou.",
+          "updateStudent": "Eroare la actualizarea studentului. Te rog încearcă din nou."
+        }
+      },
+      "fields": {
+        "studentName": "Nume Student",
+        "email": "Email",
+        "phone": "Telefon",
+        "class": "Clasă",
+        "specialization": "Specializare",
+        "name": "Nume"
+      },
+      "placeholders": {
+        "studentName": "Nume Student",
+        "email": "Email",
+        "phone": "Telefon",
+        "selectClass": "Selectează Clasa"
+      },
+      "columns": {
+        "name": "Nume",
+        "email": "Email",
+        "class": "Clasă",
+        "specialization": "Specializare",
+        "phoneNumber": "Număr de telefon",
+        "actions": "Acțiuni"
+      }
+    },
+    "parents": {
+      "title": "Părinți",
+      "list": {
+        "title": "Lista Părinți",
+        "searchPlaceholder": "Caută după nume sau email...",
+        "noParents": "Nu există părinți disponibili.",
+        "noParentsFound": "Nu au fost găsiți părinți care corespund căutării.",
+        "errorLoading": "Nu s-au putut prelua părinții. Încercați din nou.",
+        "confirmDelete": "Ești sigur că vrei să ștergi acest părinte?",
+        "deleteError": "A apărut o eroare la ștergerea părintelui.",
+        "parent": "Părinte",
+        "motherInfo": "Informații Mamă",
+        "fatherInfo": "Informații Tată"
+      },
+      "edit": {
+        "title": "Editează Părinte",
+        "successMessage": "Datele părintelui au fost actualizate cu succes!",
+        "errors": {
+          "loadingData": "Eroare la încărcarea datelor părintelui. Te rog încearcă din nou.",
+          "updateParent": "Eroare la actualizarea datelor părintelui. Te rog încearcă din nou."
+        }
+      },
+      "fields": {
+        "motherName": "Nume Mamă",
+        "motherEmail": "Email Mamă",
+        "motherPhone": "Telefon Mamă",
+        "fatherName": "Nume Tată",
+        "fatherEmail": "Email Tată",
+        "fatherPhone": "Telefon Tată",
+        "name": "Nume",
+        "email": "Email",
+        "phone": "Telefon"
+      },
+      "placeholders": {
+        "motherName": "Nume Mamă",
+        "motherEmail": "Email Mamă",
+        "motherPhone": "Telefon Mamă",
+        "fatherName": "Nume Tată",
+        "fatherEmail": "Email Tată",
+        "fatherPhone": "Telefon Tată"
+      },
+      "columns": {
+        "motherName": "Nume Mamă",
+        "motherEmail": "Email Mamă",
+        "motherPhone": "Telefon Mamă",
+        "fatherName": "Nume Tată",
+        "fatherEmail": "Email Tată",
+        "fatherPhone": "Telefon Tată",
+        "actions": "Acțiuni"
+      }
+    },
+    "userCreator": {
+      "title": "Creează utilizatori",
+      "studentSection": "Detalii Student",
+      "parentSection": "Detalii Părinte",
+      "submitButton": "Creează Utilizatori",
+      "successMessage": "Student și părinte creați cu succes!",
+      "confirmMessage": "Sigur dorești să creezi utilizatorii:\n\nStudent: {{studentUsername}}\nPărinte: {{parentUsername}}",
+      "errors": {
+        "fetchClasses": "Nu s-au putut prelua clasele.",
+        "createUsers": "Eroare la crearea utilizatorilor. Verificați datele introduse."
+      },
+      "placeholders": {
+        "studentName": "Nume Student",
+        "studentEmail": "Email Student",
+        "studentPhone": "Telefon Student",
+        "selectClass": "Selectează o clasă"
+      }
+    },
+     "grades": {
+      "title": "Gestiune Note",
+      "list": {
+        "title": "Gestiune Note",
+        "searchPlaceholder": "Caută după descriere sau profesor...",
+        "allSubjects": "Toate Materiile",
+        "allTeachers": "Toți Profesorii",
+        "noGrades": "Nu există note disponibile.",
+        "noGradesFound": "Nu s-au găsit note care să corespundă criteriilor de filtrare.",
+        "errorLoading": "Nu s-au putut încărca notele. Vă rugăm să încercați mai târziu.",
+        "confirmDelete": "Sunteți sigur că doriți să ștergeți această notă?",
+        "deleteError": "Nu s-a putut șterge nota. Vă rugăm să încercați din nou.",
+        "refresh": "Actualizează datele",
+        "showing": "Se afișează {{count}} din {{total}} note",
+        "unknownDate": "Dată necunoscută",
+        "invalidDate": "Dată invalidă",
+        "unknown": "Necunoscut",
+        "notAvailable": "N/D"
+      },
+      "create": {
+        "title": "Adaugă Notă",
+        "submitButton": "Adaugă Notă",
+        "selectClass": "Selectează Clasa",
+        "selectClassPlaceholder": "-- Selectează Clasa --",
+        "searchStudent": "Caută Elev",
+        "searchStudentPlaceholder": "Introdu numele elevului...",
+        "selectStudent": "Selectează Elevul",
+        "selectStudentPlaceholder": "-- Selectează Elevul --",
+        "selectSession": "Selectează Sesiunea",
+        "selectSessionPlaceholder": "-- Selectează Sesiunea --",
+        "gradeValue": "Valoare Notă",
+        "description": "Descriere",
+        "descriptionPlaceholder": "Ex: Evaluare sumativă, Răspuns oral...",
+        "quickGrades": "Selectare Rapidă Note",
+        "loadingStudents": "Se încarcă elevii...",
+        "loadingSessions": "Se încarcă sesiunile...",
+        "noStudentsInClass": "Nu există elevi în această clasă",
+        "noSessionsForClass": "Nu există sesiuni pentru această clasă",
+        "showingStudents": "Se afișează {{filtered}} din {{total}} elevi",
+        "classSelectionInfo": "Selectarea clasei va încărca automat elevii și sesiunile disponibile.",
+        "success": "Notă adăugată cu succes!",
+        "errors": {
+          "loadingClasses": "Eroare la încărcarea claselor. Vă rugăm să încercați din nou.",
+          "loadingStudents": "Nu s-au putut obține elevii pentru această clasă.",
+          "loadingSessions": "Elevii au fost obținuți, dar nu s-au putut încărca sesiunile.",
+          "requiredFields": "Vă rugăm să selectați un elev, o sesiune și să introduceți o notă.",
+          "createGrade": "Eroare la adăugarea notei. Vă rugăm să încercați din nou.",
+          "conflict": "Conflict: Elevul este absent sau are deja o notă.",
+          "networkError": "Eroare la adăugarea notei. Verificați conexiunea."
+        }
+      },
+      "edit": {
+        "title": "Editează Notă",
+        "gradeInfo": "Informații despre notă",
+        "infoNote": "Aceste informații nu pot fi modificate. Poți edita doar nota și descrierea.",
+        "gradeValue": "Valoare Notă",
+        "description": "Descriere (opțional)",
+        "descriptionPlaceholder": "Ex: Evaluare sumativă, Răspuns oral...",
+        "success": "Nota a fost actualizată cu succes!",
+        "errors": {
+          "loadingData": "Nu s-au putut încărca datele notei. Te rugăm să te întorci la lista de note.",
+          "generalError": "A apărut o eroare. Te rugăm să te întorci la lista de note.",
+          "gradeRequired": "Te rugăm să introduci o valoare pentru notă.",
+          "updateError": "Eroare la actualizarea notei."
+        }
+      },
+      "fields": {
+        "teacher": "Profesor",
+        "subject": "Materie",
+        "grade": "Notă",
+        "date": "Dată",
+        "description": "Descriere",
+        "actions": "Acțiuni"
+      }
+    }
   }
 }

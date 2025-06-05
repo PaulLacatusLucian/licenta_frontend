@@ -2,13 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Trash, Eye, Pencil, ArrowLeft, Menu } from "lucide-react";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const ViewStudents = () => {
+  const { t } = useTranslation();
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const navigate = useNavigate();
+
+  // Funcție pentru a traduce specializările
+  const getTranslatedSpecialization = (specialization) => {
+    if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
+      return t(`admin.classes.specializations.${specialization}`);
+    }
+    return specialization || '';
+  };
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -18,22 +28,22 @@ const ViewStudents = () => {
         setError(null);
       } catch (err) {
         console.error("Error fetching students:", err);
-        setError("Nu s-au putut prelua studenții. Încercați din nou.");
+        setError(t('admin.students.list.errorLoading'));
       }
     };
 
     fetchStudents();
-  }, []);
+  }, [t]);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Ești sigur că vrei să ștergi acest student?")) {
+    if (window.confirm(t('admin.students.list.confirmDelete'))) {
       try {
         await axios.delete(`/students/${id}`);
         setStudents((prev) => prev.filter((student) => student.id !== id));
-        console.log(`Student cu ID ${id} a fost șters.`);
+        console.log(`Student with ID ${id} was deleted.`);
       } catch (err) {
         console.error("Error deleting student:", err);
-        alert("A apărut o eroare la ștergerea studentului.");
+        alert(t('admin.students.list.deleteError'));
       }
     }
   };
@@ -57,9 +67,9 @@ const ViewStudents = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 mb-2 sm:mb-0"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi
+            {t('common.back')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Lista Studenți</h2>
+          <h2 className="text-lg font-semibold ml-auto">{t('admin.students.list.title')}</h2>
         </div>
 
         <div className="p-3 sm:p-6">
@@ -74,7 +84,7 @@ const ViewStudents = () => {
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
                 type="text"
-                placeholder="Caută după nume, email sau clasă..."
+                placeholder={t('admin.students.list.searchPlaceholder')}
                 className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -82,28 +92,28 @@ const ViewStudents = () => {
             </div>
           </div>
 
-          {/* Desktop Table - Hidden on small screens */}
+          {/* Desktop-Tabelle - auf kleinen Bildschirmen versteckt */}
           <div className="hidden md:block border rounded-lg overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Nume
+                    {t('admin.students.columns.name')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
+                    {t('admin.students.columns.email')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Clasă
+                    {t('admin.students.columns.class')}
                   </th>
                   <th className="hidden lg:table-cell px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Specializare
+                    {t('admin.students.columns.specialization')}
                   </th>
                   <th className="hidden lg:table-cell px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Număr de telefon
+                    {t('admin.students.columns.phoneNumber')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acțiuni
+                    {t('admin.students.columns.actions')}
                   </th>
                 </tr>
               </thead>
@@ -120,7 +130,7 @@ const ViewStudents = () => {
                       {student.className || "N/A"}
                     </td>
                     <td className="hidden lg:table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900">
-                      {student.classSpecialization || "N/A"}
+                      {getTranslatedSpecialization(student.classSpecialization) || "N/A"}
                     </td>
                     <td className="hidden lg:table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900">
                       {student.phoneNumber || "N/A"}
@@ -131,14 +141,14 @@ const ViewStudents = () => {
                         className="text-gray-600 hover:text-gray-900 mr-4 inline-flex items-center"
                       >
                         <Pencil className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">Editează</span>
+                        <span className="hidden sm:inline">{t('common.edit')}</span>
                       </button>
                       <button
                         onClick={() => handleDelete(student.id)}
                         className="text-red-600 hover:text-red-900 inline-flex items-center"
                       >
                         <Trash className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">Șterge</span>
+                        <span className="hidden sm:inline">{t('common.delete')}</span>
                       </button>
                     </td>
                   </tr>
@@ -147,7 +157,7 @@ const ViewStudents = () => {
             </table>
           </div>
 
-          {/* Mobile Card View - Shown only on small screens */}
+          {/* Mobile Kartenansicht - nur auf kleinen Bildschirmen angezeigt */}
           <div className="md:hidden">
             {filteredStudents.map((student) => (
               <div key={student.id} className="bg-white rounded-lg border mb-3 overflow-hidden">
@@ -164,19 +174,19 @@ const ViewStudents = () => {
                 </div>
                 <div className="p-4 space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Email:</span>
+                    <span className="text-gray-500">{t('admin.students.fields.email')}:</span>
                     <span className="text-gray-900">{student.email}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Clasă:</span>
+                    <span className="text-gray-500">{t('admin.students.fields.class')}:</span>
                     <span className="text-gray-900">{student.className || "N/A"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Specializare:</span>
-                    <span className="text-gray-900">{student.classSpecialization || "N/A"}</span>
+                    <span className="text-gray-500">{t('admin.students.fields.specialization')}:</span>
+                    <span className="text-gray-900">{getTranslatedSpecialization(student.classSpecialization) || "N/A"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Telefon:</span>
+                    <span className="text-gray-500">{t('admin.students.fields.phone')}:</span>
                     <span className="text-gray-900">{student.phoneNumber || "N/A"}</span>
                   </div>
                 </div>
@@ -187,14 +197,14 @@ const ViewStudents = () => {
                       className="bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded text-sm inline-flex items-center"
                     >
                       <Pencil className="h-4 w-4 mr-1" />
-                      Editează
+                      {t('common.edit')}
                     </button>
                     <button
                       onClick={() => handleDelete(student.id)}
                       className="bg-white text-red-600 border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded text-sm inline-flex items-center"
                     >
                       <Trash className="h-4 w-4 mr-1" />
-                      Șterge
+                      {t('common.delete')}
                     </button>
                   </div>
                 )}
@@ -205,8 +215,8 @@ const ViewStudents = () => {
           {filteredStudents.length === 0 && (
             <div className="text-center py-6 sm:py-8 text-gray-500">
               {searchTerm
-                ? "Nu au fost găsiți studenți care corespund căutării."
-                : "Nu există studenți disponibili."}
+                ? t('admin.students.list.noStudentsFound')
+                : t('admin.students.list.noStudents')}
             </div>
           )}
         </div>

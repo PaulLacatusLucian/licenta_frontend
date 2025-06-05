@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { User, BookOpen, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const EditTeacher = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -17,10 +19,10 @@ const EditTeacher = () => {
   const [loading, setLoading] = useState(true);
 
   const subjectsByCategory = {
-    Reale: ["Informatica", "Matematica", "Fizica", "Chimie", "Biologie"],
-    Umane: ["Istorie", "Geografie", "Romana", "Engleza", "Germana", "Italiana", "Latina", "Franceza"],
-    "Arte și Sport": ["Educatie Fizica", "Arte Vizuale", "Muzica"],
-    Altele: ["Religie", "Psihologie", "Economie", "Filosofie"],
+    [t('admin.teachers.subjects.categories.sciences')]: ["informatica", "matematica", "fizica", "chimie", "biologie"],
+    [t('admin.teachers.subjects.categories.humanities')]: ["istorie", "geografie", "romana", "engleza", "germana", "italiana", "latina", "franceza"],
+    [t('admin.teachers.subjects.categories.artsAndSports')]: ["educatieFizica", "arteVizuale", "muzica"],
+    [t('admin.teachers.subjects.categories.others')]: ["religie", "psihologie", "economie", "filosofie"],
   };
 
   useEffect(() => {
@@ -37,14 +39,14 @@ const EditTeacher = () => {
         console.error("Error fetching teacher:", error);
         setMessage({
           type: "error",
-          text: "Eroare la încărcarea datelor profesorului. Te rog încearcă din nou.",
+          text: t('admin.teachers.edit.errors.loadingData'),
         });
         setLoading(false);
       }
     };
 
     fetchTeacher();
-  }, [id]);
+  }, [id, t]);
 
   useEffect(() => {
     if (formData.type === "EDUCATOR") {
@@ -53,13 +55,12 @@ const EditTeacher = () => {
         if (assignedClass) {
           setMessage({
             type: "error",
-            text: `Profesorul este asignat clasei ${assignedClass.name} (clasă primară) și nu poate fi transformat în TEACHER.`,
+            text: t('admin.teachers.edit.errors.teacherAssignedToPrimary', { className: assignedClass.name }),
           });
         }
       });
     }
-  }, [id, formData.type]);
-  
+  }, [id, formData.type, t]);
 
   const handleNameChange = (e) => {
     setFormData((prev) => ({
@@ -76,7 +77,6 @@ const EditTeacher = () => {
       subject: selectedType === "EDUCATOR" ? "" : prev.subject,
     }));
   };
-  
 
   const handleSubjectChange = (e) => {
     setFormData((prev) => ({
@@ -92,7 +92,7 @@ const EditTeacher = () => {
       await axios.put(`/teachers/${id}`, formData);
       setMessage({
         type: "success",
-        text: "Profesorul a fost actualizat cu succes!",
+        text: t('admin.teachers.edit.successMessage'),
       });
       setTimeout(() => {
         navigate("/admin/teachers");
@@ -101,7 +101,7 @@ const EditTeacher = () => {
       console.error("Error updating teacher:", error);
       setMessage({
         type: "error",
-        text: "Eroare la actualizarea profesorului. Te rog încearcă din nou.",
+        text: t('admin.teachers.edit.errors.updateTeacher'),
       });
     }
   };
@@ -109,7 +109,7 @@ const EditTeacher = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-gray-500">Se încarcă...</div>
+        <div className="text-gray-500">{t('common.loading')}</div>
       </div>
     );
   }
@@ -123,9 +123,9 @@ const EditTeacher = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi la Listă
+            {t('common.backToList')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Editează Profesor</h2>
+          <h2 className="text-lg font-semibold ml-auto">{t('admin.teachers.edit.title')}</h2>
         </div>
 
         <div className="p-6">
@@ -143,12 +143,12 @@ const EditTeacher = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Nume Profesor</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.teachers.fields.teacherName')}</label>
               <div className="relative">
                 <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Ex: Mr. Smith"
+                  placeholder={t('admin.teachers.placeholders.teacherName')}
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                   value={formData.name}
                   onChange={handleNameChange}
@@ -158,7 +158,7 @@ const EditTeacher = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Tip Profesor</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.teachers.fields.teacherType')}</label>
               <select
                 name="type"
                 value={formData.type}
@@ -166,28 +166,27 @@ const EditTeacher = () => {
                 required
                 className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
               >
-                <option value="">Selectează tipul</option>
-                <option value="EDUCATOR">Învățător</option>
-                <option value="TEACHER">Profesor</option>
+                <option value="">{t('admin.teachers.placeholders.selectType')}</option>
+                <option value="EDUCATOR">{t('admin.teachers.types.educatorLabel')}</option>
+                <option value="TEACHER">{t('admin.teachers.types.teacherLabel')}</option>
               </select>
             </div>
 
-
             {formData.type !== "EDUCATOR" && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-900">Materie Predată</label>
+                <label className="text-sm font-medium text-gray-900">{t('admin.teachers.fields.subjectTaught')}</label>
                 <select
                   value={formData.subject}
                   onChange={handleSubjectChange}
                   required={formData.type !== "EDUCATOR"}
                   className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950"
                 >
-                  <option value="">Selectează Materia</option>
+                  <option value="">{t('admin.teachers.placeholders.selectSubject')}</option>
                   {Object.entries(subjectsByCategory).map(([category, subjects]) => (
                     <optgroup key={category} label={category} className="font-medium">
                       {subjects.map((subject) => (
                         <option key={subject} value={subject}>
-                          {subject}
+                          {t(`admin.teachers.subjects.list.${subject}`)}
                         </option>
                       ))}
                     </optgroup>
@@ -202,14 +201,14 @@ const EditTeacher = () => {
                 onClick={() => navigate("/admin/teachers")}
                 className="inline-flex w-1/2 items-center justify-center rounded-md border border-gray-200 px-4 h-9 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
               >
-                Anulează
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 className="inline-flex w-1/2 items-center justify-center rounded-md bg-gray-900 px-4 h-9 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
-                Salvează
+                {t('common.save')}
               </button>
             </div>
           </form>

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { User, Mail, Phone, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const EditParent = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     motherName: "",
@@ -36,14 +38,14 @@ const EditParent = () => {
         console.error("Error fetching parent:", error);
         setMessage({
           type: "error",
-          text: "Eroare la încărcarea datelor părintelui. Te rog încearcă din nou.",
+          text: t('admin.parents.edit.errors.loadingData'),
         });
         setLoading(false);
       }
     };
 
     fetchParent();
-  }, [id]);
+  }, [id, t]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,7 +62,7 @@ const EditParent = () => {
       await axios.put(`/parents/${id}`, formData);
       setMessage({
         type: "success",
-        text: "Datele părintelui au fost actualizate cu succes!",
+        text: t('admin.parents.edit.successMessage'),
       });
       setTimeout(() => {
         navigate("/admin/parents");
@@ -69,7 +71,7 @@ const EditParent = () => {
       console.error("Error updating parent:", error);
       setMessage({
         type: "error",
-        text: "Eroare la actualizarea datelor părintelui. Te rog încearcă din nou.",
+        text: t('admin.parents.edit.errors.updateParent'),
       });
     }
   };
@@ -77,7 +79,7 @@ const EditParent = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-gray-500">Se încarcă...</div>
+        <div className="text-gray-500">{t('common.loading')}</div>
       </div>
     );
   }
@@ -91,9 +93,9 @@ const EditParent = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi la Listă
+            {t('common.backToList')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Editează Părinte</h2>
+          <h2 className="text-lg font-semibold ml-auto">{t('admin.parents.edit.title')}</h2>
         </div>
 
         <div className="p-6">
@@ -111,12 +113,12 @@ const EditParent = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Nume Mamă</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.parents.fields.motherName')}</label>
               <div className="relative">
                 <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Nume Mamă"
+                  placeholder={t('admin.parents.placeholders.motherName')}
                   name="motherName"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                   value={formData.motherName}
@@ -127,12 +129,12 @@ const EditParent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Email Mamă</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.parents.fields.motherEmail')}</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="email"
-                  placeholder="Email Mamă"
+                  placeholder={t('admin.parents.placeholders.motherEmail')}
                   name="motherEmail"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                   value={formData.motherEmail}
@@ -143,12 +145,12 @@ const EditParent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Telefon Mamă</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.parents.fields.motherPhone')}</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Telefon Mamă"
+                  placeholder={t('admin.parents.placeholders.motherPhone')}
                   name="motherPhoneNumber"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                   value={formData.motherPhoneNumber}
@@ -158,12 +160,12 @@ const EditParent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Nume Tată</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.parents.fields.fatherName')}</label>
               <div className="relative">
                 <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Nume Tată"
+                  placeholder={t('admin.parents.placeholders.fatherName')}
                   name="fatherName"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                   value={formData.fatherName}
@@ -173,12 +175,12 @@ const EditParent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Email Tată</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.parents.fields.fatherEmail')}</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="email"
-                  placeholder="Email Tată"
+                  placeholder={t('admin.parents.placeholders.fatherEmail')}
                   name="fatherEmail"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                   value={formData.fatherEmail}
@@ -188,12 +190,12 @@ const EditParent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Telefon Tată</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.parents.fields.fatherPhone')}</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Telefon Tată"
+                  placeholder={t('admin.parents.placeholders.fatherPhone')}
                   name="fatherPhoneNumber"
                   className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                   value={formData.fatherPhoneNumber}
@@ -208,13 +210,13 @@ const EditParent = () => {
                 onClick={() => navigate("/admin/parents")}
                 className="inline-flex w-1/2 items-center justify-center rounded-md border border-gray-200 px-4 h-9 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
               >
-                Anulează
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 className="inline-flex w-1/2 items-center justify-center rounded-md bg-gray-900 px-4 h-9 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
               >
-                Salvează
+                {t('common.save')}
               </button>
             </div>
           </form>

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaStar, FaArrowLeft, FaSearch, FaFilter, FaSyncAlt, FaInfoCircle } from "react-icons/fa";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const CreateGrade = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     studentId: "",
@@ -28,6 +30,22 @@ const CreateGrade = () => {
   const [sessionLoading, setSessionLoading] = useState(false);
   const [studentsLoading, setStudentsLoading] = useState(false);
 
+  // Funcție pentru a traduce specializările
+  const getTranslatedSpecialization = (specialization) => {
+    if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
+      return t(`admin.classes.specializations.${specialization}`);
+    }
+    return specialization || '';
+  };
+
+  // Funcție pentru a traduce subiectele
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -38,17 +56,17 @@ const CreateGrade = () => {
         setClasses(classesResponse.data);
         setLoading(false);
       } catch (error) {
-        console.error("Eroare la încărcarea datelor inițiale:", error);
+        console.error("Error loading initial data:", error);
         setMessage({
           type: "error",
-          text: "Eroare la încărcarea claselor. Te rog încearcă din nou."
+          text: t('admin.grades.create.errors.loadingClasses')
         });
         setLoading(false);
       }
     };
 
     fetchInitialData();
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const fetchStudentsForClass = async () => {
@@ -74,10 +92,10 @@ const CreateGrade = () => {
         
         fetchSessionsForClass(selectedClass);
       } catch (error) {
-        console.error("Eroare la obținerea elevilor pentru clasă:", error);
+        console.error("Error getting students for class:", error);
         setMessage({
           type: "error",
-          text: "Nu s-au putut obține elevii pentru această clasă."
+          text: t('admin.grades.create.errors.loadingStudents')
         });
         setFilteredStudents([]);
       } finally {
@@ -115,10 +133,10 @@ const CreateGrade = () => {
         setSessions(response.data);
         setFilteredSessions(relevantSessions);
       } catch (error) {
-        console.error("Eroare la obținerea sesiunilor pentru clasă:", error);
+        console.error("Error getting sessions for class:", error);
         setMessage({
           type: "warning",
-          text: "S-au obținut elevii, dar nu s-au putut încărca sesiunile."
+          text: t('admin.grades.create.errors.loadingSessions')
         });
         setFilteredSessions([]);
       } finally {
@@ -129,7 +147,7 @@ const CreateGrade = () => {
     if (selectedClass) {
       fetchStudentsForClass();
     }
-  }, [selectedClass]);
+  }, [selectedClass, t]);
 
   useEffect(() => {
     if (!studentSearch.trim()) {
@@ -150,7 +168,7 @@ const CreateGrade = () => {
     if (!formData.studentId || !formData.sessionId || !formData.gradeValue) {
       setMessage({
         type: "error",
-        text: "Selectează un elev, o sesiune și introdu o notă."
+        text: t('admin.grades.create.errors.requiredFields')
       });
       return;
     }
@@ -166,7 +184,7 @@ const CreateGrade = () => {
       
       setMessage({
         type: "success",
-        text: "Nota a fost adăugată cu succes!"
+        text: t('admin.grades.create.success')
       });
       
       setFormData({
@@ -186,18 +204,18 @@ const CreateGrade = () => {
         if (error.response.status === 409) {
           setMessage({
             type: "error",
-            text: error.response.data || "Conflict: Elevul este absent sau are deja notă."
+            text: error.response.data || t('admin.grades.create.errors.conflict')
           });
         } else {
           setMessage({
             type: "error",
-            text: error.response.data || "Eroare la adăugarea notei. Te rog încearcă din nou."
+            text: error.response.data || t('admin.grades.create.errors.createGrade')
           });
         }
       } else {
         setMessage({
           type: "error",
-          text: "Eroare la adăugarea notei. Verifică conexiunea."
+          text: t('admin.grades.create.errors.networkError')
         });
       }
     }
@@ -206,7 +224,7 @@ const CreateGrade = () => {
   const formatSessionLabel = (session) => {
     if (!session) return "";
     
-    let label = session.subject || "Necunoscut";
+    let label = getTranslatedSubject(session.subject) || t('admin.grades.list.unknown');
     
     if (session.startTime) {
       const startTime = new Date(session.startTime);
@@ -232,7 +250,7 @@ const CreateGrade = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-gray-500">Se încarcă...</div>
+        <div className="text-gray-500">{t('common.loading')}</div>
       </div>
     );
   }
@@ -246,9 +264,9 @@ const CreateGrade = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <FaArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi la Listă
+            {t('common.backToList')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Adaugă Notă</h2>
+          <h2 className="text-lg font-semibold ml-auto">{t('admin.grades.create.title')}</h2>
         </div>
 
         <div className="p-6">
@@ -270,7 +288,7 @@ const CreateGrade = () => {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-900 flex items-center">
                 <FaFilter className="mr-2 h-4 w-4 text-gray-500" />
-                Selectează Clasa
+                {t('admin.grades.create.selectClass')}
                 <span className="text-red-500 ml-1">*</span>
               </label>
               
@@ -280,18 +298,18 @@ const CreateGrade = () => {
                 className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
                 required
               >
-                <option value="">-- Selectează o clasă --</option>
+                <option value="">{t('admin.grades.create.selectClassPlaceholder')}</option>
                 {classes.map((classItem) => (
                   <option key={classItem.id} value={classItem.id.toString()}>
                     {classItem.name} 
-                    {classItem.specialization ? ` (${classItem.specialization})` : ''}
+                    {classItem.specialization ? ` (${getTranslatedSpecialization(classItem.specialization)})` : ''}
                   </option>
                 ))}
               </select>
               
               <div className="text-xs text-gray-500 flex items-start">
                 <FaInfoCircle className="h-3 w-3 mt-0.5 mr-1 flex-shrink-0" />
-                <span>Selectarea clasei va încărca automat elevii și sesiunile disponibile.</span>
+                <span>{t('admin.grades.create.classSelectionInfo')}</span>
               </div>
             </div>
 
@@ -300,33 +318,33 @@ const CreateGrade = () => {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-900 flex items-center">
                     <FaSearch className="mr-2 h-4 w-4 text-gray-500" />
-                    Caută Elev
+                    {t('admin.grades.create.searchStudent')}
                   </label>
                   
                   <input
                     type="text"
                     value={studentSearch}
                     onChange={(e) => setStudentSearch(e.target.value)}
-                    placeholder="Introdu numele elevului..."
+                    placeholder={t('admin.grades.create.searchStudentPlaceholder')}
                     className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
                   />
                   
                   <div className="text-xs text-gray-500">
-                    Afișare {filteredStudents.length} din {students.length} elevi
+                    {t('admin.grades.create.showingStudents', { filtered: filteredStudents.length, total: students.length })}
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-900 flex items-center">
                     <FaStar className="mr-2 h-4 w-4 text-gray-500" />
-                    Selectează Elevul
+                    {t('admin.grades.create.selectStudent')}
                     <span className="text-red-500 ml-1">*</span>
                   </label>
                   
                   {studentsLoading ? (
                     <div className="flex items-center justify-center py-2">
                       <FaSyncAlt className="animate-spin h-4 w-4 mr-2 text-gray-500" />
-                      <span className="text-sm text-gray-500">Se încarcă elevii...</span>
+                      <span className="text-sm text-gray-500">{t('admin.grades.create.loadingStudents')}</span>
                     </div>
                   ) : (
                     <select
@@ -336,9 +354,9 @@ const CreateGrade = () => {
                       required
                       className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
                     >
-                      <option value="">-- Selectează un elev --</option>
+                      <option value="">{t('admin.grades.create.selectStudentPlaceholder')}</option>
                       {filteredStudents.length === 0 ? (
-                        <option disabled value="">Nu există elevi în această clasă</option>
+                        <option disabled value="">{t('admin.grades.create.noStudentsInClass')}</option>
                       ) : (
                         filteredStudents.map((student) => (
                           <option key={student.id} value={student.id}>
@@ -353,14 +371,14 @@ const CreateGrade = () => {
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-900 flex items-center">
                     <FaFilter className="mr-2 h-4 w-4 text-gray-500" />
-                    Selectează Sesiunea
+                    {t('admin.grades.create.selectSession')}
                     <span className="text-red-500 ml-1">*</span>
                   </label>
                   
                   {sessionLoading ? (
                     <div className="flex items-center justify-center py-2">
                       <FaSyncAlt className="animate-spin h-4 w-4 mr-2 text-gray-500" />
-                      <span className="text-sm text-gray-500">Se încarcă sesiunile...</span>
+                      <span className="text-sm text-gray-500">{t('admin.grades.create.loadingSessions')}</span>
                     </div>
                   ) : (
                     <select
@@ -370,9 +388,9 @@ const CreateGrade = () => {
                       required
                       className="w-full h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
                     >
-                      <option value="">-- Selectează o sesiune --</option>
+                      <option value="">{t('admin.grades.create.selectSessionPlaceholder')}</option>
                       {filteredSessions.length === 0 ? (
-                        <option disabled value="">Nu există sesiuni pentru această clasă</option>
+                        <option disabled value="">{t('admin.grades.create.noSessionsForClass')}</option>
                       ) : (
                         filteredSessions.map((session) => (
                           <option key={session.id} value={session.id}>
@@ -390,7 +408,7 @@ const CreateGrade = () => {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-900 flex items-center">
                   <FaStar className="mr-2 h-4 w-4 text-gray-500" />
-                  Valoare Notă
+                  {t('admin.grades.create.gradeValue')}
                   <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -427,7 +445,7 @@ const CreateGrade = () => {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-900 flex items-center">
                   <FaInfoCircle className="mr-2 h-4 w-4 text-gray-500" />
-                  Descriere (opțional)
+                  {t('admin.grades.create.description')}
                 </label>
                 <textarea
                   name="description"
@@ -435,7 +453,7 @@ const CreateGrade = () => {
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   className="w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
                   rows="3"
-                  placeholder="Ex: Evaluare sumativă, Răspuns oral..."
+                  placeholder={t('admin.grades.create.descriptionPlaceholder')}
                 />
               </div>
             )}
@@ -446,7 +464,7 @@ const CreateGrade = () => {
                 onClick={() => navigate("/admin/grades")}
                 className="inline-flex w-1/2 items-center justify-center rounded-md border border-gray-200 px-4 h-9 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
               >
-                Anulează
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
@@ -454,7 +472,7 @@ const CreateGrade = () => {
                 className="inline-flex w-1/2 items-center justify-center rounded-md bg-gray-900 px-4 h-9 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
               >
                 <FaStar className="mr-2 h-4 w-4" />
-                Adaugă Notă
+                {t('admin.grades.create.submitButton')}
               </button>
             </div>
           </form>

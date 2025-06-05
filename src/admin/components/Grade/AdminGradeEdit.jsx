@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { FaStar, FaArrowLeft, FaInfoCircle } from "react-icons/fa";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const EditGrade = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
+  const { t } = useTranslation();
   
   const gradeFromList = location.state?.gradeData;
 
@@ -24,6 +26,14 @@ const EditGrade = () => {
     sessionDate: ""
   });
 
+  // Funktion zur Übersetzung von Fächern
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
   useEffect(() => {
     const fetchGradeData = async () => {
       try {
@@ -31,8 +41,8 @@ const EditGrade = () => {
         
         if (gradeFromList) {
           setDisplayInfo({
-            teacherName: gradeFromList.teacherName || "Necunoscut",
-            subject: gradeFromList.subject || "Necunoscută",
+            teacherName: gradeFromList.teacherName || t('admin.grades.list.unknown'),
+            subject: gradeFromList.subject || t('admin.grades.list.unknown'),
             sessionDate: gradeFromList.sessionDate || ""
           });
           
@@ -43,23 +53,23 @@ const EditGrade = () => {
         } else {
           setMessage({
             type: "warning",
-            text: "Nu s-au putut încărca datele notei. Te rugăm să te întorci la lista de note."
+            text: t('admin.grades.edit.errors.loadingData')
           });
         }
         
         setLoading(false);
       } catch (error) {
-        console.error("Eroare la încărcarea datelor:", error);
+        console.error("Error loading data:", error);
         setMessage({
           type: "error",
-          text: "A apărut o eroare. Te rugăm să te întorci la lista de note."
+          text: t('admin.grades.edit.errors.generalError')
         });
         setLoading(false);
       }
     };
 
     fetchGradeData();
-  }, [id, gradeFromList]);
+  }, [id, gradeFromList, t]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,7 +77,7 @@ const EditGrade = () => {
     if (!formData.grade) {
       setMessage({
         type: "error",
-        text: "Te rugăm să introduci o valoare pentru notă."
+        text: t('admin.grades.edit.errors.gradeRequired')
       });
       return;
     }
@@ -80,16 +90,16 @@ const EditGrade = () => {
       
       setMessage({
         type: "success",
-        text: "Nota a fost actualizată cu succes!"
+        text: t('admin.grades.edit.success')
       });
       
       setTimeout(() => {
         navigate("/admin/grades");
       }, 1500);
     } catch (error) {
-      console.error("Eroare la actualizarea notei:", error);
+      console.error("Error updating grade:", error);
       
-      let errorMessage = "Eroare la actualizarea notei.";
+      let errorMessage = t('admin.grades.edit.errors.updateError');
       if (error.response) {
         errorMessage += ` Server: ${error.response.status}`;
         if (error.response.data) {
@@ -116,7 +126,7 @@ const EditGrade = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-gray-500">Se încarcă...</div>
+        <div className="text-gray-500">{t('common.loading')}</div>
       </div>
     );
   }
@@ -130,9 +140,9 @@ const EditGrade = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <FaArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi la Listă
+            {t('common.backToList')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto mr-2">Editează Notă</h2>
+          <h2 className="text-lg font-semibold ml-auto mr-2">{t('admin.grades.edit.title')}</h2>
         </div>
 
         <div className="p-6">
@@ -155,27 +165,27 @@ const EditGrade = () => {
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
                 <h3 className="text-sm font-medium text-gray-700 flex items-center">
                   <FaInfoCircle className="mr-2 h-4 w-4 text-gray-500" />
-                  Informații despre notă
+                  {t('admin.grades.edit.gradeInfo')}
                 </h3>
                 
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   {displayInfo.teacherName && (
                     <div>
-                      <span className="text-gray-500">Profesor:</span>
+                      <span className="text-gray-500">{t('admin.grades.fields.teacher')}:</span>
                       <p className="font-medium">{displayInfo.teacherName}</p>
                     </div>
                   )}
                   
                   {displayInfo.subject && (
                     <div>
-                      <span className="text-gray-500">Materie:</span>
-                      <p className="font-medium">{displayInfo.subject}</p>
+                      <span className="text-gray-500">{t('admin.grades.fields.subject')}:</span>
+                      <p className="font-medium">{getTranslatedSubject(displayInfo.subject)}</p>
                     </div>
                   )}
                   
                   {displayInfo.sessionDate && (
                     <div>
-                      <span className="text-gray-500">Data:</span>
+                      <span className="text-gray-500">{t('admin.grades.fields.date')}:</span>
                       <p className="font-medium">{formatDate(displayInfo.sessionDate)}</p>
                     </div>
                   )}
@@ -183,13 +193,13 @@ const EditGrade = () => {
                 
                 <div className="text-xs text-gray-500 flex items-start">
                   <FaInfoCircle className="h-3 w-3 mt-0.5 mr-1 flex-shrink-0" />
-                  <span>Aceste informații nu pot fi modificate. Poți edita doar nota și descrierea.</span>
+                  <span>{t('admin.grades.edit.infoNote')}</span>
                 </div>
               </div>
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Valoare Notă</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.grades.edit.gradeValue')}</label>
               <input
                 type="number"
                 min="1"
@@ -220,14 +230,14 @@ const EditGrade = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Descriere (opțional)</label>
+              <label className="text-sm font-medium text-gray-900">{t('admin.grades.edit.description')}</label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 className="w-full rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-950"
                 rows="3"
-                placeholder="Ex: Evaluare sumativă, Răspuns oral..."
+                placeholder={t('admin.grades.edit.descriptionPlaceholder')}
               />
             </div>
 
@@ -237,14 +247,14 @@ const EditGrade = () => {
                 onClick={() => navigate("/admin/grades")}
                 className="inline-flex w-1/2 items-center justify-center rounded-md border border-gray-200 px-4 h-9 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
               >
-                Anulează
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 className="inline-flex w-1/2 items-center justify-center rounded-md bg-gray-900 px-4 h-9 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
               >
                 <FaStar className="mr-2 h-4 w-4" />
-                Salvează
+                {t('common.save')}
               </button>
             </div>
           </form>

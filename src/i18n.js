@@ -38,4 +38,8 @@ i18n
     }
   });
 
+  console.log('i18n resources:', i18n.options.resources);
+
+
+
 export default i18n;

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Trash, Pencil, ArrowLeft, Menu } from "lucide-react";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const ViewParents = () => {
+  const { t } = useTranslation();
   const [parents, setParents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
@@ -19,22 +21,22 @@ const ViewParents = () => {
         setError(null);
       } catch (err) {
         console.error("Error fetching parents:", err);
-        setError("Nu s-au putut prelua părinții. Încercați din nou.");
+        setError(t('admin.parents.list.errorLoading'));
       }
     };
 
     fetchParents();
-  }, []);
+  }, [t]);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Ești sigur că vrei să ștergi acest părinte?")) {
+    if (window.confirm(t('admin.parents.list.confirmDelete'))) {
       try {
         await axios.delete(`/parents/${id}`);
         setParents((prev) => prev.filter((parent) => parent.id !== id));
-        console.log(`Părinte cu ID ${id} a fost șters.`);
+        console.log(`Parent with ID ${id} was deleted.`);
       } catch (err) {
         console.error("Error deleting parent:", err);
-        alert("A apărut o eroare la ștergerea părintelui.");
+        alert(t('admin.parents.list.deleteError'));
       }
     }
   };
@@ -58,9 +60,9 @@ const ViewParents = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 mb-2 sm:mb-0"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi
+            {t('common.back')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Lista Părinți</h2>
+          <h2 className="text-lg font-semibold ml-auto">{t('admin.parents.list.title')}</h2>
         </div>
 
         <div className="p-3 sm:p-6">
@@ -75,7 +77,7 @@ const ViewParents = () => {
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
                 type="text"
-                placeholder="Caută după nume sau email..."
+                placeholder={t('admin.parents.list.searchPlaceholder')}
                 className="w-full pl-9 h-9 rounded-md border border-gray-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -83,31 +85,31 @@ const ViewParents = () => {
             </div>
           </div>
 
-          {/* Desktop Table - Hidden on small screens */}
+          {/* Desktop-Tabelle - auf kleinen Bildschirmen versteckt */}
           <div className="hidden lg:block border rounded-lg overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Nume Mamă
+                    {t('admin.parents.columns.motherName')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email Mamă
+                    {t('admin.parents.columns.motherEmail')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Telefon Mamă
+                    {t('admin.parents.columns.motherPhone')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Nume Tată
+                    {t('admin.parents.columns.fatherName')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email Tată
+                    {t('admin.parents.columns.fatherEmail')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Telefon Tată
+                    {t('admin.parents.columns.fatherPhone')}
                   </th>
                   <th className="px-4 sm:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acțiuni
+                    {t('admin.parents.columns.actions')}
                   </th>
                 </tr>
               </thead>
@@ -138,14 +140,14 @@ const ViewParents = () => {
                         className="text-gray-600 hover:text-gray-900 mr-4 inline-flex items-center"
                       >
                         <Pencil className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">Editează</span>
+                        <span className="hidden sm:inline">{t('common.edit')}</span>
                       </button>
                       <button
                         onClick={() => handleDelete(parent.id)}
                         className="text-red-600 hover:text-red-900 inline-flex items-center"
                       >
                         <Trash className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">Șterge</span>
+                        <span className="hidden sm:inline">{t('common.delete')}</span>
                       </button>
                     </td>
                   </tr>
@@ -154,7 +156,7 @@ const ViewParents = () => {
             </table>
           </div>
 
-          {/* Mobile Card View - Shown only on smaller screens */}
+          {/* Mobile Kartenansicht - nur auf kleineren Bildschirmen angezeigt */}
           <div className="lg:hidden">
             {filteredParents.map((parent) => (
               <div key={parent.id} className="bg-white rounded-lg border mb-3 overflow-hidden">
@@ -163,7 +165,7 @@ const ViewParents = () => {
                     <h3 className="font-medium text-gray-900">
                       {(parent.motherName && parent.fatherName) 
                         ? `${parent.motherName} & ${parent.fatherName}`
-                        : parent.motherName || parent.fatherName || "Părinte"}
+                        : parent.motherName || parent.fatherName || t('admin.parents.list.parent')}
                     </h3>
                     <button
                       onClick={() => toggleMobileMenu(parent.id)}
@@ -175,26 +177,26 @@ const ViewParents = () => {
                 </div>
                 
                 <div className="p-4">
-                  {/* Mother Information */}
+                  {/* Informationen der Mutter */}
                   {(parent.motherName || parent.motherEmail || parent.motherPhoneNumber) && (
                     <div className="mb-4">
-                      <h4 className="font-medium text-gray-900 mb-2">Informații Mamă</h4>
+                      <h4 className="font-medium text-gray-900 mb-2">{t('admin.parents.list.motherInfo')}</h4>
                       <div className="space-y-2 text-sm">
                         {parent.motherName && (
                           <div className="flex justify-between">
-                            <span className="text-gray-500">Nume:</span>
+                            <span className="text-gray-500">{t('admin.parents.fields.name')}:</span>
                             <span className="text-gray-900">{parent.motherName}</span>
                           </div>
                         )}
                         {parent.motherEmail && (
                           <div className="flex justify-between">
-                            <span className="text-gray-500">Email:</span>
+                            <span className="text-gray-500">{t('admin.parents.fields.email')}:</span>
                             <span className="text-gray-900">{parent.motherEmail}</span>
                           </div>
                         )}
                         {parent.motherPhoneNumber && (
                           <div className="flex justify-between">
-                            <span className="text-gray-500">Telefon:</span>
+                            <span className="text-gray-500">{t('admin.parents.fields.phone')}:</span>
                             <span className="text-gray-900">{parent.motherPhoneNumber}</span>
                           </div>
                         )}
@@ -202,26 +204,26 @@ const ViewParents = () => {
                     </div>
                   )}
                   
-                  {/* Father Information */}
+                  {/* Informationen des Vaters */}
                   {(parent.fatherName || parent.fatherEmail || parent.fatherPhoneNumber) && (
                     <div>
-                      <h4 className="font-medium text-gray-900 mb-2">Informații Tată</h4>
+                      <h4 className="font-medium text-gray-900 mb-2">{t('admin.parents.list.fatherInfo')}</h4>
                       <div className="space-y-2 text-sm">
                         {parent.fatherName && (
                           <div className="flex justify-between">
-                            <span className="text-gray-500">Nume:</span>
+                            <span className="text-gray-500">{t('admin.parents.fields.name')}:</span>
                             <span className="text-gray-900">{parent.fatherName}</span>
                           </div>
                         )}
                         {parent.fatherEmail && (
                           <div className="flex justify-between">
-                            <span className="text-gray-500">Email:</span>
+                            <span className="text-gray-500">{t('admin.parents.fields.email')}:</span>
                             <span className="text-gray-900">{parent.fatherEmail}</span>
                           </div>
                         )}
                         {parent.fatherPhoneNumber && (
                           <div className="flex justify-between">
-                            <span className="text-gray-500">Telefon:</span>
+                            <span className="text-gray-500">{t('admin.parents.fields.phone')}:</span>
                             <span className="text-gray-900">{parent.fatherPhoneNumber}</span>
                           </div>
                         )}
@@ -237,14 +239,14 @@ const ViewParents = () => {
                       className="bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded text-sm inline-flex items-center"
                     >
                       <Pencil className="h-4 w-4 mr-1" />
-                      Editează
+                      {t('common.edit')}
                     </button>
                     <button
                       onClick={() => handleDelete(parent.id)}
                       className="bg-white text-red-600 border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded text-sm inline-flex items-center"
                     >
                       <Trash className="h-4 w-4 mr-1" />
-                      Șterge
+                      {t('common.delete')}
                     </button>
                   </div>
                 )}
@@ -255,8 +257,8 @@ const ViewParents = () => {
           {filteredParents.length === 0 && (
             <div className="text-center py-6 sm:py-8 text-gray-500">
               {searchTerm
-                ? "Nu au fost găsiți părinți care corespund căutării."
-                : "Nu există părinți disponibili."}
+                ? t('admin.parents.list.noParentsFound')
+                : t('admin.parents.list.noParents')}
             </div>
           )}
         </div>

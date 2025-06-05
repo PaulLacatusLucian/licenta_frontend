@@ -2,9 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Users, Mail, Phone, Lock, GraduationCap, ArrowLeft } from "lucide-react";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const AdminUserCreator = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = React.useState({
     studentName: "",
@@ -33,12 +35,12 @@ const AdminUserCreator = () => {
         setClasses(response.data);
       } catch (error) {
         console.error("Error fetching classes:", error);
-        setMessage({ type: "error", text: "Nu s-au putut prelua clasele." });
+        setMessage({ type: "error", text: t('admin.userCreator.errors.fetchClasses') });
       }
     };
 
     fetchClasses();
-  }, []);
+  }, [t]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -57,9 +59,12 @@ const AdminUserCreator = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const confirm = window.confirm(
-      `Sigur dorești să creezi utilizatorii:\n\nStudent: ${studentUsername}\nPărinte: ${parentUsername}`
-    );
+    const confirmMessage = t('admin.userCreator.confirmMessage', {
+      studentUsername: studentUsername,
+      parentUsername: parentUsername
+    });
+    
+    const confirm = window.confirm(confirmMessage);
     
     if (!confirm) return;
 
@@ -81,9 +86,8 @@ const AdminUserCreator = () => {
           },
         },
       });
-      
 
-      setMessage({ type: "success", text: "Student și părinte creați cu succes!" });
+      setMessage({ type: "success", text: t('admin.userCreator.successMessage') });
       setFormData({
         studentName: "",
         studentEmail: "",
@@ -100,7 +104,7 @@ const AdminUserCreator = () => {
       console.error("Error creating users:", error);
       setMessage({
         type: "error",
-        text: "Eroare la crearea utilizatorilor. Verificați datele introduse.",
+        text: t('admin.userCreator.errors.createUsers'),
       });
     }
   };
@@ -109,15 +113,14 @@ const AdminUserCreator = () => {
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl bg-white rounded-lg border shadow-sm">
         <div className="p-6 pb-4 border-b flex items-center">
-          {/* Back Button */}
           <button
             onClick={() => navigate("/admin")}
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi
+            {t('common.back')}
           </button>
-          <h2 className="text-lg font-semibold ml-auto">Creează utilizatori</h2>
+          <h2 className="text-lg font-semibold ml-auto">{t('admin.userCreator.title')}</h2>
         </div>
 
         <div className="p-6">
@@ -136,13 +139,13 @@ const AdminUserCreator = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Secțiunea detalii student */}
             <fieldset className="space-y-4">
-              <legend className="text-base font-medium text-gray-900 border-b pb-2">Detalii Student</legend>
+              <legend className="text-base font-medium text-gray-900 border-b pb-2">{t('admin.userCreator.studentSection')}</legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
                   icon={User}
                   type="text"
                   name="studentName"
-                  placeholder="Nume Student"
+                  placeholder={t('admin.userCreator.placeholders.studentName')}
                   value={formData.studentName}
                   onChange={handleInputChange}
                   required
@@ -151,7 +154,7 @@ const AdminUserCreator = () => {
                   icon={Mail}
                   type="email"
                   name="studentEmail"
-                  placeholder="Email Student"
+                  placeholder={t('admin.userCreator.placeholders.studentEmail')}
                   value={formData.studentEmail}
                   onChange={handleInputChange}
                   required
@@ -160,7 +163,7 @@ const AdminUserCreator = () => {
                   icon={Phone}
                   type="text"
                   name="studentPhoneNumber"
-                  placeholder="Telefon Student"
+                  placeholder={t('admin.userCreator.placeholders.studentPhone')}
                   value={formData.studentPhoneNumber}
                   onChange={handleInputChange}
                   required
@@ -174,7 +177,7 @@ const AdminUserCreator = () => {
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="">Selectează o clasă</option>
+                    <option value="">{t('admin.userCreator.placeholders.selectClass')}</option>
                     {classes.map((cls) => (
                       <option key={cls.id} value={cls.id}>
                         {cls.name} (ID: {cls.id})
@@ -187,13 +190,13 @@ const AdminUserCreator = () => {
 
             {/* Secțiunea detalii părinte */}
             <fieldset className="space-y-4">
-              <legend className="text-base font-medium text-gray-900 border-b pb-2">Detalii Părinte</legend>
+              <legend className="text-base font-medium text-gray-900 border-b pb-2">{t('admin.userCreator.parentSection')}</legend>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
                   icon={User}
                   type="text"
                   name="motherName"
-                  placeholder="Nume Mamă"
+                  placeholder={t('admin.parents.placeholders.motherName')}
                   value={formData.motherName}
                   onChange={handleInputChange}
                 />
@@ -201,7 +204,7 @@ const AdminUserCreator = () => {
                   icon={Mail}
                   type="email"
                   name="motherEmail"
-                  placeholder="Email Mamă"
+                  placeholder={t('admin.parents.placeholders.motherEmail')}
                   value={formData.motherEmail}
                   onChange={handleInputChange}
                 />
@@ -209,7 +212,7 @@ const AdminUserCreator = () => {
                   icon={Phone}
                   type="text"
                   name="motherPhoneNumber"
-                  placeholder="Telefon Mamă"
+                  placeholder={t('admin.parents.placeholders.motherPhone')}
                   value={formData.motherPhoneNumber}
                   onChange={handleInputChange}
                 />
@@ -217,7 +220,7 @@ const AdminUserCreator = () => {
                   icon={User}
                   type="text"
                   name="fatherName"
-                  placeholder="Nume Tată"
+                  placeholder={t('admin.parents.placeholders.fatherName')}
                   value={formData.fatherName}
                   onChange={handleInputChange}
                 />
@@ -225,7 +228,7 @@ const AdminUserCreator = () => {
                   icon={Mail}
                   type="email"
                   name="fatherEmail"
-                  placeholder="Email Tată"
+                  placeholder={t('admin.parents.placeholders.fatherEmail')}
                   value={formData.fatherEmail}
                   onChange={handleInputChange}
                 />
@@ -233,7 +236,7 @@ const AdminUserCreator = () => {
                   icon={Phone}
                   type="text"
                   name="fatherPhoneNumber"
-                  placeholder="Telefon Tată"
+                  placeholder={t('admin.parents.placeholders.fatherPhone')}
                   value={formData.fatherPhoneNumber}
                   onChange={handleInputChange}
                 />
@@ -245,7 +248,7 @@ const AdminUserCreator = () => {
               className="inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-4 h-9 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-0 disabled:pointer-events-none disabled:opacity-50"
             >
               <Users className="mr-2 h-4 w-4" />
-              Creează Utilizatori
+              {t('admin.userCreator.submitButton')}
             </button>
           </form>
         </div>

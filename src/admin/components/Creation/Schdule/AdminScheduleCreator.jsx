@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../../../axiosConfig";
 import { Calendar, Book, Users, Clock, X, AlertCircle } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 const CreateSchedule = ({
   day,
@@ -12,6 +13,8 @@ const CreateSchedule = ({
   editMode = false,
   scheduleData = null
 }) => {
+  const { t } = useTranslation();
+
   const initialFormData = editMode && scheduleData ? 
     {
       id: scheduleData.id,
@@ -38,10 +41,30 @@ const CreateSchedule = ({
   const [educationLevel, setEducationLevel] = useState("");
 
   const subjectsByCategory = {
-    Reale: ["Informatica", "Matematica", "Fizica", "Chimie", "Biologie"],
-    Umane: ["Istorie", "Geografie", "Romana", "Engleza", "Germana", "Italiana", "Latina", "Franceza"],
-    "Arte și Sport": ["Educatie Fizica", "Arte Vizuale", "Muzica"],
-    Altele: ["Religie", "Psihologie", "Economie", "Filosofie"],
+    [t('admin.teachers.subjects.categories.sciences')]: ["informatica", "matematica", "fizica", "chimie", "biologie"],
+    [t('admin.teachers.subjects.categories.humanities')]: ["istorie", "geografie", "romana", "engleza", "germana", "italiana", "latina", "franceza"],
+    [t('admin.teachers.subjects.categories.artsAndSports')]: ["educatieFizica", "arteVizuale", "muzica"],
+    [t('admin.teachers.subjects.categories.others')]: ["religie", "psihologie", "economie", "filosofie"],
+  };
+
+  // Funcție pentru a traduce subiectele profesorilor
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
+  // Funcție pentru a traduce zilele săptămânii
+  const getTranslatedDay = (day) => {
+    const dayMap = {
+      'Luni': t('admin.schedule.days.monday'),
+      'Marți': t('admin.schedule.days.tuesday'),
+      'Miercuri': t('admin.schedule.days.wednesday'),
+      'Joi': t('admin.schedule.days.thursday'),
+      'Vineri': t('admin.schedule.days.friday')
+    };
+    return dayMap[day] || day;
   };
 
   useEffect(() => {
@@ -53,13 +76,13 @@ const CreateSchedule = ({
         console.error("Error fetching teachers:", error);
         setMessage({
           type: "error",
-          text: "Nu s-au putut prelua datele profesorilor. Verifică conexiunea.",
+          text: t('admin.schedule.errors.fetchTeachers'),
         });
       }
     };
 
     fetchTeachers();
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const fetchClassDetails = async () => {
@@ -115,7 +138,7 @@ const CreateSchedule = ({
     ) {
       setMessage({
         type: "error",
-        text: "Te rog completează toate câmpurile necesare.",
+        text: t('admin.schedule.errors.requiredFields'),
       });
       setIsLoading(false);
       return;
@@ -139,10 +162,10 @@ const CreateSchedule = ({
       if (editMode && formData.id) {
         requestData.id = formData.id;
         response = await axios.put(`/schedules/${formData.id}`, requestData);
-        setMessage({ type: "success", text: "Orarul a fost actualizat cu succes!" });
+        setMessage({ type: "success", text: t('admin.schedule.updateSuccess') });
       } else {
         response = await axios.post("/schedules", requestData);
-        setMessage({ type: "success", text: "Orarul a fost creat cu succes!" });
+        setMessage({ type: "success", text: t('admin.schedule.createSuccess') });
       }
 
       if (onScheduleCreated) {
@@ -157,8 +180,8 @@ const CreateSchedule = ({
       setMessage({
         type: "error",
         text: editMode 
-          ? "Eroare la actualizarea orarului. Te rog încearcă din nou."
-          : "Eroare la crearea orarului. Te rog încearcă din nou."
+          ? t('admin.schedule.errors.updateSchedule')
+          : t('admin.schedule.errors.createSchedule')
       });
     } finally {
       setIsLoading(false);
@@ -171,12 +194,12 @@ const CreateSchedule = ({
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-800 flex items-center">
           <Calendar className="h-5 w-5 mr-2 text-gray-700" />
-          {editMode ? "Actualizează Orarul" : "Creează Orarul"}
+          {editMode ? t('admin.schedule.updateTitle') : t('admin.schedule.createTitle')}
         </h2>
         <button
           onClick={onClose}
           className="text-gray-500 hover:text-gray-900 transition-colors rounded-full p-1 hover:bg-gray-100"
-          aria-label="Close"
+          aria-label={t('common.close')}
         >
           <X className="h-5 w-5" />
         </button>
@@ -200,7 +223,7 @@ const CreateSchedule = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {/* Class */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Clasă</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.schedule.fields.class')}</label>
             <div className="relative">
               <Users className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
@@ -215,13 +238,13 @@ const CreateSchedule = ({
 
           {/* Day */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ziua</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.schedule.fields.day')}</label>
             <div className="relative">
               <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
                 type="text"
                 name="scheduleDay"
-                value={formData.scheduleDay}
+                value={getTranslatedDay(formData.scheduleDay)}
                 readOnly
                 className="w-full pl-9 h-9 rounded-md border border-gray-300 bg-gray-50 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
               />
@@ -230,7 +253,7 @@ const CreateSchedule = ({
 
           {/* Time fields */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ora de început</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.schedule.fields.startTime')}</label>
             <div className="relative">
               <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
@@ -244,7 +267,7 @@ const CreateSchedule = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ora de sfârșit</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.schedule.fields.endTime')}</label>
             <div className="relative">
               <Clock className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
@@ -260,7 +283,7 @@ const CreateSchedule = ({
           {/* Course fields - Different based on education level */}
           {educationLevel === "PRIMARY" ? (
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Materie</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.schedule.fields.subject')}</label>
               <div className="relative">
                 <Book className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                 <select
@@ -270,12 +293,12 @@ const CreateSchedule = ({
                   className="w-full pl-9 h-9 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
                   required
                 >
-                  <option value="">Selectează Materia</option>
+                  <option value="">{t('admin.schedule.placeholders.selectSubject')}</option>
                   {Object.entries(subjectsByCategory).map(([category, subjects]) => (
                     <optgroup key={category} label={category}>
                       {subjects.map((subject) => (
                         <option key={subject} value={subject}>
-                          {subject}
+                          {t(`admin.teachers.subjects.list.${subject}`)}
                         </option>
                       ))}
                     </optgroup>
@@ -286,7 +309,7 @@ const CreateSchedule = ({
           ) : (
             <>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Profesor</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.schedule.fields.teacher')}</label>
                 <div className="relative">
                   <Users className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                   <select
@@ -296,12 +319,12 @@ const CreateSchedule = ({
                     className="w-full pl-9 h-9 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
                     required
                   >
-                    <option value="">Selectează un profesor</option>
+                    <option value="">{t('admin.schedule.placeholders.selectTeacher')}</option>
                     {teachers
                       .filter((teacher) => teacher.type !== "EDUCATOR")
                       .map((teacher) => (
                         <option key={teacher.id} value={teacher.id}>
-                          {teacher.name} - {teacher.subject}
+                          {teacher.name} - {getTranslatedSubject(teacher.subject)}
                         </option>
                       ))}
                   </select>
@@ -309,13 +332,13 @@ const CreateSchedule = ({
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Materie</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.schedule.fields.subject')}</label>
                 <div className="relative">
                   <Book className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                   <input
                     type="text"
                     name="subject"
-                    value={formData.subject}
+                    value={getTranslatedSubject(formData.subject)}
                     readOnly
                     className="w-full pl-9 h-9 rounded-md border border-gray-300 bg-gray-50 shadow-sm"
                   />
@@ -340,10 +363,10 @@ const CreateSchedule = ({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Se procesează...
+                {t('admin.schedule.processing')}
               </span>
             ) : (
-              editMode ? "Actualizează Orar" : "Creează Orar"
+              editMode ? t('admin.schedule.updateButton') : t('admin.schedule.createButton')
             )}
           </button>
         </div>

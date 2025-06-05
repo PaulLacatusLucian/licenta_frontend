@@ -250,5 +250,513 @@
       "title": "Library",
       "description": "Extensive collection of German and Romanian literature and resources."
     }
+  },
+    "class": {
+      "title": "Classes",
+      "createClass": "Create Class",
+      "editClass": "Edit Class",
+      "deleteClass": "Delete Class",
+      "classList": "Class List",
+      "className": "Class Name",
+      "classNamePlaceholder": "Ex: 10A",
+      "educationLevel": "Education Level",
+      "specialization": "Specialization",
+      "selectSpecialization": "Select Specialization",
+      "classTeacher": "Class Teacher",
+      "educator": "Educator",
+      "formTeacher": "Form Teacher",
+      "selectEducator": "Select an educator",
+      "selectTeacher": "Select a teacher",
+      "level": "Level",
+      "searchPlaceholder": "Search by name or specialization...",
+      "classCreatedSuccess": "Class created successfully!",
+      "classUpdatedSuccess": "Class updated successfully!",
+      "classDeletedSuccess": "Class deleted successfully.",
+      "createClassError": "Error creating class. Please try again.",
+      "updateClassError": "Error updating class. Please try again.",
+      "deleteClassError": "Error deleting class. Please try again.",
+      "loadClassError": "Failed to load class data. Please try again.",
+      "invalidClassName": "Class name is not valid for the selected education level.",
+      "fillRequiredFields": "Please fill in all required fields!",
+      "educationLevels": {
+        "PRIMARY": "Grades 0-4 (Primary Education)",
+        "MIDDLE": "Grades 5-8 (Middle School)",
+        "HIGH": "Grades 9-12 (High School)"
+      },
+      "specializations": {
+        "math-cs": "Mathematics-Computer Science",
+        "math-cs-bilingual": "Mathematics-Computer Science-Bilingual",
+        "philology": "Philology",
+        "bio-chem": "Biology-Chemistry"
+      },
+      "noClassesFound": "No classes found matching your search.",
+      "noClassesAvailable": "No classes available."
+    },
+    "teacher": {
+      "title": "Teachers",
+      "createTeacher": "Create Teacher",
+      "editTeacher": "Edit Teacher",
+      "deleteTeacher": "Delete Teacher",
+      "teacherList": "Teacher List",
+      "teacherName": "Teacher Name",
+      "teacherNamePlaceholder": "Ex: Mr. Smith",
+      "teacherEmail": "Teacher Email",
+      "emailPlaceholder": "example@domain.com",
+      "subject": "Subject Taught",
+      "selectSubject": "Select Subject",
+      "teacherType": "Teacher Type",
+      "selectType": "Select type",
+      "searchPlaceholder": "Search by name or subject...",
+      "teacherCreatedSuccess": "Teacher created successfully! Username: {{username}}, Password: {{password}}",
+      "teacherUpdatedSuccess": "Teacher updated successfully!",
+      "teacherDeletedSuccess": "Teacher deleted successfully.",
+      "createTeacherError": "Error creating teacher. Please try again.",
+      "updateTeacherError": "Error updating teacher. Please try again.",
+      "deleteTeacherError": "Error deleting teacher. Please try again.",
+      "loadTeacherError": "Failed to load teacher data. Please try again.",
+      "loadTeachersError": "Failed to load teachers. Please try again later.",
+      "cannotChangeType": "Teacher is assigned to class {{className}} (primary class) and cannot be changed to TEACHER.",
+      "types": {
+        "TEACHER": "Teacher (grades 5-12)",
+        "EDUCATOR": "Educator (grades 0-4)"
+      },
+      "subjectCategories": {
+        "sciences": "Sciences",
+        "humanities": "Humanities",
+        "artsAndSports": "Arts & Sports",
+        "others": "Others"
+      },
+      "subjects": {
+        "informatics": "Computer Science",
+        "mathematics": "Mathematics",
+        "physics": "Physics",
+        "chemistry": "Chemistry",
+        "biology": "Biology",
+        "history": "History",
+        "geography": "Geography",
+        "romanian": "Romanian",
+        "english": "English",
+        "german": "German",
+        "italian": "Italian",
+        "latin": "Latin",
+        "french": "French",
+        "physicalEducation": "Physical Education",
+        "visualArts": "Visual Arts",
+        "music": "Music",
+        "religion": "Religion",
+        "psychology": "Psychology",
+        "economics": "Economics",
+        "philosophy": "Philosophy"
+      },
+      "noTeachersFound": "No teachers found matching your search.",
+      "noTeachersAvailable": "No teachers available."
+  },
+  "common": {
+    "back": "Back",
+    "backToList": "Back to List",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "search": "Search",
+    "actions": "Actions",
+    "notSpecified": "Not specified",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "admin": {
+    "classes": {
+      "title": "Classes",
+      "list": {
+        "title": "Class List",
+        "searchPlaceholder": "Search by name or specialization...",
+        "noClasses": "No classes available.",
+        "noClassesFound": "No classes found matching your search.",
+        "errorLoading": "Failed to load classes. Please try again later."
+      },
+      "specializations": {
+        "matematica-informatica": "Mathematics-Computer Science",
+        "matematica-informatica-bilingv": "Mathematics-Computer Science-Bilingual",
+        "filologie": "Philology",
+        "bio-chimie": "Biology-Chemistry"
+      },
+      "create": {
+        "title": "Create a Class",
+        "submitButton": "Create Class",
+        "success": "Class created successfully!",
+        "errors": {
+          "fetchTeachers": "Could not fetch teachers.",
+          "invalidClassName": "Class name is not valid for the selected education level.",
+          "requiredFields": "Please complete all required fields!",
+          "invalidClassNameLevel": "Class name is not valid for the selected education level.",
+          "createClass": "Error creating class. Please try again."
+        }
+      },
+      "edit": {
+        "title": "Edit Class",
+        "submitButton": "Save",
+        "success": "Class updated successfully!",
+        "loading": "Loading...",
+        "errors": {
+          "loadingData": "Error loading class data. Please try again.",
+          "invalidClassName": "Invalid class name for the selected education level.",
+          "updateClass": "Error updating class. Please try again."
+        }
+      },
+      "delete": {
+        "title": "Delete Class",
+        "confirmMessage": "Are you sure you want to delete this class?",
+        "confirmButton": "Yes, Delete",
+        "success": "Class deleted successfully.",
+        "error": "Error deleting class. Please try again."
+      },
+      "fields": {
+        "className": "Class Name",
+        "educationLevel": "Education Level",
+        "classTeacher": "Class Teacher",
+        "primaryTeacher": "Primary Teacher",
+        "specialization": "Specialization",
+        "level": "Level"
+      },
+      "placeholders": {
+        "className": "Ex: 10A",
+        "selectTeacher": "Select a teacher",
+        "selectPrimaryTeacher": "Select a primary teacher",
+        "selectSpecialization": "Select a specialization"
+      },
+      "levels": {
+        "primary": "Grades 0-4 (Primary Education)",
+        "middle": "Grades 5-8 (Middle School)",
+        "high": "Grades 9-12 (High School)"
+      },
+      "columns": {
+        "name": "Class Name",
+        "level": "Level",
+        "teacher": "Teacher / Primary Teacher",
+        "specialization": "Specialization",
+        "actions": "Actions"
+      }
+    },
+      "teachers": {
+    "title": "Teachers",
+    "list": {
+      "title": "Teacher List",
+      "searchPlaceholder": "Search by name or subject...",
+      "noTeachers": "No teachers available.",
+      "noTeachersFound": "No teachers found matching your search.",
+      "errorLoading": "Failed to load teachers. Please try again later."
+    },
+    "create": {
+      "title": "Create Teacher",
+      "submitButton": "Create Teacher",
+      "successMessage": "Teacher created successfully! Username: {{username}}, Password: {{password}}",
+      "errors": {
+        "createTeacher": "Error creating teacher. Please try again."
+      }
+    },
+    "edit": {
+      "title": "Edit Teacher",
+      "successMessage": "Teacher updated successfully!",
+      "errors": {
+        "loadingData": "Error loading teacher data. Please try again.",
+        "updateTeacher": "Error updating teacher. Please try again.",
+        "teacherAssignedToPrimary": "Teacher is assigned to class {{className}} (primary class) and cannot be converted to TEACHER."
+      }
+    },
+    "delete": {
+      "title": "Delete Teacher",
+      "confirmMessage": "Are you sure you want to delete this teacher?",
+      "confirmButton": "Yes, Delete",
+      "successMessage": "Teacher deleted successfully.",
+      "errorMessage": "Error deleting teacher."
+    },
+    "fields": {
+      "teacherName": "Teacher Name",
+      "teacherEmail": "Teacher Email",
+      "subjectTaught": "Subject Taught",
+      "teacherType": "Teacher Type",
+      "name": "Name",
+      "subject": "Subject",
+      "type": "Type"
+    },
+    "placeholders": {
+      "teacherName": "Ex: Mr. Smith",
+      "teacherEmail": "example@domain.com",
+      "selectSubject": "Select Subject",
+      "selectType": "Select type"
+    },
+    "types": {
+      "teacher": "Teacher (grades 5-12)",
+      "educator": "Educator (grades 0-4)",
+      "teacherLabel": "Teacher",
+      "educatorLabel": "Educator"
+    },
+    "subjects": {
+      "categories": {
+        "sciences": "Sciences",
+        "humanities": "Humanities",
+        "artsAndSports": "Arts & Sports",
+        "others": "Others"
+      },
+      "list": {
+        "informatica": "Computer Science",
+        "matematica": "Mathematics",
+        "fizica": "Physics",
+        "chimie": "Chemistry",
+        "biologie": "Biology",
+        "istorie": "History",
+        "geografie": "Geography",
+        "romana": "Romanian",
+        "engleza": "English",
+        "germana": "German",
+        "italiana": "Italian",
+        "latina": "Latin",
+        "franceza": "French",
+        "educatieFizica": "Physical Education",
+        "arteVizuale": "Visual Arts",
+        "muzica": "Music",
+        "religie": "Religion",
+        "psihologie": "Psychology",
+        "economie": "Economics",
+        "filosofie": "Philosophy"
+      }
+    },
+    "columns": {
+      "name": "Name",
+      "subject": "Subject",
+      "type": "Type"
+    }
+  },
+  "schedule": {
+      "title": "Class Schedule",
+      "createTitle": "Create Schedule",
+      "updateTitle": "Update Schedule",
+      "class": "Class",
+      "dayHour": "DAY / HOUR",
+      "add": "Add",
+      "scheduled": "Scheduled",
+      "available": "Available",
+      "refresh": "Refresh data",
+      "processing": "Processing...",
+      "createButton": "Create Schedule",
+      "updateButton": "Update Schedule",
+      "createSuccess": "Schedule created successfully!",
+      "updateSuccess": "Schedule updated successfully!",
+      "confirmDelete": "Are you sure you want to delete this schedule?",
+      "fields": {
+        "class": "Class",
+        "day": "Day",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "subject": "Subject",
+        "teacher": "Teacher"
+      },
+      "placeholders": {
+        "selectSubject": "Select Subject",
+        "selectTeacher": "Select a teacher"
+      },
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday"
+      },
+      "errors": {
+        "fetchClasses": "Could not load classes. Check your connection.",
+        "fetchSchedule": "Could not load schedule for this class.",
+        "fetchTeachers": "Could not fetch teachers data. Check your connection.",
+        "requiredFields": "Please complete all required fields.",
+        "createSchedule": "Error creating schedule. Please try again.",
+        "updateSchedule": "Error updating schedule. Please try again.",
+        "deleteSchedule": "An error occurred while deleting the schedule."
+      }
+    },
+      "students": {
+      "title": "Students",
+      "list": {
+        "title": "Student List",
+        "searchPlaceholder": "Search by name, email or class...",
+        "noStudents": "No students available.",
+        "noStudentsFound": "No students found matching your search.",
+        "errorLoading": "Could not fetch students. Please try again.",
+        "confirmDelete": "Are you sure you want to delete this student?"
+      },
+      "edit": {
+        "title": "Edit Student",
+        "successMessage": "Student updated successfully!",
+        "errors": {
+          "loadingData": "Error loading student data. Please try again.",
+          "loadingClasses": "Error loading classes. Please try again.",
+          "updateStudent": "Error updating student. Please try again."
+        }
+      },
+      "fields": {
+        "studentName": "Student Name",
+        "email": "Email",
+        "phone": "Phone",
+        "class": "Class",
+        "specialization": "Specialization",
+        "name": "Name"
+      },
+      "placeholders": {
+        "studentName": "Student Name",
+        "email": "Email",
+        "phone": "Phone",
+        "selectClass": "Select Class"
+      },
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "class": "Class",
+        "specialization": "Specialization",
+        "phoneNumber": "Phone Number",
+        "actions": "Actions"
+      }
+    },
+    "parents": {
+      "title": "Parents",
+      "list": {
+        "title": "Parent List",
+        "searchPlaceholder": "Search by name or email...",
+        "noParents": "No parents available.",
+        "noParentsFound": "No parents found matching your search.",
+        "errorLoading": "Could not fetch parents. Please try again.",
+        "confirmDelete": "Are you sure you want to delete this parent?",
+        "deleteError": "An error occurred while deleting the parent.",
+        "parent": "Parent",
+        "motherInfo": "Mother Information",
+        "fatherInfo": "Father Information"
+      },
+      "edit": {
+        "title": "Edit Parent",
+        "successMessage": "Parent data updated successfully!",
+        "errors": {
+          "loadingData": "Error loading parent data. Please try again.",
+          "updateParent": "Error updating parent data. Please try again."
+        }
+      },
+      "fields": {
+        "motherName": "Mother's Name",
+        "motherEmail": "Mother's Email",
+        "motherPhone": "Mother's Phone",
+        "fatherName": "Father's Name",
+        "fatherEmail": "Father's Email",
+        "fatherPhone": "Father's Phone",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone"
+      },
+      "placeholders": {
+        "motherName": "Mother's Name",
+        "motherEmail": "Mother's Email",
+        "motherPhone": "Mother's Phone",
+        "fatherName": "Father's Name",
+        "fatherEmail": "Father's Email",
+        "fatherPhone": "Father's Phone"
+      },
+      "columns": {
+        "motherName": "Mother's Name",
+        "motherEmail": "Mother's Email",
+        "motherPhone": "Mother's Phone",
+        "fatherName": "Father's Name",
+        "fatherEmail": "Father's Email",
+        "fatherPhone": "Father's Phone",
+        "actions": "Actions"
+      }
+    },
+    "userCreator": {
+      "title": "Create Users",
+      "studentSection": "Student Details",
+      "parentSection": "Parent Details",
+      "submitButton": "Create Users",
+      "successMessage": "Student and parent created successfully!",
+      "confirmMessage": "Are you sure you want to create users:\n\nStudent: {{studentUsername}}\nParent: {{parentUsername}}",
+      "errors": {
+        "fetchClasses": "Could not fetch classes.",
+        "createUsers": "Error creating users. Please check the entered data."
+      },
+      "placeholders": {
+        "studentName": "Student Name",
+        "studentEmail": "Student Email",
+        "studentPhone": "Student Phone",
+        "selectClass": "Select a class"
+      }
+    },
+      "grades": {
+      "title": "Grades Management",
+      "list": {
+        "title": "Grades Management",
+        "searchPlaceholder": "Search by description or teacher...",
+        "allSubjects": "All Subjects",
+        "allTeachers": "All Teachers",
+        "noGrades": "No grades available.",
+        "noGradesFound": "No grades found matching the filter criteria.",
+        "errorLoading": "Could not load grades. Please try again later.",
+        "confirmDelete": "Are you sure you want to delete this grade?",
+        "deleteError": "Could not delete grade. Please try again.",
+        "refresh": "Refresh data",
+        "showing": "Showing {{count}} of {{total}} grades",
+        "unknownDate": "Unknown date",
+        "invalidDate": "Invalid date",
+        "unknown": "Unknown",
+        "notAvailable": "N/A"
+      },
+      "create": {
+        "title": "Add Grade",
+        "submitButton": "Add Grade",
+        "selectClass": "Select Class",
+        "selectClassPlaceholder": "-- Select Class --",
+        "searchStudent": "Search Student",
+        "searchStudentPlaceholder": "Enter student name...",
+        "selectStudent": "Select Student",
+        "selectStudentPlaceholder": "-- Select Student --",
+        "selectSession": "Select Session",
+        "selectSessionPlaceholder": "-- Select Session --",
+        "gradeValue": "Grade Value",
+        "description": "Description",
+        "descriptionPlaceholder": "e.g. Final exam, Oral response...",
+        "quickGrades": "Quick Grade Selection",
+        "loadingStudents": "Loading students...",
+        "loadingSessions": "Loading sessions...",
+        "noStudentsInClass": "No students in this class",
+        "noSessionsForClass": "No sessions for this class",
+        "showingStudents": "Showing {{filtered}} of {{total}} students",
+        "classSelectionInfo": "Selecting a class will automatically load available students and sessions.",
+        "success": "Grade added successfully!",
+        "errors": {
+          "loadingClasses": "Error loading classes. Please try again.",
+          "loadingStudents": "Could not get students for this class.",
+          "loadingSessions": "Students retrieved, but could not load sessions.",
+          "requiredFields": "Please select a student, session, and enter a grade.",
+          "createGrade": "Error adding grade. Please try again.",
+          "conflict": "Conflict: Student is absent or already has a grade.",
+          "networkError": "Error adding grade. Check your connection."
+        }
+      },
+      "edit": {
+        "title": "Edit Grade",
+        "gradeInfo": "Grade Information",
+        "infoNote": "This information cannot be modified. You can only edit the grade and description.",
+        "gradeValue": "Grade Value",
+        "description": "Description (optional)",
+        "descriptionPlaceholder": "e.g. Final exam, Oral response...",
+        "success": "Grade updated successfully!",
+        "errors": {
+          "loadingData": "Could not load grade data. Please return to the grades list.",
+          "generalError": "An error occurred. Please return to the grades list.",
+          "gradeRequired": "Please enter a value for the grade.",
+          "updateError": "Error updating grade."
+        }
+      },
+      "fields": {
+        "teacher": "Teacher",
+        "subject": "Subject",
+        "grade": "Grade",
+        "date": "Date",
+        "description": "Description",
+        "actions": "Actions"
+      }
+    }
   }
 }

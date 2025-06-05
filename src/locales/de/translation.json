@@ -250,5 +250,513 @@
       "title": "Bibliothek",
       "description": "Umfangreiche Sammlung deutscher und rumänischer Literatur und Ressourcen."
     }
+  },
+    "class": {
+      "title": "Klassen",
+      "createClass": "Klasse erstellen",
+      "editClass": "Klasse bearbeiten",
+      "deleteClass": "Klasse löschen",
+      "classList": "Klassenliste",
+      "className": "Klassenname",
+      "classNamePlaceholder": "Beispiel: 10A",
+      "educationLevel": "Bildungsstufe",
+      "specialization": "Spezialisierung",
+      "selectSpecialization": "Spezialisierung auswählen",
+      "classTeacher": "Klassenlehrer",
+      "educator": "Erzieher",
+      "formTeacher": "Klassenlehrer",
+      "selectEducator": "Erzieher auswählen",
+      "selectTeacher": "Lehrer auswählen",
+      "level": "Stufe",
+      "searchPlaceholder": "Nach Name oder Spezialisierung suchen...",
+      "classCreatedSuccess": "Klasse erfolgreich erstellt!",
+      "classUpdatedSuccess": "Klasse erfolgreich aktualisiert!",
+      "classDeletedSuccess": "Klasse erfolgreich gelöscht.",
+      "createClassError": "Fehler beim Erstellen der Klasse. Bitte versuchen Sie es erneut.",
+      "updateClassError": "Fehler beim Aktualisieren der Klasse. Bitte versuchen Sie es erneut.",
+      "deleteClassError": "Fehler beim Löschen der Klasse. Bitte versuchen Sie es erneut.",
+      "loadClassError": "Fehler beim Laden der Klassendaten. Bitte versuchen Sie es erneut.",
+      "invalidClassName": "Klassenname ist für die gewählte Bildungsstufe nicht gültig.",
+      "fillRequiredFields": "Bitte füllen Sie alle erforderlichen Felder aus!",
+      "educationLevels": {
+        "PRIMARY": "Klasse 0-4 (Grundschule)",
+        "MIDDLE": "Klasse 5-8 (Mittelschule)",
+        "HIGH": "Klasse 9-12 (Gymnasium)"
+      },
+      "specializations": {
+        "math-cs": "Mathematik-Informatik",
+        "math-cs-bilingual": "Mathematik-Informatik-Zweisprachig",
+        "philology": "Philologie",
+        "bio-chem": "Biologie-Chemie"
+      },
+      "noClassesFound": "Keine Klassen gefunden, die Ihrer Suche entsprechen.",
+      "noClassesAvailable": "Keine Klassen verfügbar."
+    },
+    "teacher": {
+      "title": "Lehrer",
+      "createTeacher": "Lehrer erstellen",
+      "editTeacher": "Lehrer bearbeiten",
+      "deleteTeacher": "Lehrer löschen",
+      "teacherList": "Lehrerliste",
+      "teacherName": "Lehrername",
+      "teacherNamePlaceholder": "Beispiel: Herr Schmidt",
+      "teacherEmail": "Lehrer E-Mail",
+      "emailPlaceholder": "beispiel@domain.com",
+      "subject": "Unterrichtsfach",
+      "selectSubject": "Fach auswählen",
+      "teacherType": "Lehrertyp",
+      "selectType": "Typ auswählen",
+      "searchPlaceholder": "Nach Name oder Fach suchen...",
+      "teacherCreatedSuccess": "Lehrer erfolgreich erstellt! Benutzername: {{username}}, Passwort: {{password}}",
+      "teacherUpdatedSuccess": "Lehrer erfolgreich aktualisiert!",
+      "teacherDeletedSuccess": "Lehrer erfolgreich gelöscht.",
+      "createTeacherError": "Fehler beim Erstellen des Lehrers. Bitte versuchen Sie es erneut.",
+      "updateTeacherError": "Fehler beim Aktualisieren des Lehrers. Bitte versuchen Sie es erneut.",
+      "deleteTeacherError": "Fehler beim Löschen des Lehrers.",
+      "loadTeacherError": "Fehler beim Laden der Lehrerdaten. Bitte versuchen Sie es erneut.",
+      "loadTeachersError": "Lehrer konnten nicht geladen werden.",
+      "cannotChangeType": "Lehrer ist der Klasse {{className}} (Grundschulklasse) zugewiesen und kann nicht zu TEACHER geändert werden.",
+      "types": {
+        "TEACHER": "Lehrer (Klasse 5-12)",
+        "EDUCATOR": "Erzieher (Klasse 0-4)"
+      },
+      "subjectCategories": {
+        "sciences": "Naturwissenschaften",
+        "humanities": "Geisteswissenschaften",
+        "artsAndSports": "Kunst und Sport",
+        "others": "Andere"
+      },
+      "subjects": {
+        "informatics": "Informatik",
+        "mathematics": "Mathematik",
+        "physics": "Physik",
+        "chemistry": "Chemie",
+        "biology": "Biologie",
+        "history": "Geschichte",
+        "geography": "Geographie",
+        "romanian": "Rumänisch",
+        "english": "Englisch",
+        "german": "Deutsch",
+        "italian": "Italienisch",
+        "latin": "Latein",
+        "french": "Französisch",
+        "physicalEducation": "Sportunterricht",
+        "visualArts": "Bildende Kunst",
+        "music": "Musik",
+        "religion": "Religion",
+        "psychology": "Psychologie",
+        "economics": "Wirtschaft",
+        "philosophy": "Philosophie"
+      },
+      "noTeachersFound": "Keine Lehrer gefunden, die Ihrer Suche entsprechen.",
+      "noTeachersAvailable": "Keine Lehrer verfügbar."
+  },
+  "common": {
+    "back": "Zurück",
+    "backToList": "Zurück zur Liste",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "search": "Suchen",
+    "actions": "Aktionen",
+    "notSpecified": "Nicht angegeben",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "admin": {
+    "classes": {
+      "title": "Klassen",
+      "list": {
+        "title": "Klassenliste",
+        "searchPlaceholder": "Nach Name oder Spezialisierung suchen...",
+        "noClasses": "Keine Klassen verfügbar.",
+        "noClassesFound": "Keine Klassen gefunden, die Ihrer Suche entsprechen.",
+        "errorLoading": "Klassen konnten nicht geladen werden. Bitte versuchen Sie es später erneut."
+      },
+      "specializations": {
+        "matematica-informatica": "Mathematik-Informatik",
+        "matematica-informatica-bilingv": "Mathematik-Informatik-Bilingual",
+        "filologie": "Philologie",
+        "bio-chimie": "Biologie-Chemie"
+      },
+      "create": {
+        "title": "Klasse erstellen",
+        "submitButton": "Klasse erstellen",
+        "success": "Klasse erfolgreich erstellt!",
+        "errors": {
+          "fetchTeachers": "Lehrer konnten nicht abgerufen werden.",
+          "invalidClassName": "Klassenname ist für die gewählte Bildungsstufe nicht gültig.",
+          "requiredFields": "Bitte füllen Sie alle erforderlichen Felder aus!",
+          "invalidClassNameLevel": "Klassenname ist für die gewählte Bildungsstufe nicht gültig.",
+          "createClass": "Fehler beim Erstellen der Klasse. Bitte versuchen Sie es erneut."
+        }
+      },
+      "edit": {
+        "title": "Klasse bearbeiten",
+        "submitButton": "Speichern",
+        "success": "Klasse erfolgreich aktualisiert!",
+        "loading": "Wird geladen...",
+        "errors": {
+          "loadingData": "Fehler beim Laden der Klassendaten. Bitte versuchen Sie es erneut.",
+          "invalidClassName": "Ungültiger Klassenname für die gewählte Bildungsstufe.",
+          "updateClass": "Fehler beim Aktualisieren der Klasse. Bitte versuchen Sie es erneut."
+        }
+      },
+      "delete": {
+        "title": "Klasse löschen",
+        "confirmMessage": "Sind Sie sicher, dass Sie diese Klasse löschen möchten?",
+        "confirmButton": "Ja, löschen",
+        "success": "Klasse erfolgreich gelöscht.",
+        "error": "Fehler beim Löschen der Klasse. Bitte versuchen Sie es erneut."
+      },
+      "fields": {
+        "className": "Klassenname",
+        "educationLevel": "Bildungsstufe",
+        "classTeacher": "Klassenlehrer",
+        "primaryTeacher": "Grundschullehrer",
+        "specialization": "Spezialisierung",
+        "level": "Stufe"
+      },
+      "placeholders": {
+        "className": "Bsp: 10A",
+        "selectTeacher": "Lehrer auswählen",
+        "selectPrimaryTeacher": "Grundschullehrer auswählen",
+        "selectSpecialization": "Spezialisierung auswählen"
+      },
+      "levels": {
+        "primary": "Klasse 0-4 (Grundschule)",
+        "middle": "Klasse 5-8 (Mittelschule)",
+        "high": "Klasse 9-12 (Gymnasium)"
+      },
+      "columns": {
+        "name": "Klassenname",
+        "level": "Stufe",
+        "teacher": "Lehrer / Grundschullehrer",
+        "specialization": "Spezialisierung",
+        "actions": "Aktionen"
+      }
+    },
+   "teachers": {
+    "title": "Lehrer",
+    "list": {
+      "title": "Lehrerliste",
+      "searchPlaceholder": "Nach Name oder Fach suchen...",
+      "noTeachers": "Keine Lehrer verfügbar.",
+      "noTeachersFound": "Keine Lehrer gefunden, die Ihrer Suche entsprechen.",
+      "errorLoading": "Lehrer konnten nicht geladen werden. Bitte versuchen Sie es später erneut."
+    },
+    "create": {
+      "title": "Lehrer erstellen",
+      "submitButton": "Lehrer erstellen",
+      "successMessage": "Lehrer erfolgreich erstellt! Benutzername: {{username}}, Passwort: {{password}}",
+      "errors": {
+        "createTeacher": "Fehler beim Erstellen des Lehrers. Bitte versuchen Sie es erneut."
+      }
+    },
+    "edit": {
+      "title": "Lehrer bearbeiten",
+      "successMessage": "Lehrer erfolgreich aktualisiert!",
+      "errors": {
+        "loadingData": "Fehler beim Laden der Lehrerdaten. Bitte versuchen Sie es erneut.",
+        "updateTeacher": "Fehler beim Aktualisieren des Lehrers. Bitte versuchen Sie es erneut.",
+        "teacherAssignedToPrimary": "Lehrer ist der Klasse {{className}} (Grundschulklasse) zugewiesen und kann nicht in TEACHER umgewandelt werden."
+      }
+    },
+    "delete": {
+      "title": "Lehrer löschen",
+      "confirmMessage": "Sind Sie sicher, dass Sie diesen Lehrer löschen möchten?",
+      "confirmButton": "Ja, löschen",
+      "successMessage": "Lehrer erfolgreich gelöscht.",
+      "errorMessage": "Fehler beim Löschen des Lehrers."
+    },
+    "fields": {
+      "teacherName": "Lehrername",
+      "teacherEmail": "Lehrer E-Mail",
+      "subjectTaught": "Unterrichtsfach",
+      "teacherType": "Lehrertyp",
+      "name": "Name",
+      "subject": "Fach",
+      "type": "Typ"
+    },
+    "placeholders": {
+      "teacherName": "Bsp: Herr Schmidt",
+      "teacherEmail": "beispiel@domain.com",
+      "selectSubject": "Fach auswählen",
+      "selectType": "Typ auswählen"
+    },
+    "types": {
+      "teacher": "Lehrer (Klasse 5-12)",
+      "educator": "Erzieher (Klasse 0-4)",
+      "teacherLabel": "Lehrer",
+      "educatorLabel": "Erzieher"
+    },
+    "subjects": {
+      "categories": {
+        "sciences": "Naturwissenschaften",
+        "humanities": "Geisteswissenschaften",
+        "artsAndSports": "Kunst und Sport",
+        "others": "Sonstiges"
+      },
+      "list": {
+        "informatica": "Informatik",
+        "matematica": "Mathematik",
+        "fizica": "Physik",
+        "chimie": "Chemie",
+        "biologie": "Biologie",
+        "istorie": "Geschichte",
+        "geografie": "Geographie",
+        "romana": "Rumänisch",
+        "engleza": "Englisch",
+        "germana": "Deutsch",
+        "italiana": "Italienisch",
+        "latina": "Latein",
+        "franceza": "Französisch",
+        "educatieFizica": "Sportunterricht",
+        "arteVizuale": "Bildende Kunst",
+        "muzica": "Musik",
+        "religie": "Religion",
+        "psihologie": "Psychologie",
+        "economie": "Wirtschaft",
+        "filosofie": "Philosophie"
+      }
+    },
+    "columns": {
+      "name": "Name",
+      "subject": "Fach",
+      "type": "Typ"
+    }
+  },
+   "schedule": {
+      "title": "Stundenplan",
+      "createTitle": "Stundenplan erstellen",
+      "updateTitle": "Stundenplan aktualisieren",
+      "class": "Klasse",
+      "dayHour": "TAG / STUNDE",
+      "add": "Hinzufügen",
+      "scheduled": "Geplant",
+      "available": "Verfügbar",
+      "refresh": "Daten aktualisieren",
+      "processing": "Wird verarbeitet...",
+      "createButton": "Stundenplan erstellen",
+      "updateButton": "Stundenplan aktualisieren",
+      "createSuccess": "Stundenplan erfolgreich erstellt!",
+      "updateSuccess": "Stundenplan erfolgreich aktualisiert!",
+      "confirmDelete": "Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?",
+      "fields": {
+        "class": "Klasse",
+        "day": "Tag",
+        "startTime": "Startzeit",
+        "endTime": "Endzeit",
+        "subject": "Fach",
+        "teacher": "Lehrer"
+      },
+      "placeholders": {
+        "selectSubject": "Fach auswählen",
+        "selectTeacher": "Lehrer auswählen"
+      },
+      "days": {
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag"
+      },
+      "errors": {
+        "fetchClasses": "Klassen konnten nicht geladen werden. Überprüfen Sie Ihre Verbindung.",
+        "fetchSchedule": "Stundenplan für diese Klasse konnte nicht geladen werden.",
+        "fetchTeachers": "Lehrerdaten konnten nicht abgerufen werden. Überprüfen Sie Ihre Verbindung.",
+        "requiredFields": "Bitte füllen Sie alle erforderlichen Felder aus.",
+        "createSchedule": "Fehler beim Erstellen des Stundenplans. Bitte versuchen Sie es erneut.",
+        "updateSchedule": "Fehler beim Aktualisieren des Stundenplans. Bitte versuchen Sie es erneut.",
+        "deleteSchedule": "Beim Löschen des Eintrags ist ein Fehler aufgetreten."
+      }
+    },
+     "students": {
+      "title": "Schüler",
+      "list": {
+        "title": "Schülerliste",
+        "searchPlaceholder": "Nach Name, E-Mail oder Klasse suchen...",
+        "noStudents": "Keine Schüler verfügbar.",
+        "noStudentsFound": "Keine Schüler gefunden, die Ihrer Suche entsprechen.",
+        "errorLoading": "Schüler konnten nicht abgerufen werden. Bitte versuchen Sie es erneut.",
+        "confirmDelete": "Sind Sie sicher, dass Sie diesen Schüler löschen möchten?"
+      },
+      "edit": {
+        "title": "Schüler bearbeiten",
+        "successMessage": "Schüler erfolgreich aktualisiert!",
+        "errors": {
+          "loadingData": "Fehler beim Laden der Schülerdaten. Bitte versuchen Sie es erneut.",
+          "loadingClasses": "Fehler beim Laden der Klassen. Bitte versuchen Sie es erneut.",
+          "updateStudent": "Fehler beim Aktualisieren des Schülers. Bitte versuchen Sie es erneut."
+        }
+      },
+      "fields": {
+        "studentName": "Schülername",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "class": "Klasse",
+        "specialization": "Spezialisierung",
+        "name": "Name"
+      },
+      "placeholders": {
+        "studentName": "Schülername",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "selectClass": "Klasse auswählen"
+      },
+      "columns": {
+        "name": "Name",
+        "email": "E-Mail",
+        "class": "Klasse",
+        "specialization": "Spezialisierung",
+        "phoneNumber": "Telefonnummer",
+        "actions": "Aktionen"
+      }
+    },
+    "parents": {
+      "title": "Eltern",
+      "list": {
+        "title": "Elternliste",
+        "searchPlaceholder": "Nach Name oder E-Mail suchen...",
+        "noParents": "Keine Eltern verfügbar.",
+        "noParentsFound": "Keine Eltern gefunden, die Ihrer Suche entsprechen.",
+        "errorLoading": "Eltern konnten nicht abgerufen werden. Bitte versuchen Sie es erneut.",
+        "confirmDelete": "Sind Sie sicher, dass Sie diese Eltern löschen möchten?",
+        "deleteError": "Beim Löschen der Eltern ist ein Fehler aufgetreten.",
+        "parent": "Elternteil",
+        "motherInfo": "Informationen zur Mutter",
+        "fatherInfo": "Informationen zum Vater"
+      },
+      "edit": {
+        "title": "Eltern bearbeiten",
+        "successMessage": "Elterndaten erfolgreich aktualisiert!",
+        "errors": {
+          "loadingData": "Fehler beim Laden der Elterndaten. Bitte versuchen Sie es erneut.",
+          "updateParent": "Fehler beim Aktualisieren der Elterndaten. Bitte versuchen Sie es erneut."
+        }
+      },
+      "fields": {
+        "motherName": "Name der Mutter",
+        "motherEmail": "E-Mail der Mutter",
+        "motherPhone": "Telefon der Mutter",
+        "fatherName": "Name des Vaters",
+        "fatherEmail": "E-Mail des Vaters",
+        "fatherPhone": "Telefon des Vaters",
+        "name": "Name",
+        "email": "E-Mail",
+        "phone": "Telefon"
+      },
+      "placeholders": {
+        "motherName": "Name der Mutter",
+        "motherEmail": "E-Mail der Mutter",
+        "motherPhone": "Telefon der Mutter",
+        "fatherName": "Name des Vaters",
+        "fatherEmail": "E-Mail des Vaters",
+        "fatherPhone": "Telefon des Vaters"
+      },
+      "columns": {
+        "motherName": "Name der Mutter",
+        "motherEmail": "E-Mail der Mutter",
+        "motherPhone": "Telefon der Mutter",
+        "fatherName": "Name des Vaters",
+        "fatherEmail": "E-Mail des Vaters",
+        "fatherPhone": "Telefon des Vaters",
+        "actions": "Aktionen"
+      }
+    },
+    "userCreator": {
+      "title": "Benutzer erstellen",
+      "studentSection": "Schülerdetails",
+      "parentSection": "Elterndetails",
+      "submitButton": "Benutzer erstellen",
+      "successMessage": "Schüler und Eltern erfolgreich erstellt!",
+      "confirmMessage": "Möchten Sie wirklich die Benutzer erstellen:\n\nSchüler: {{studentUsername}}\nEltern: {{parentUsername}}",
+      "errors": {
+        "fetchClasses": "Klassen konnten nicht abgerufen werden.",
+        "createUsers": "Fehler beim Erstellen der Benutzer. Überprüfen Sie die eingegebenen Daten."
+      },
+      "placeholders": {
+        "studentName": "Schülername",
+        "studentEmail": "Schüler-E-Mail",
+        "studentPhone": "Schüler-Telefon",
+        "selectClass": "Klasse auswählen"
+      }
+    },
+ "grades": {
+      "title": "Notenverwaltung",
+      "list": {
+        "title": "Notenverwaltung",
+        "searchPlaceholder": "Nach Beschreibung oder Lehrer suchen...",
+        "allSubjects": "Alle Fächer",
+        "allTeachers": "Alle Lehrer",
+        "noGrades": "Keine Noten verfügbar.",
+        "noGradesFound": "Keine Noten gefunden, die den Filterkriterien entsprechen.",
+        "errorLoading": "Noten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+        "confirmDelete": "Sind Sie sicher, dass Sie diese Note löschen möchten?",
+        "deleteError": "Note konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+        "refresh": "Daten aktualisieren",
+        "showing": "Anzeige {{count}} von {{total}} Noten",
+        "unknownDate": "Unbekanntes Datum",
+        "invalidDate": "Ungültiges Datum",
+        "unknown": "Unbekannt",
+        "notAvailable": "N/V"
+      },
+      "create": {
+        "title": "Note hinzufügen",
+        "submitButton": "Note hinzufügen",
+        "selectClass": "Klasse auswählen",
+        "selectClassPlaceholder": "-- Klasse auswählen --",
+        "searchStudent": "Schüler suchen",
+        "searchStudentPlaceholder": "Schülername eingeben...",
+        "selectStudent": "Schüler auswählen",
+        "selectStudentPlaceholder": "-- Schüler auswählen --",
+        "selectSession": "Sitzung auswählen",
+        "selectSessionPlaceholder": "-- Sitzung auswählen --",
+        "gradeValue": "Notenwert",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "z.B. Abschlussprüfung, Mündliche Antwort...",
+        "quickGrades": "Schnelle Notenauswahl",
+        "loadingStudents": "Schüler werden geladen...",
+        "loadingSessions": "Sitzungen werden geladen...",
+        "noStudentsInClass": "Keine Schüler in dieser Klasse",
+        "noSessionsForClass": "Keine Sitzungen für diese Klasse",
+        "showingStudents": "Anzeige {{filtered}} von {{total}} Schülern",
+        "classSelectionInfo": "Die Auswahl der Klasse lädt automatisch verfügbare Schüler und Sitzungen.",
+        "success": "Note erfolgreich hinzugefügt!",
+        "errors": {
+          "loadingClasses": "Fehler beim Laden der Klassen. Bitte versuchen Sie es erneut.",
+          "loadingStudents": "Schüler für diese Klasse konnten nicht abgerufen werden.",
+          "loadingSessions": "Schüler abgerufen, aber Sitzungen konnten nicht geladen werden.",
+          "requiredFields": "Wählen Sie einen Schüler, eine Sitzung und geben Sie eine Note ein.",
+          "createGrade": "Fehler beim Hinzufügen der Note. Bitte versuchen Sie es erneut.",
+          "conflict": "Konflikt: Schüler ist abwesend oder hat bereits eine Note.",
+          "networkError": "Fehler beim Hinzufügen der Note. Überprüfen Sie Ihre Verbindung."
+        }
+      },
+      "edit": {
+        "title": "Note bearbeiten",
+        "gradeInfo": "Noteninformationen",
+        "infoNote": "Diese Informationen können nicht geändert werden. Sie können nur die Note und Beschreibung bearbeiten.",
+        "gradeValue": "Notenwert",
+        "description": "Beschreibung (optional)",
+        "descriptionPlaceholder": "z.B. Abschlussprüfung, Mündliche Antwort...",
+        "success": "Note erfolgreich aktualisiert!",
+        "errors": {
+          "loadingData": "Notendaten konnten nicht geladen werden. Bitte kehren Sie zur Notenliste zurück.",
+          "generalError": "Ein Fehler ist aufgetreten. Bitte kehren Sie zur Notenliste zurück.",
+          "gradeRequired": "Bitte geben Sie einen Wert für die Note ein.",
+          "updateError": "Fehler beim Aktualisieren der Note."
+        }
+      },
+      "fields": {
+        "teacher": "Lehrer",
+        "subject": "Fach",
+        "grade": "Note",
+        "date": "Datum",
+        "description": "Beschreibung",
+        "actions": "Aktionen"
+      }
+    }
   }
 }

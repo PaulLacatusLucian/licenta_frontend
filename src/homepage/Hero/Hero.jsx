@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import { useTranslation } from 'react-i18next';
 import Blob from "../../assets/blob.svg";
 import HeroPng from "../../assets/homeImg.png";
 import { motion } from "framer-motion";
@@ -27,6 +28,7 @@ export const FadeUp = (delay) => {
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleGetStarted = () => {
     navigate("/contact-us");
@@ -44,8 +46,8 @@ const Hero = () => {
               animate="animate"
               className="text-3xl lg:text-5xl font-bold !leading-snug"
             >
-              Learn more about {" "}
-              <span className="text-secondary">your future</span> school
+              {t('hero.title')} {" "}
+              <span className="text-secondary">{t('hero.titleHighlight')}</span> {t('hero.titleEnd')}
             </motion.h1>
             <motion.div
               variants={FadeUp(0.8)}
@@ -57,7 +59,7 @@ const Hero = () => {
                 className="primary-btn flex items-center gap-2 group"
                 onClick={handleGetStarted}
               >
-                Get Started
+                {t('hero.getStarted')}
                 <IoIosArrowRoundForward className="text-xl group-hover:translate-x-2 group-hover:-rotate-45 duration-300" />
               </button>
             </motion.div>

@@ -1,13 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { 
   BookOpen, 
   Globe, 
   Users, 
   Medal, 
   Music, 
-  Microscope  ,
+  Microscope,
   Code,
   Heart,
   Video,
@@ -61,41 +62,42 @@ const ServiceCard = ({ icon: Icon, title, description, features, delay }) => (
 
 const OurServices = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
   const mainServices = [
     {
       icon: BookOpen,
-      title: "German Language Education",
-      description: "Comprehensive German language instruction from beginner to advanced levels.",
+      title: t('ourServices.germanEducation.title'),
+      description: t('ourServices.germanEducation.description'),
       features: [
-        "DSD (German Language Diploma) preparation",
-        "Native German-speaking teachers",
-        "Small class sizes for optimal learning",
-        "Cultural integration activities"
+        t('ourServices.germanEducation.features.dsd'),
+        t('ourServices.germanEducation.features.native'),
+        t('ourServices.germanEducation.features.smallClass'),
+        t('ourServices.germanEducation.features.cultural')
       ],
       delay: 0.3
     },
     {
       icon: Globe,
-      title: "International Programs",
-      description: "Exchange programs and international partnerships for global exposure.",
+      title: t('ourServices.international.title'),
+      description: t('ourServices.international.description'),
       features: [
-        "Student exchange programs with German schools",
-        "International summer camps",
-        "Cultural exchange events",
-        "Partnership with German universities"
+        t('ourServices.international.features.exchange'),
+        t('ourServices.international.features.summer'),
+        t('ourServices.international.features.events'),
+        t('ourServices.international.features.partnership')
       ],
       delay: 0.4
     },
     {
       icon: Medal,
-      title: "Academic Excellence",
-      description: "Rigorous academic programs following both Romanian and German curricula.",
+      title: t('ourServices.academic.title'),
+      description: t('ourServices.academic.description'),
       features: [
-        "Dual language instruction",
-        "Advanced placement courses",
-        "University preparation programs",
-        "Academic competitions support"
+        t('ourServices.academic.features.dual'),
+        t('ourServices.academic.features.advanced'),
+        t('ourServices.academic.features.university'),
+        t('ourServices.academic.features.competitions')
       ],
       delay: 0.5
     }
@@ -104,45 +106,45 @@ const OurServices = () => {
   const additionalServices = [
     {
       icon: Music,
-      title: "Arts & Music",
-      description: "Comprehensive arts education including music, theater, and visual arts.",
+      title: t('ourServices.arts.title'),
+      description: t('ourServices.arts.description'),
       delay: 0.6
     },
     {
-      icon: Microscope ,
-      title: "Science Labs",
-      description: "Modern laboratories for physics, chemistry, and biology experiments.",
+      icon: Microscope,
+      title: t('ourServices.science.title'),
+      description: t('ourServices.science.description'),
       delay: 0.7
     },
     {
       icon: Code,
-      title: "Technology",
-      description: "Computer science courses and digital literacy programs.",
+      title: t('ourServices.technology.title'),
+      description: t('ourServices.technology.description'),
       delay: 0.8
     },
     {
       icon: Heart,
-      title: "Student Support",
-      description: "Counseling services and academic guidance for all students.",
+      title: t('ourServices.support.title'),
+      description: t('ourServices.support.description'),
       delay: 0.9
     },
     {
       icon: Video,
-      title: "Media Center",
-      description: "Modern media facilities for digital learning and projects.",
+      title: t('ourServices.media.title'),
+      description: t('ourServices.media.description'),
       delay: 1.0
     },
     {
       icon: Library,
-      title: "Library",
-      description: "Extensive collection of German and Romanian literature and resources.",
+      title: t('ourServices.library.title'),
+      description: t('ourServices.library.description'),
       delay: 1.1
     }
   ];
 
   return (
     <div className="bg-light">
-      {/* Hero Section */}
+      {/* Hero Sektion */}
       <section className="relative py-20 bg-secondary/10">
         <div className="container">
           <motion.div
@@ -152,17 +154,16 @@ const OurServices = () => {
             className="text-center max-w-3xl mx-auto"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Our Services
+              {t('ourServices.title')}
             </h1>
             <p className="text-lg text-gray-700">
-              Discover the comprehensive educational services and programs we offer 
-              to help our students excel in both German and Romanian educational systems.
+              {t('ourServices.subtitle')}
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Main Services */}
+      {/* Hauptdienstleistungen */}
       <section className="py-16">
         <div className="container">
           <motion.h2
@@ -171,7 +172,7 @@ const OurServices = () => {
             animate="animate"
             className="text-3xl font-bold text-center mb-12"
           >
-            Core Educational Programs
+            {t('ourServices.corePrograms')}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {mainServices.map((service, index) => (
@@ -181,7 +182,7 @@ const OurServices = () => {
         </div>
       </section>
 
-      {/* Additional Services */}
+      {/* Zusätzliche Dienstleistungen */}
       <section className="py-16 bg-white">
         <div className="container">
           <motion.h2
@@ -190,7 +191,7 @@ const OurServices = () => {
             animate="animate"
             className="text-3xl font-bold text-center mb-12"
           >
-            Additional Services
+            {t('ourServices.additionalServices')}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {additionalServices.map((service, index) => (
@@ -210,14 +211,16 @@ const OurServices = () => {
             className="bg-secondary/10 p-12 rounded-xl text-center max-w-3xl mx-auto"
           >
             <h2 className="text-2xl font-bold mb-4">
-              Want to Learn More About Our Services?
+              {t('ourServices.cta.title')}
             </h2>
             <p className="text-gray-700 mb-8">
-              Contact us to schedule a visit or learn more about our educational programs.
+              {t('ourServices.cta.description')}
             </p>
-            <button className="bg-secondary text-white px-8 py-3 rounded-lg hover:bg-secondary/90 transition-colors duration-300"
-            onClick={() => navigate("/contact-us")}>
-              Contact Us
+            <button 
+              className="bg-secondary text-white px-8 py-3 rounded-lg hover:bg-secondary/90 transition-colors duration-300"
+              onClick={() => navigate("/contact-us")}
+            >
+              {t('ourServices.cta.button')}
             </button>
           </motion.div>
         </div>

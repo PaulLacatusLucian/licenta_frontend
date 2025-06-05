@@ -1,0 +1,254 @@
+{
+  "navbar": {
+    "home": "Acasă",
+    "services": "Servicii",
+    "aboutUs": "Despre Noi",
+    "ourTeam": "Echipa Noastră",
+    "contactUs": "Contact",
+    "signIn": "Autentificare",
+    "schoolName": "Liceul Teoretic German \"Johann Ettinger\""
+  },
+  "hero": {
+    "title": "Află mai multe despre",
+    "titleHighlight": "viitoarea ta",
+    "titleEnd": "școală",
+    "getStarted": "Începe Acum"
+  },
+  "services": {
+    "title": "Facilități și Servicii pe care le Oferim",
+    "education": "Educație și Diplomă",
+    "cafeteria": "Cantină",
+    "sportsField": "Teren de Sport",
+    "security": "Securitate",
+    "afterSchool": "After School",
+    "modernEquipment": "Echipament Modern"
+  },
+  "aboutUs": {
+    "ourStory": "Povestea Noastră",
+    "subtitle": "Construim punți între culturi prin educație din 1997",
+    "stats": {
+      "students": "Elevi",
+      "yearsOfExcellence": "Ani de Excelență",
+      "exchangePrograms": "Programe de Schimb",
+      "awards": "Premii"
+    },
+    "missionVision": {
+      "title": "Misiunea și Viziunea Noastră",
+      "mission": "La Liceul Teoretic German \"Johann Ettinger\", ne străduim să oferim educație bilingvă excelentă care face legătura între culturile germană și română, pregătind în același timp elevii pentru oportunități globale.",
+      "vision": "Viziunea noastră este să fim o instituție de frunte în educația bilingvă, promovând înțelegerea culturală și excelența academică, în timp ce formăm cetățeni globali responsabili."
+    },
+    "journey": {
+      "title": "Parcursul Nostru",
+      "1997": {
+        "title": "Înființarea Școlii",
+        "desc": "Înființarea liceului teoretic german în Satu Mare."
+      },
+      "2005": {
+        "title": "Implementarea Programului DSD",
+        "desc": "Introducerea programului Diplomei de Limbă Germană (DSD)."
+      },
+      "2010": {
+        "title": "Parteneriate Internaționale",
+        "desc": "Stabilirea de parteneriate cheie cu școli și instituții germane."
+      },
+      "2023": {
+        "title": "Dezvoltarea Campusului Modern",
+        "desc": "Extinderea și modernizarea facilităților și programelor școlare."
+      }
+    },
+    "values": {
+      "title": "Valorile Noastre",
+      "academicExcellence": {
+        "title": "Excelență Academică",
+        "desc": "Menținem standarde academice ridicate și promovăm gândirea critică prin educație bilingvă."
+      },
+      "culturalUnderstanding": {
+        "title": "Înțelegere Culturală",
+        "desc": "Promovăm aprecierea atât pentru cultura germană, cât și pentru cea română, încurajând diversitatea și incluziunea."
+      },
+      "innovation": {
+        "title": "Inovație",
+        "desc": "Îmbrățișăm metodele moderne de predare și tehnologiile, menținând în același timp valorile educaționale tradiționale."
+      }
+    }
+  },
+  "contactUs": {
+    "title": "Contact",
+    "subtitle": "Aveți întrebări? Ne-ar plăcea să auzim de la dumneavoastră. Trimiteți-ne un mesaj și vă vom răspunde cât mai curând posibil.",
+    "address": "Adresă",
+    "phone": "Telefon",
+    "email": "Email",
+    "officeHours": "Program de Lucru",
+    "officeHoursValue": "Luni - Vineri: 8:00 - 16:00",
+    "sendMessage": "Trimiteți-ne un Mesaj",
+    "findUs": "Găsiți-ne",
+    "form": {
+      "name": "Nume",
+      "namePlaceholder": "Numele dumneavoastră",
+      "email": "Email",
+      "emailPlaceholder": "email@exemplu.com",
+      "subject": "Subiect",
+      "subjectPlaceholder": "Cum vă putem ajuta?",
+      "message": "Mesaj",
+      "messagePlaceholder": "Mesajul dumneavoastră...",
+      "send": "Trimite Mesajul"
+    }
+  },
+  "login": {
+    "welcome": "Bine ați venit",
+    "subtitle": "Conectați-vă pentru a accesa portalul școlii",
+    "authentication": "Autentificare",
+    "username": "Nume de utilizator",
+    "usernamePlaceholder": "Introduceți numele de utilizator",
+    "password": "Parolă",
+    "passwordPlaceholder": "Introduceți parola",
+    "signIn": "Conectare",
+    "loading": "Se încarcă...",
+    "schoolPortal": "Portal Școlar",
+    "authProblems": "Probleme cu autentificarea? Contactați administratorul școlii.",
+    "errors": {
+      "userNotFound": "Utilizatorul nu există în sistem. Verificați numele de utilizator.",
+      "wrongCredentials": "Nume de utilizator sau parolă greșită. Vă rugăm să încercați din nou.",
+      "authError": "Eroare la autentificare. Verificați numele de utilizator și parola."
+    }
+  },
+  "erasmus": {
+    "title": "Proiecte Erasmus în care Suntem Implicați",
+    "counter": "Proiecte Erasmus",
+    "description": "De peste 8 ani, școala noastră este implicată activ în proiecte Erasmus, colaborând cu instituții de învățământ din toată Europa. Aceste proiecte acoperă atât învățământul primar, cât și cel liceal, permițând elevilor noștri să se angajeze în experiențe de învățare interculturală și promovând parteneriatele internaționale.",
+    "andMore": "Și încă multe alte proiecte..."
+  },
+  "specialEvents": {
+    "title": "Evenimente Speciale la Școala Noastră",
+    "subtitle": "Școala noastră nu este doar despre academie. Sărbătorim, de asemenea, creativitatea, distracția și tradiția prin diverse evenimente speciale pe parcursul anului. Iată câteva dintre momentele noastre de vârf:",
+    "studentsVsTeachers": {
+      "title": "Meciul Elevi vs Profesori (Clasa a XII-a)",
+      "desc": "Un meci prietenesc, dar emoționant între elevi și profesori din clasa a XII-a, organizat anual."
+    },
+    "christmasMarket": {
+      "title": "Weihnachtsbasar (Târgul de Crăciun)",
+      "desc": "Târgul de Crăciun al școlii, unde elevii și profesorii colaborează pentru a vinde produse tradiționale și făcute manual."
+    },
+    "eratosthenes": {
+      "title": "Experimentul Eratostene",
+      "desc": "Un experiment fascinant care permite elevilor să măsoare circumferința Pământului folosind doar umbra unui stâlp și geografia."
+    }
+  },
+  "video": {
+    "title": "Un videoclip scurt pentru a rezuma experiența noastră școlară",
+    "description": "Urmăriți acest videoclip scurt care surprinde esența școlii noastre, de la activitățile vibrante din sală de clasă la momentele extracurriculare captivante. Obțineți o privire asupra experienței unice pe care o oferim elevilor noștri."
+  },
+  "footer": {
+    "sponsors": "Sponsorii Noștri",
+    "contact": "Contact",
+    "rights": "Toate drepturile rezervate."
+  },
+  "ourTeam": {
+    "title": "Echipa Noastră",
+    "subtitle": "Întâlniți profesioniștii dedicați care fac din Liceul Teoretic German \"Johann Ettinger\" un centru de excelență în educația bilingvă.",
+    "leadership": "Conducerea Școlii",
+    "vicePrincipal": "Director Adjunct",
+    "teachers": "Profesori",
+    "roles": {
+      "principal": "Director",
+      "vicePrincipal": "Director Adjunct",
+      "teacher": "Profesor"
+    },
+    "subjects": {
+      "music": "Muzică",
+      "romanianLanguage": "Limba Română",
+      "chemistry": "Chimie",
+      "germanLanguage": "Limba Germană",
+      "mathematics": "Matematică",
+      "philosophy": "Filosofie",
+      "physicalEducation": "Educație Fizică",
+      "history": "Istorie"
+    },
+    "principal": {
+      "description": "Conduce școala noastră cu dedicare și angajament pentru excelența educațională."
+    },
+    "vicePrincipalDesc": {
+      "description": "Sprijină administrația școlară și coordonează programele educaționale."
+    },
+    "teacherDescriptions": {
+      "zsoltKuki": "Inspiră elevii prin educație muzicală și activități culturale.",
+      "mariaTompos": "Dedicată dezvoltării competențelor lingvistice și aprecierii literare a elevilor.",
+      "manuelaDan": "Pasionată de literatura română și studiile culturale.",
+      "renataHodor": "Specializată în metodologii de predare a limbii române.",
+      "renataVeron": "Face lumea chimiei accesibilă și captivantă pentru elevi.",
+      "ildikoBodnar": "Promovează competențele de limbă germană și înțelegerea culturală.",
+      "anzikEster": "Specializată în predarea limbii germane și literatură.",
+      "erikaGazsa": "Dedicată dezvoltării unor fundații matematice solide și abilități de rezolvare a problemelor.",
+      "mrPop": "Ajută elevii să descopere frumusețea și logica matematicii.",
+      "mrSzekely": "Încurajează gândirea critică și cercetarea filosofică.",
+      "adrianTascu": "Promovează condiția fizică și sporturile de echipă.",
+      "sebi": "Dedicat dezvoltării fizice a elevilor și excelenței sportive.",
+      "bogdanStana": "Aduce istoria la viață prin metode de predare captivante."
+    }
+  },
+  "ourServices": {
+    "title": "Serviciile Noastre",
+    "subtitle": "Descoperiți serviciile și programele educaționale cuprinzătoare pe care le oferim pentru a ajuta elevii noștri să exceleze atât în sistemul educațional german, cât și în cel românesc.",
+    "corePrograms": "Programe Educaționale de Bază",
+    "additionalServices": "Servicii Suplimentare",
+    "cta": {
+      "title": "Doriți să Aflați Mai Multe Despre Serviciile Noastre?",
+      "description": "Contactați-ne pentru a programa o vizită sau pentru a afla mai multe despre programele noastre educaționale.",
+      "button": "Contactează-ne"
+    },
+    "germanEducation": {
+      "title": "Educație în Limba Germană",
+      "description": "Instruire cuprinzătoare în limba germană de la nivel începător la avansat.",
+      "features": {
+        "dsd": "Pregătire pentru DSD (Diploma de Limbă Germană)",
+        "native": "Profesori vorbitori nativi de germană",
+        "smallClass": "Clase mici pentru învățare optimă",
+        "cultural": "Activități de integrare culturală"
+      }
+    },
+    "international": {
+      "title": "Programe Internaționale",
+      "description": "Programe de schimb și parteneriate internaționale pentru expunere globală.",
+      "features": {
+        "exchange": "Programe de schimb de elevi cu școli germane",
+        "summer": "Tabere internaționale de vară",
+        "events": "Evenimente de schimb cultural",
+        "partnership": "Parteneriat cu universități germane"
+      }
+    },
+    "academic": {
+      "title": "Excelență Academică",
+      "description": "Programe academice riguroase care urmează atât curricula română, cât și cea germană.",
+      "features": {
+        "dual": "Instruire în două limbi",
+        "advanced": "Cursuri de plasament avansat",
+        "university": "Programe de pregătire universitară",
+        "competitions": "Suport pentru competiții academice"
+      }
+    },
+    "arts": {
+      "title": "Arte și Muzică",
+      "description": "Educație artistică cuprinzătoare incluzând muzică, teatru și arte vizuale."
+    },
+    "science": {
+      "title": "Laboratoare de Științe",
+      "description": "Laboratoare moderne pentru experimente de fizică, chimie și biologie."
+    },
+    "technology": {
+      "title": "Tehnologie",
+      "description": "Cursuri de informatică și programe de alfabetizare digitală."
+    },
+    "support": {
+      "title": "Sprijin pentru Elevi",
+      "description": "Servicii de consiliere și îndrumare academică pentru toți elevii."
+    },
+    "media": {
+      "title": "Centru Media",
+      "description": "Facilități media moderne pentru învățare digitală și proiecte."
+    },
+    "library": {
+      "title": "Bibliotecă",
+      "description": "Colecție extinsă de literatură și resurse germane și românești."
+    }
+  }
+}

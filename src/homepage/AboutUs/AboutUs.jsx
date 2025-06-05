@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, BookOpen, Globe, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const FadeUp = (delay) => {
   return {
@@ -38,9 +39,11 @@ const StatCard = ({ icon: Icon, title, value, delay }) => (
 );
 
 const AboutUs = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-light">
-      {/* Hero Section */}
+      {/* Hero Sektion */}
       <section className="relative h-[400px] bg-secondary/10 overflow-hidden">
         <div className="container h-full flex items-center justify-center">
           <motion.div
@@ -50,40 +53,40 @@ const AboutUs = () => {
             className="text-center"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Our Story
+              {t('aboutUs.ourStory')}
             </h1>
             <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-              Building bridges between cultures through education since 1997
+              {t('aboutUs.subtitle')}
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Statistiken Sektion */}
       <section className="py-16">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <StatCard
               icon={Users}
-              title="Students"
+              title={t('aboutUs.stats.students')}
               value="500+"
               delay={0.3}
             />
             <StatCard
               icon={BookOpen}
-              title="Years of Excellence"
+              title={t('aboutUs.stats.yearsOfExcellence')}
               value="26"
               delay={0.4}
             />
             <StatCard
               icon={Globe}
-              title="Exchange Programs"
+              title={t('aboutUs.stats.exchangePrograms')}
               value="15+"
               delay={0.5}
             />
             <StatCard
               icon={Award}
-              title="Awards"
+              title={t('aboutUs.stats.awards')}
               value="100+"
               delay={0.6}
             />
@@ -100,20 +103,18 @@ const AboutUs = () => {
             animate="animate"
             className="max-w-3xl mx-auto text-center mb-16"
           >
-            <h2 className="text-3xl font-bold mb-6">Our Mission & Vision</h2>
+            <h2 className="text-3xl font-bold mb-6">{t('aboutUs.missionVision.title')}</h2>
             <p className="text-lg text-gray-700 mb-8">
-              At Liceul Teoretic German "Johann Ettinger", we strive to provide excellent bilingual education 
-              that bridges German and Romanian cultures while preparing students for global opportunities.
+              {t('aboutUs.missionVision.mission')}
             </p>
             <p className="text-lg text-gray-700">
-              Our vision is to be a leading institution in bilingual education, fostering cultural understanding 
-              and academic excellence while nurturing responsible global citizens.
+              {t('aboutUs.missionVision.vision')}
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* History Timeline */}
+      {/* Geschichte Timeline */}
       <section className="py-16">
         <div className="container">
           <motion.h2
@@ -122,7 +123,7 @@ const AboutUs = () => {
             animate="animate"
             className="text-3xl font-bold text-center mb-12"
           >
-            Our Journey
+            {t('aboutUs.journey.title')}
           </motion.h2>
           <div className="max-w-4xl mx-auto">
             <motion.div
@@ -136,8 +137,8 @@ const AboutUs = () => {
                   <h3 className="text-xl font-bold text-secondary">1997</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <h4 className="font-semibold mb-2">School Foundation</h4>
-                  <p className="text-gray-700">Establishment of the German theoretical high school in Satu Mare.</p>
+                  <h4 className="font-semibold mb-2">{t('aboutUs.journey.1997.title')}</h4>
+                  <p className="text-gray-700">{t('aboutUs.journey.1997.desc')}</p>
                 </div>
               </div>
 
@@ -146,8 +147,8 @@ const AboutUs = () => {
                   <h3 className="text-xl font-bold text-secondary">2005</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <h4 className="font-semibold mb-2">DSD Program Implementation</h4>
-                  <p className="text-gray-700">Introduction of the German Language Diploma (DSD) program.</p>
+                  <h4 className="font-semibold mb-2">{t('aboutUs.journey.2005.title')}</h4>
+                  <p className="text-gray-700">{t('aboutUs.journey.2005.desc')}</p>
                 </div>
               </div>
 
@@ -156,8 +157,8 @@ const AboutUs = () => {
                   <h3 className="text-xl font-bold text-secondary">2010</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <h4 className="font-semibold mb-2">International Partnerships</h4>
-                  <p className="text-gray-700">Establishment of key partnerships with German schools and institutions.</p>
+                  <h4 className="font-semibold mb-2">{t('aboutUs.journey.2010.title')}</h4>
+                  <p className="text-gray-700">{t('aboutUs.journey.2010.desc')}</p>
                 </div>
               </div>
 
@@ -166,8 +167,8 @@ const AboutUs = () => {
                   <h3 className="text-xl font-bold text-secondary">2023</h3>
                 </div>
                 <div className="md:w-2/3">
-                  <h4 className="font-semibold mb-2">Modern Campus Development</h4>
-                  <p className="text-gray-700">Expansion and modernization of school facilities and programs.</p>
+                  <h4 className="font-semibold mb-2">{t('aboutUs.journey.2023.title')}</h4>
+                  <p className="text-gray-700">{t('aboutUs.journey.2023.desc')}</p>
                 </div>
               </div>
             </motion.div>
@@ -175,7 +176,7 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* Values Section */}
+      {/* Werte Sektion */}
       <section className="py-16 bg-white">
         <div className="container">
           <motion.h2
@@ -184,7 +185,7 @@ const AboutUs = () => {
             animate="animate"
             className="text-3xl font-bold text-center mb-12"
           >
-            Our Values
+            {t('aboutUs.values.title')}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <motion.div
@@ -193,9 +194,9 @@ const AboutUs = () => {
               animate="animate"
               className="bg-light p-6 rounded-xl"
             >
-              <h3 className="text-xl font-bold mb-4">Academic Excellence</h3>
+              <h3 className="text-xl font-bold mb-4">{t('aboutUs.values.academicExcellence.title')}</h3>
               <p className="text-gray-700">
-                We maintain high academic standards and promote critical thinking through bilingual education.
+                {t('aboutUs.values.academicExcellence.desc')}
               </p>
             </motion.div>
 
@@ -205,9 +206,9 @@ const AboutUs = () => {
               animate="animate"
               className="bg-light p-6 rounded-xl"
             >
-              <h3 className="text-xl font-bold mb-4">Cultural Understanding</h3>
+              <h3 className="text-xl font-bold mb-4">{t('aboutUs.values.culturalUnderstanding.title')}</h3>
               <p className="text-gray-700">
-                We foster appreciation for both German and Romanian cultures, promoting diversity and inclusion.
+                {t('aboutUs.values.culturalUnderstanding.desc')}
               </p>
             </motion.div>
 
@@ -217,9 +218,9 @@ const AboutUs = () => {
               animate="animate"
               className="bg-light p-6 rounded-xl"
             >
-              <h3 className="text-xl font-bold mb-4">Innovation</h3>
+              <h3 className="text-xl font-bold mb-4">{t('aboutUs.values.innovation.title')}</h3>
               <p className="text-gray-700">
-                We embrace modern teaching methods and technologies while maintaining traditional educational values.
+                {t('aboutUs.values.innovation.desc')}
               </p>
             </motion.div>
           </div>

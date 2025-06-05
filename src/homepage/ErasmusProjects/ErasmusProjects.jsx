@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
 import ProjectCard from "./ProjectCard";
 import projectImage1 from "../../assets/erasmus-1.jpg";
@@ -14,6 +15,7 @@ import projectImage9 from "../../assets/erasmus-9.jpg";
 import { FadeUp } from "../Hero/Hero";
 
 const ErasmusProjects = () => {
+  const { t } = useTranslation();
   const [counter, setCounter] = useState(0);
   const targetCount = 100;
 
@@ -41,17 +43,17 @@ const ErasmusProjects = () => {
   return (
     <section className="bg-light py-16">
       <div className="container">
-        {/* Titlul secțiunii */}
+        {/* Titel der Sektion */}
         <motion.h2
           variants={FadeUp(0.3)}
           initial="initial"
           animate="animate"
           className="text-4xl font-bold text-center pb-10"
         >
-          Erasmus Projects We Are Involved In
+          {t('erasmus.title')}
         </motion.h2>
 
-        {/* Counter */}
+        {/* Zähler */}
         <motion.div
           variants={FadeUp(0.4)}
           initial="initial"
@@ -59,20 +61,20 @@ const ErasmusProjects = () => {
           className="text-5xl font-bold text-center mb-8"
         >
           <span className="text-secondary">{counter}+ </span>
-          Erasmus Projects
+          {t('erasmus.counter')}
         </motion.div>
 
-        {/* Descriere */}
+        {/* Beschreibung */}
         <motion.p
           variants={FadeUp(0.5)}
           initial="initial"
           animate="animate"
           className="text-lg text-center text-gray-700 mb-12"
         >
-          For over 8 years, our school has been actively involved in Erasmus projects, collaborating with educational institutions from all over Europe. These projects span both primary and high school education, allowing our students to engage in cross-cultural learning experiences and fostering international partnerships.
+          {t('erasmus.description')}
         </motion.p>
 
-        {/* Lista de proiecte Erasmus */}
+        {/* Erasmus-Projektliste */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <ProjectCard
@@ -84,14 +86,14 @@ const ErasmusProjects = () => {
           ))}
         </div>
 
-        {/* Text "și încă multe altele" */}
+        {/* "Und viele weitere Projekte" Text */}
         <motion.div
           variants={FadeUp(0.6)}
           initial="initial"
           animate="animate"
           className="text-lg text-center text-gray-700 mt-12"
         >
-          And many more projects...
+          {t('erasmus.andMore')}
         </motion.div>
       </div>
     </section>

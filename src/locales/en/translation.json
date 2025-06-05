@@ -1,0 +1,254 @@
+{
+  "navbar": {
+    "home": "Home",
+    "services": "Services",
+    "aboutUs": "About Us",
+    "ourTeam": "Our Team",
+    "contactUs": "Contact Us",
+    "signIn": "Sign In",
+    "schoolName": "German Theoretical High School \"Johann Ettinger\""
+  },
+  "hero": {
+    "title": "Learn more about",
+    "titleHighlight": "your future",
+    "titleEnd": "school",
+    "getStarted": "Get Started"
+  },
+  "services": {
+    "title": "Facilities and Services We Provide",
+    "education": "Education & Degree",
+    "cafeteria": "Cafeteria",
+    "sportsField": "Sports Field",
+    "security": "Security",
+    "afterSchool": "After School",
+    "modernEquipment": "Modern Equipment"
+  },
+  "aboutUs": {
+    "ourStory": "Our Story",
+    "subtitle": "Building bridges between cultures through education since 1997",
+    "stats": {
+      "students": "Students",
+      "yearsOfExcellence": "Years of Excellence",
+      "exchangePrograms": "Exchange Programs",
+      "awards": "Awards"
+    },
+    "missionVision": {
+      "title": "Our Mission & Vision",
+      "mission": "At Liceul Teoretic German \"Johann Ettinger\", we strive to provide excellent bilingual education that bridges German and Romanian cultures while preparing students for global opportunities.",
+      "vision": "Our vision is to be a leading institution in bilingual education, fostering cultural understanding and academic excellence while nurturing responsible global citizens."
+    },
+    "journey": {
+      "title": "Our Journey",
+      "1997": {
+        "title": "School Foundation",
+        "desc": "Establishment of the German theoretical high school in Satu Mare."
+      },
+      "2005": {
+        "title": "DSD Program Implementation",
+        "desc": "Introduction of the German Language Diploma (DSD) program."
+      },
+      "2010": {
+        "title": "International Partnerships",
+        "desc": "Establishment of key partnerships with German schools and institutions."
+      },
+      "2023": {
+        "title": "Modern Campus Development",
+        "desc": "Expansion and modernization of school facilities and programs."
+      }
+    },
+    "values": {
+      "title": "Our Values",
+      "academicExcellence": {
+        "title": "Academic Excellence",
+        "desc": "We maintain high academic standards and promote critical thinking through bilingual education."
+      },
+      "culturalUnderstanding": {
+        "title": "Cultural Understanding",
+        "desc": "We foster appreciation for both German and Romanian cultures, promoting diversity and inclusion."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "desc": "We embrace modern teaching methods and technologies while maintaining traditional educational values."
+      }
+    }
+  },
+  "contactUs": {
+    "title": "Contact Us",
+    "subtitle": "Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "officeHours": "Office Hours",
+    "officeHoursValue": "Monday - Friday: 8:00 AM - 4:00 PM",
+    "sendMessage": "Send us a Message",
+    "findUs": "Find Us",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "How can we help?",
+      "message": "Message",
+      "messagePlaceholder": "Your message...",
+      "send": "Send Message"
+    }
+  },
+  "login": {
+    "welcome": "Welcome",
+    "subtitle": "Sign in to access the school portal",
+    "authentication": "Authentication",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signIn": "Sign In",
+    "loading": "Loading...",
+    "schoolPortal": "School Portal",
+    "authProblems": "Authentication problems? Contact the school administrator.",
+    "errors": {
+      "userNotFound": "User not found in the system. Please check your username.",
+      "wrongCredentials": "Wrong username or password. Please try again.",
+      "authError": "Authentication error. Please check your username and password."
+    }
+  },
+  "erasmus": {
+    "title": "Erasmus Projects We Are Involved In",
+    "counter": "Erasmus Projects",
+    "description": "For over 8 years, our school has been actively involved in Erasmus projects, collaborating with educational institutions from all over Europe. These projects span both primary and high school education, allowing our students to engage in cross-cultural learning experiences and fostering international partnerships.",
+    "andMore": "And many more projects..."
+  },
+  "specialEvents": {
+    "title": "Special Events at Our School",
+    "subtitle": "Our school is not just about academics. We also celebrate creativity, fun, and tradition through various special events throughout the year. Here are some of our highlights:",
+    "studentsVsTeachers": {
+      "title": "Students vs Teachers Match (12th Grade)",
+      "desc": "A friendly, yet emotional match between students and teachers from the 12th grade, held annually."
+    },
+    "christmasMarket": {
+      "title": "Weihnachtsbasar (Christmas Market)",
+      "desc": "The school's Christmas market, where students and teachers collaborate to sell traditional and handmade products."
+    },
+    "eratosthenes": {
+      "title": "Eratosthenes Experiment",
+      "desc": "A fascinating experiment that allows students to measure the Earth's circumference using only the shadow of a pillar and geography."
+    }
+  },
+  "video": {
+    "title": "A quick video to summarize our school experience",
+    "description": "Watch this short video that captures the essence of our school, from the vibrant classroom activities to the exciting extracurricular moments. Get a glimpse into the unique experience we offer our students."
+  },
+  "footer": {
+    "sponsors": "Our Sponsors",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  },
+  "ourTeam": {
+    "title": "Our Team",
+    "subtitle": "Meet the dedicated professionals who make Liceul Teoretic German \"Johann Ettinger\" a center of excellence in bilingual education.",
+    "leadership": "School Leadership",
+    "vicePrincipal": "Vice Principal",
+    "teachers": "Teachers",
+    "roles": {
+      "principal": "School Principal",
+      "vicePrincipal": "Vice Principal",
+      "teacher": "Teacher"
+    },
+    "subjects": {
+      "music": "Music",
+      "romanianLanguage": "Romanian Language",
+      "chemistry": "Chemistry",
+      "germanLanguage": "German Language",
+      "mathematics": "Mathematics",
+      "philosophy": "Philosophy",
+      "physicalEducation": "Physical Education",
+      "history": "History"
+    },
+    "principal": {
+      "description": "Leading our school with dedication and commitment to educational excellence."
+    },
+    "vicePrincipalDesc": {
+      "description": "Supporting school administration and coordinating educational programs."
+    },
+    "teacherDescriptions": {
+      "zsoltKuki": "Inspiring students through music education and cultural activities.",
+      "mariaTompos": "Dedicated to developing students' language proficiency and literary appreciation.",
+      "manuelaDan": "Passionate about Romanian literature and cultural studies.",
+      "renataHodor": "Specialized in Romanian language teaching methodologies.",
+      "renataVeron": "Making the world of chemistry accessible and exciting for students.",
+      "ildikoBodnar": "Promoting German language skills and cultural understanding.",
+      "anzikEster": "Specializing in German language instruction and literature.",
+      "erikaGazsa": "Dedicated to developing strong mathematical foundations and problem-solving skills.",
+      "mrPop": "Helping students discover the beauty and logic of mathematics.",
+      "mrSzekely": "Encouraging critical thinking and philosophical inquiry.",
+      "adrianTascu": "Promoting physical fitness and team sports.",
+      "sebi": "Dedicated to students' physical development and sports excellence.",
+      "bogdanStana": "Making history come alive through engaging teaching methods."
+    }
+  },
+  "ourServices": {
+    "title": "Our Services",
+    "subtitle": "Discover the comprehensive educational services and programs we offer to help our students excel in both German and Romanian educational systems.",
+    "corePrograms": "Core Educational Programs",
+    "additionalServices": "Additional Services",
+    "cta": {
+      "title": "Want to Learn More About Our Services?",
+      "description": "Contact us to schedule a visit or learn more about our educational programs.",
+      "button": "Contact Us"
+    },
+    "germanEducation": {
+      "title": "German Language Education",
+      "description": "Comprehensive German language instruction from beginner to advanced levels.",
+      "features": {
+        "dsd": "DSD (German Language Diploma) preparation",
+        "native": "Native German-speaking teachers",
+        "smallClass": "Small class sizes for optimal learning",
+        "cultural": "Cultural integration activities"
+      }
+    },
+    "international": {
+      "title": "International Programs",
+      "description": "Exchange programs and international partnerships for global exposure.",
+      "features": {
+        "exchange": "Student exchange programs with German schools",
+        "summer": "International summer camps",
+        "events": "Cultural exchange events",
+        "partnership": "Partnership with German universities"
+      }
+    },
+    "academic": {
+      "title": "Academic Excellence",
+      "description": "Rigorous academic programs following both Romanian and German curricula.",
+      "features": {
+        "dual": "Dual language instruction",
+        "advanced": "Advanced placement courses",
+        "university": "University preparation programs",
+        "competitions": "Academic competitions support"
+      }
+    },
+    "arts": {
+      "title": "Arts & Music",
+      "description": "Comprehensive arts education including music, theater, and visual arts."
+    },
+    "science": {
+      "title": "Science Labs",
+      "description": "Modern laboratories for physics, chemistry, and biology experiments."
+    },
+    "technology": {
+      "title": "Technology",
+      "description": "Computer science courses and digital literacy programs."
+    },
+    "support": {
+      "title": "Student Support",
+      "description": "Counseling services and academic guidance for all students."
+    },
+    "media": {
+      "title": "Media Center",
+      "description": "Modern media facilities for digital learning and projects."
+    },
+    "library": {
+      "title": "Library",
+      "description": "Extensive collection of German and Romanian literature and resources."
+    }
+  }
+}

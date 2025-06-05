@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-// Animația pentru intrare
+// Animation für Eingang
 const FadeUp = (delay) => {
   return {
     initial: {

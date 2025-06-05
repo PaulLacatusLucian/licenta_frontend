@@ -1,36 +1,41 @@
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
+// src/i18n.js
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+// Import translation files
+import enTranslation from './locales/en/translation.json';
+import roTranslation from './locales/ro/translation.json';
+import deTranslation from './locales/de/translation.json';
 
 const resources = {
   en: {
-    translation: {
-      videoTitle: "A quick video to summarize our school experience",
-      videoDescription: "Watch this short video that captures the essence of our school...",
-    },
+    translation: enTranslation
   },
   ro: {
-    translation: {
-      videoTitle: "Un videoclip rapid care rezumă experiența noastră școlară",
-      videoDescription: "Urmărește acest videoclip scurt care surprinde esența școlii noastre...",
-    },
+    translation: roTranslation
   },
   de: {
-    translation: {
-      videoTitle: "Ein kurzes Video, das unsere Schulerfahrung zusammenfasst",
-      videoDescription: "Sehen Sie sich dieses kurze Video an, das das Wesen unserer Schule einfängt...",
-    },
-  },
+    translation: deTranslation
+  }
 };
 
 i18n
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
-    lng: "en", 
-    fallbackLng: "en",
+    fallbackLng: 'ro', // limba implicită
+    debug: false,
+    
     interpolation: {
-      escapeValue: false,
+      escapeValue: false // React deja face escape la valori
     },
+    
+    detection: {
+      order: ['localStorage', 'navigator', 'htmlTag'],
+      caches: ['localStorage']
+    }
   });
 
 export default i18n;

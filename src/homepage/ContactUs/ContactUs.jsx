@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const FadeUp = (delay) => {
   return {
@@ -38,110 +39,112 @@ const ContactInfoCard = ({ icon: Icon, title, content, delay }) => (
 );
 
 const ContactUs = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="bg-light py-16">
       <div className="container">
-        {/* Header Section */}
+        {/* Header Sektion */}
         <motion.div
           variants={FadeUp(0.2)}
           initial="initial"
           animate="animate"
           className="text-center mb-12"
         >
-          <h2 className="text-4xl font-bold mb-4">Contact Us</h2>
+          <h2 className="text-4xl font-bold mb-4">{t('contactUs.title')}</h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            {t('contactUs.subtitle')}
           </p>
         </motion.div>
 
-        {/* Contact Info Cards */}
+        {/* Kontaktinfo Karten */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <ContactInfoCard
             icon={MapPin}
-            title="Address"
+            title={t('contactUs.address')}
             content="Bulevardul Cloșca, nr. 72, Satu Mare, Romania"
             delay={0.3}
           />
           <ContactInfoCard
             icon={Phone}
-            title="Phone"
+            title={t('contactUs.phone')}
             content="0261722185"
             delay={0.4}
           />
           <ContactInfoCard
             icon={Mail}
-            title="Email"
+            title={t('contactUs.email')}
             content="ltg@lgerm-ettinger.ro"
             delay={0.5}
           />
           <ContactInfoCard
             icon={Clock}
-            title="Office Hours"
-            content="Monday - Friday: 8:00 AM - 4:00 PM"
+            title={t('contactUs.officeHours')}
+            content={t('contactUs.officeHoursValue')}
             delay={0.6}
           />
         </div>
 
-        {/* Contact Form and Map Section */}
+        {/* Kontaktformular und Karte Sektion */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
+          {/* Kontaktformular */}
           <motion.div
             variants={FadeUp(0.7)}
             initial="initial"
             animate="animate"
             className="bg-white p-8 rounded-xl shadow-lg"
           >
-            <h3 className="text-2xl font-semibold mb-6">Send us a Message</h3>
+            <h3 className="text-2xl font-semibold mb-6">{t('contactUs.sendMessage')}</h3>
             <form className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Name
+                  {t('contactUs.form.name')}
                 </label>
                 <input
                   type="text"
                   id="name"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  placeholder="Your name"
+                  placeholder={t('contactUs.form.namePlaceholder')}
                 />
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  {t('contactUs.form.email')}
                 </label>
                 <input
                   type="email"
                   id="email"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  placeholder="your@email.com"
+                  placeholder={t('contactUs.form.emailPlaceholder')}
                 />
               </div>
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject
+                  {t('contactUs.form.subject')}
                 </label>
                 <input
                   type="text"
                   id="subject"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  placeholder="How can we help?"
+                  placeholder={t('contactUs.form.subjectPlaceholder')}
                 />
               </div>
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Message
+                  {t('contactUs.form.message')}
                 </label>
                 <textarea
                   id="message"
                   rows={4}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  placeholder="Your message..."
+                  placeholder={t('contactUs.form.messagePlaceholder')}
                 />
               </div>
               <button
                 type="submit"
                 className="w-full bg-secondary text-white py-3 px-6 rounded-lg hover:bg-secondary/90 transition-colors duration-300"
               >
-                Send Message
+                {t('contactUs.form.send')}
               </button>
             </form>
           </motion.div>
@@ -152,7 +155,7 @@ const ContactUs = () => {
             animate="animate"
             className="bg-white p-8 rounded-xl shadow-lg"
           >
-            <h3 className="text-2xl font-semibold mb-6">Find Us</h3>
+            <h3 className="text-2xl font-semibold mb-6">{t('contactUs.findUs')}</h3>
             <div className="h-[400px] bg-gray-100 rounded-lg overflow-hidden">
               <iframe
                 title="School Location"

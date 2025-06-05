@@ -1,0 +1,254 @@
+{
+  "navbar": {
+    "home": "Startseite",
+    "services": "Dienstleistungen",
+    "aboutUs": "Über Uns",
+    "ourTeam": "Unser Team",
+    "contactUs": "Kontakt",
+    "signIn": "Anmelden",
+    "schoolName": "Deutsches Theoretisches Gymnasium \"Johann Ettinger\""
+  },
+  "hero": {
+    "title": "Erfahren Sie mehr über",
+    "titleHighlight": "Ihre zukünftige",
+    "titleEnd": "Schule",
+    "getStarted": "Jetzt Starten"
+  },
+  "services": {
+    "title": "Einrichtungen und Dienstleistungen, die wir anbieten",
+    "education": "Bildung & Abschluss",
+    "cafeteria": "Cafeteria",
+    "sportsField": "Sportplatz",
+    "security": "Sicherheit",
+    "afterSchool": "Nachmittagsbetreuung",
+    "modernEquipment": "Moderne Ausstattung"
+  },
+  "aboutUs": {
+    "ourStory": "Unsere Geschichte",
+    "subtitle": "Brücken zwischen Kulturen durch Bildung seit 1997",
+    "stats": {
+      "students": "Schüler",
+      "yearsOfExcellence": "Jahre der Exzellenz",
+      "exchangePrograms": "Austauschprogramme",
+      "awards": "Auszeichnungen"
+    },
+    "missionVision": {
+      "title": "Unsere Mission & Vision",
+      "mission": "Am Deutsches Theoretisches Gymnasium \"Johann Ettinger\" bemühen wir uns, exzellente zweisprachige Bildung anzubieten, die deutsche und rumänische Kulturen verbindet und Schüler auf globale Möglichkeiten vorbereitet.",
+      "vision": "Unsere Vision ist es, eine führende Institution in der zweisprachigen Bildung zu sein, kulturelles Verständnis und akademische Exzellenz zu fördern und verantwortungsbewusste Weltbürger zu erziehen."
+    },
+    "journey": {
+      "title": "Unser Weg",
+      "1997": {
+        "title": "Schulgründung",
+        "desc": "Gründung des deutschen theoretischen Gymnasiums in Satu Mare."
+      },
+      "2005": {
+        "title": "DSD-Programm Implementierung",
+        "desc": "Einführung des Deutschen Sprachdiplom (DSD) Programms."
+      },
+      "2010": {
+        "title": "Internationale Partnerschaften",
+        "desc": "Aufbau wichtiger Partnerschaften mit deutschen Schulen und Institutionen."
+      },
+      "2023": {
+        "title": "Moderne Campus-Entwicklung",
+        "desc": "Erweiterung und Modernisierung der Schuleinrichtungen und Programme."
+      }
+    },
+    "values": {
+      "title": "Unsere Werte",
+      "academicExcellence": {
+        "title": "Akademische Exzellenz",
+        "desc": "Wir halten hohe akademische Standards aufrecht und fördern kritisches Denken durch zweisprachige Bildung."
+      },
+      "culturalUnderstanding": {
+        "title": "Kulturelles Verständnis",
+        "desc": "Wir fördern die Wertschätzung sowohl der deutschen als auch der rumänischen Kultur und fördern Vielfalt und Inklusion."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "desc": "Wir nutzen moderne Lehrmethoden und Technologien, während wir traditionelle Bildungswerte beibehalten."
+      }
+    }
+  },
+  "contactUs": {
+    "title": "Kontakt",
+    "subtitle": "Haben Sie Fragen? Wir würden gerne von Ihnen hören. Senden Sie uns eine Nachricht und wir werden so schnell wie möglich antworten.",
+    "address": "Adresse",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "officeHours": "Bürozeiten",
+    "officeHoursValue": "Montag - Freitag: 8:00 - 16:00 Uhr",
+    "sendMessage": "Senden Sie uns eine Nachricht",
+    "findUs": "Finden Sie uns",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Ihr Name",
+      "email": "E-Mail",
+      "emailPlaceholder": "ihre@email.com",
+      "subject": "Betreff",
+      "subjectPlaceholder": "Wie können wir helfen?",
+      "message": "Nachricht",
+      "messagePlaceholder": "Ihre Nachricht...",
+      "send": "Nachricht senden"
+    }
+  },
+  "login": {
+    "welcome": "Willkommen",
+    "subtitle": "Melden Sie sich an, um auf das Schulportal zuzugreifen",
+    "authentication": "Authentifizierung",
+    "username": "Benutzername",
+    "usernamePlaceholder": "Benutzername eingeben",
+    "password": "Passwort",
+    "passwordPlaceholder": "Passwort eingeben",
+    "signIn": "Anmelden",
+    "loading": "Lädt...",
+    "schoolPortal": "Schulportal",
+    "authProblems": "Authentifizierungsprobleme? Kontaktieren Sie den Schuladministrator.",
+    "errors": {
+      "userNotFound": "Benutzer nicht im System gefunden. Bitte überprüfen Sie Ihren Benutzernamen.",
+      "wrongCredentials": "Falscher Benutzername oder Passwort. Bitte versuchen Sie es erneut.",
+      "authError": "Authentifizierungsfehler. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort."
+    }
+  },
+  "erasmus": {
+    "title": "Erasmus-Projekte, an denen wir beteiligt sind",
+    "counter": "Erasmus-Projekte",
+    "description": "Seit über 8 Jahren ist unsere Schule aktiv an Erasmus-Projekten beteiligt und arbeitet mit Bildungseinrichtungen aus ganz Europa zusammen. Diese Projekte umfassen sowohl die Grund- als auch die Gymnasialbildung und ermöglichen es unseren Schülern, sich an interkulturellen Lernerfahrungen zu beteiligen und internationale Partnerschaften zu fördern.",
+    "andMore": "Und viele weitere Projekte..."
+  },
+  "specialEvents": {
+    "title": "Besondere Veranstaltungen an unserer Schule",
+    "subtitle": "In unserer Schule geht es nicht nur um Akademisches. Wir feiern auch Kreativität, Spaß und Tradition durch verschiedene besondere Veranstaltungen das ganze Jahr über. Hier sind einige unserer Highlights:",
+    "studentsVsTeachers": {
+      "title": "Schüler gegen Lehrer Spiel (12. Klasse)",
+      "desc": "Ein freundschaftliches, aber emotionales Spiel zwischen Schülern und Lehrern der 12. Klasse, das jährlich stattfindet."
+    },
+    "christmasMarket": {
+      "title": "Weihnachtsbasar",
+      "desc": "Der Weihnachtsmarkt der Schule, auf dem Schüler und Lehrer zusammenarbeiten, um traditionelle und handgefertigte Produkte zu verkaufen."
+    },
+    "eratosthenes": {
+      "title": "Eratosthenes-Experiment",
+      "desc": "Ein faszinierendes Experiment, das es Schülern ermöglicht, den Erdumfang nur mit dem Schatten einer Säule und Geographie zu messen."
+    }
+  },
+  "video": {
+    "title": "Ein kurzes Video zur Zusammenfassung unserer Schulerfahrung",
+    "description": "Sehen Sie sich dieses kurze Video an, das die Essenz unserer Schule einfängt, von den lebendigen Klassenaktivitäten bis zu den aufregenden außerschulischen Momenten. Erhalten Sie einen Einblick in die einzigartige Erfahrung, die wir unseren Schülern bieten."
+  },
+  "footer": {
+    "sponsors": "Unsere Sponsoren",
+    "contact": "Kontakt",
+    "rights": "Alle Rechte vorbehalten."
+  },
+  "ourTeam": {
+    "title": "Unser Team",
+    "subtitle": "Lernen Sie die engagierten Fachleute kennen, die das Deutsche Theoretische Gymnasium \"Johann Ettinger\" zu einem Zentrum der Exzellenz in der zweisprachigen Bildung machen.",
+    "leadership": "Schulleitung",
+    "vicePrincipal": "Stellvertretender Direktor",
+    "teachers": "Lehrer",
+    "roles": {
+      "principal": "Schuldirektor",
+      "vicePrincipal": "Stellvertretender Direktor",
+      "teacher": "Lehrer"
+    },
+    "subjects": {
+      "music": "Musik",
+      "romanianLanguage": "Rumänische Sprache",
+      "chemistry": "Chemie",
+      "germanLanguage": "Deutsche Sprache",
+      "mathematics": "Mathematik",
+      "philosophy": "Philosophie",
+      "physicalEducation": "Sportunterricht",
+      "history": "Geschichte"
+    },
+    "principal": {
+      "description": "Leitet unsere Schule mit Engagement und Einsatz für pädagogische Exzellenz."
+    },
+    "vicePrincipalDesc": {
+      "description": "Unterstützt die Schulverwaltung und koordiniert Bildungsprogramme."
+    },
+    "teacherDescriptions": {
+      "zsoltKuki": "Inspiriert Schüler durch Musikerziehung und kulturelle Aktivitäten.",
+      "mariaTompos": "Engagiert sich für die Entwicklung der Sprachkompetenz und literarischen Wertschätzung der Schüler.",
+      "manuelaDan": "Leidenschaftlich für rumänische Literatur und Kulturstudien.",
+      "renataHodor": "Spezialisiert auf rumänische Sprachlehrmethoden.",
+      "renataVeron": "Macht die Welt der Chemie für Schüler zugänglich und spannend.",
+      "ildikoBodnar": "Fördert deutsche Sprachkenntnisse und kulturelles Verständnis.",
+      "anzikEster": "Spezialisiert auf deutschen Sprachunterricht und Literatur.",
+      "erikaGazsa": "Engagiert sich für die Entwicklung starker mathematischer Grundlagen und Problemlösungsfähigkeiten.",
+      "mrPop": "Hilft Schülern, die Schönheit und Logik der Mathematik zu entdecken.",
+      "mrSzekely": "Fördert kritisches Denken und philosophische Untersuchungen.",
+      "adrianTascu": "Fördert körperliche Fitness und Mannschaftssportarten.",
+      "sebi": "Engagiert sich für die körperliche Entwicklung und sportliche Exzellenz der Schüler.",
+      "bogdanStana": "Erweckt Geschichte durch engagierte Lehrmethoden zum Leben."
+    }
+  },
+  "ourServices": {
+    "title": "Unsere Dienstleistungen",
+    "subtitle": "Entdecken Sie die umfassenden Bildungsdienstleistungen und Programme, die wir anbieten, um unseren Schülern zu helfen, sowohl im deutschen als auch im rumänischen Bildungssystem zu glänzen.",
+    "corePrograms": "Kern-Bildungsprogramme",
+    "additionalServices": "Zusätzliche Dienstleistungen",
+    "cta": {
+      "title": "Möchten Sie mehr über unsere Dienstleistungen erfahren?",
+      "description": "Kontaktieren Sie uns, um einen Besuch zu vereinbaren oder mehr über unsere Bildungsprogramme zu erfahren.",
+      "button": "Kontaktieren Sie uns"
+    },
+    "germanEducation": {
+      "title": "Deutsche Sprachausbildung",
+      "description": "Umfassender Deutschunterricht vom Anfänger- bis zum Fortgeschrittenenniveau.",
+      "features": {
+        "dsd": "DSD (Deutsches Sprachdiplom) Vorbereitung",
+        "native": "Muttersprachliche Deutschlehrer",
+        "smallClass": "Kleine Klassengrößen für optimales Lernen",
+        "cultural": "Kulturelle Integrationsaktivitäten"
+      }
+    },
+    "international": {
+      "title": "Internationale Programme",
+      "description": "Austauschprogramme und internationale Partnerschaften für globale Exposition.",
+      "features": {
+        "exchange": "Schüleraustauschprogramme mit deutschen Schulen",
+        "summer": "Internationale Sommercamps",
+        "events": "Kulturaustauschveranstaltungen",
+        "partnership": "Partnerschaft mit deutschen Universitäten"
+      }
+    },
+    "academic": {
+      "title": "Akademische Exzellenz",
+      "description": "Strenge akademische Programme nach sowohl rumänischen als auch deutschen Lehrplänen.",
+      "features": {
+        "dual": "Zweisprachiger Unterricht",
+        "advanced": "Fortgeschrittene Platzierungskurse",
+        "university": "Universitätsvorbereitungsprogramme",
+        "competitions": "Unterstützung für akademische Wettbewerbe"
+      }
+    },
+    "arts": {
+      "title": "Kunst & Musik",
+      "description": "Umfassende Kunstausbildung einschließlich Musik, Theater und bildende Kunst."
+    },
+    "science": {
+      "title": "Wissenschaftslabore",
+      "description": "Moderne Labore für Physik-, Chemie- und Biologieexperimente."
+    },
+    "technology": {
+      "title": "Technologie",
+      "description": "Informatikkurse und digitale Alphabetisierungsprogramme."
+    },
+    "support": {
+      "title": "Schülerbetreuung",
+      "description": "Beratungsdienste und akademische Beratung für alle Schüler."
+    },
+    "media": {
+      "title": "Medienzentrum",
+      "description": "Moderne Medieneinrichtungen für digitales Lernen und Projekte."
+    },
+    "library": {
+      "title": "Bibliothek",
+      "description": "Umfangreiche Sammlung deutscher und rumänischer Literatur und Ressourcen."
+    }
+  }
+}

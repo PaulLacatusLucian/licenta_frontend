@@ -1,12 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
-// Images for events
-import matchImage from "../../assets/event-1.jpg"; // Replace with your own images
+// Bilder für Veranstaltungen
+import matchImage from "../../assets/event-1.jpg";
 import weihnachtsbasarImage from "../../assets/event-2.jpg";
 import eratosthenesImage from "../../assets/event-3.jpg";
 
-// Animation for entrance
+// Animation für Eingang
 const FadeUp = (delay) => {
   return {
     initial: {
@@ -28,26 +29,25 @@ const FadeUp = (delay) => {
 };
 
 const SpecialEvents = () => {
+  const { t } = useTranslation();
+
   const events = [
     {
       image: matchImage,
-      title: "Students vs Teachers Match (12th Grade)",
-      description:
-        "A friendly, yet emotional match between students and teachers from the 12th grade, held annually.",
+      title: t('specialEvents.studentsVsTeachers.title'),
+      description: t('specialEvents.studentsVsTeachers.desc'),
       delay: 0.6,
     },
     {
       image: weihnachtsbasarImage,
-      title: "Weihnachtsbasar (Christmas Market)",
-      description:
-        "The school's Christmas market, where students and teachers collaborate to sell traditional and handmade products.",
+      title: t('specialEvents.christmasMarket.title'),
+      description: t('specialEvents.christmasMarket.desc'),
       delay: 0.7,
     },
     {
       image: eratosthenesImage,
-      title: "Eratosthenes Experiment",
-      description:
-        "A fascinating experiment that allows students to measure the Earth's circumference using only the shadow of a pillar and geography.",
+      title: t('specialEvents.eratosthenes.title'),
+      description: t('specialEvents.eratosthenes.desc'),
       delay: 0.8,
     },
   ];
@@ -55,28 +55,27 @@ const SpecialEvents = () => {
   return (
     <section className="bg-white py-16">
       <div className="container">
-        {/* Section Title */}
+        {/* Sektionstitel */}
         <motion.h2
           variants={FadeUp(0.3)}
           initial="initial"
           animate="animate"
           className="text-4xl font-bold text-center pb-10"
         >
-          Special Events at Our School
+          {t('specialEvents.title')}
         </motion.h2>
 
-        {/* Section Description */}
+        {/* Sektionsbeschreibung */}
         <motion.p
           variants={FadeUp(0.4)}
           initial="initial"
           animate="animate"
           className="text-lg text-center text-gray-700 mb-12"
         >
-          Our school is not just about academics. We also celebrate creativity, fun, and tradition through various special events
-          throughout the year. Here are some of our highlights:
+          {t('specialEvents.subtitle')}
         </motion.p>
 
-        {/* List of special events */}
+        {/* Liste der besonderen Veranstaltungen */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12">
           {events.map((event, index) => (
             <motion.div

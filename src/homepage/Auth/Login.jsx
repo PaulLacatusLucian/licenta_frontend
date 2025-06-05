@@ -3,6 +3,7 @@ import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { FaUserAlt, FaLock, FaSignInAlt, FaSchool } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 import logo from "../../assets/logo.png";
 
 function Login() {
@@ -11,6 +12,7 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,7 +39,7 @@ function Login() {
       Cookies.set("jwt-token", token, { expires: 1 / 8 });
       Cookies.set("username", username, { expires: 1 / 8 });
 
-      // Redirect based on user role
+      // Weiterleitung basierend auf Benutzerrolle
       if (username.endsWith(".parent")) {
         navigate("/parent");
       } else if (username.endsWith(".student")) {
@@ -49,26 +51,22 @@ function Login() {
       } else if (username.endsWith(".chef")) {
         navigate("/chef");
       } else {
-        throw new Error("Rol necunoscut.");
+        throw new Error("Unbekannte Rolle.");
       }
     } catch (error) {
       console.error("Login error:", error);
       
-      // Check for specific error message patterns
+      // Überprüfung auf spezifische Fehlermeldungen
       const errorMsg = error.response?.data?.message || "";
       
       if (errorMsg.includes("null") && errorMsg.includes("getPassword")) {
-        // User not found in database
-        setErrorMessage("Utilizatorul nu există în sistem. Verificați numele de utilizator.");
+        setErrorMessage(t('login.errors.userNotFound'));
       } else if (error.response && error.response.status === 401) {
-        // Authentication failed
-        setErrorMessage("Nume de utilizator sau parolă greșită. Vă rugăm să încercați din nou.");
+        setErrorMessage(t('login.errors.wrongCredentials'));
       } else if (errorMsg) {
-        // Use server provided message
         setErrorMessage(errorMsg);
       } else {
-        // Default error message
-        setErrorMessage("Eroare la autentificare. Verificați numele de utilizator și parola.");
+        setErrorMessage(t('login.errors.authError'));
       }
       
       setIsLoading(false);
@@ -77,7 +75,7 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary to-secondary">
-      {/* Decorative elements */}
+      {/* Dekorative Elemente */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-64 h-64 bg-white opacity-5 rounded-full"></div>
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-white opacity-5 rounded-full"></div>
@@ -85,7 +83,7 @@ function Login() {
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        {/* Card */}
+        {/* Karte */}
         <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
           {/* Header */}
           <div className="relative">
@@ -98,11 +96,11 @@ function Login() {
                   className="w-18 h-18 object-contain" 
                 />
               </div>
-              <h1 className="text-dark text-3xl font-bold mt-6">Bine ați venit</h1>
-              <p className="text-dark2 mt-2">Conectați-vă pentru a accesa portalul școlii</p>
+              <h1 className="text-dark text-3xl font-bold mt-6">{t('login.welcome')}</h1>
+              <p className="text-dark2 mt-2">{t('login.subtitle')}</p>
             </div>
             
-            {/* Wave divider */}
+            {/* Wellentrenner */}
             <div className="absolute -bottom-1 left-0 right-0">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120">
                 <path fill="#ffffff" fillOpacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
@@ -110,11 +108,11 @@ function Login() {
             </div>
           </div>
 
-          {/* Form */}
+          {/* Formular */}
           <div className="px-8 py-10 pt-2">
             <div className="flex items-center justify-center mb-6">
               <div className="h-1 flex-1 bg-gray-100 rounded-full"></div>
-              <span className="px-4 text-gray-500 font-medium">Autentificare</span>
+              <span className="px-4 text-gray-500 font-medium">{t('login.authentication')}</span>
               <div className="h-1 flex-1 bg-gray-100 rounded-full"></div>
             </div>
 
@@ -122,14 +120,14 @@ function Login() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 flex items-center" htmlFor="username">
                   <FaUserAlt className="w-4 h-4 mr-2 text-primary" />
-                  Nume de utilizator
+                  {t('login.username')}
                 </label>
                 <div className="relative">
                   <input
                     className="w-full px-4 py-3 bg-light border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                     id="username"
                     type="text"
-                    placeholder="Introduceți numele de utilizator"
+                    placeholder={t('login.usernamePlaceholder')}
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
@@ -142,14 +140,14 @@ function Login() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 flex items-center" htmlFor="password">
                   <FaLock className="w-4 h-4 mr-2 text-primary" />
-                  Parolă
+                  {t('login.password')}
                 </label>
                 <div className="relative">
                   <input
                     className="w-full px-4 py-3 bg-light border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Introduceți parola"
+                    placeholder={t('login.passwordPlaceholder')}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
@@ -199,12 +197,12 @@ function Login() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Se încarcă...
+                      {t('login.loading')}
                     </>
                   ) : (
                     <>
                       <FaSignInAlt className="mr-2" />
-                      Conectare
+                      {t('login.signIn')}
                     </>
                   )}
                 </button>
@@ -214,18 +212,18 @@ function Login() {
             <div className="mt-8 text-center space-y-2">
               <div className="flex items-center justify-center space-x-2">
                 <FaSchool className="text-primary" />
-                <span className="text-sm font-semibold text-gray-700">Portal Școlar</span>
+                <span className="text-sm font-semibold text-gray-700">{t('login.schoolPortal')}</span>
               </div>
               <p className="text-xs text-gray-500">
-                Probleme cu autentificarea? Contactați administratorul școlii.
+                {t('login.authProblems')}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Fußzeile */}
         <div className="text-center mt-8 text-white/80 text-sm">
-          © {new Date().getFullYear()} Liceul Teoretic German "Johann Ettinger". Toate drepturile rezervate.
+          © {new Date().getFullYear()} Liceul Teoretic German "Johann Ettinger". {t('footer.rights')}
         </div>
       </div>
     </div>

@@ -1,58 +1,14 @@
 import React from "react";
 import { FaGraduationCap } from "react-icons/fa";
-import { MdRestaurant } from "react-icons/md"; // Icona pentru Cafeteria (mâncare)
+import { MdRestaurant } from "react-icons/md";
 import { MdSportsSoccer } from "react-icons/md";
 import { FiShield } from "react-icons/fi";
 import { IoMdHappy } from "react-icons/io";
-import { IoIosSchool } from "react-icons/io"; // Icona pentru After School
-import { RiComputerLine } from "react-icons/ri"; // Icona pentru Modern Equipment
-import { FaRegClock } from "react-icons/fa"; // Icona pentru ceas
+import { IoIosSchool } from "react-icons/io";
+import { RiComputerLine } from "react-icons/ri";
+import { FaRegClock } from "react-icons/fa";
 import { motion } from "framer-motion";
-
-const ServicesData = [
-  {
-    id: 1,
-    title: "Education & Degree",
-    link: "#",
-    icon: <FaGraduationCap />,
-    delay: 0.2,
-  },
-  {
-    id: 2,
-    title: "Cafeteria",
-    link: "#",
-    icon: <MdRestaurant />,
-    delay: 0.3,
-  },
-  {
-    id: 3,
-    title: "Sports Field",
-    link: "#",
-    icon: <MdSportsSoccer />,
-    delay: 0.4,
-  },
-  {
-    id: 4,
-    title: "Security",
-    link: "#",
-    icon: <FiShield />,
-    delay: 0.5,
-  },
-  {
-    id: 5,
-    title: "After School",
-    link: "#",
-    icon: <FaRegClock />, // Icona de ceas pentru After School
-    delay: 0.6,
-  },
-  {
-    id: 6,
-    title: "Modern Equipment",
-    link: "#",
-    icon: <RiComputerLine />,
-    delay: 1.2,
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 const SlideLeft = (delay) => {
   return {
@@ -73,15 +29,63 @@ const SlideLeft = (delay) => {
 };
 
 const Services = () => {
+  const { t } = useTranslation();
+
+  const ServicesData = [
+    {
+      id: 1,
+      title: t('services.education'),
+      link: "#",
+      icon: <FaGraduationCap />,
+      delay: 0.2,
+    },
+    {
+      id: 2,
+      title: t('services.cafeteria'),
+      link: "#",
+      icon: <MdRestaurant />,
+      delay: 0.3,
+    },
+    {
+      id: 3,
+      title: t('services.sportsField'),
+      link: "#",
+      icon: <MdSportsSoccer />,
+      delay: 0.4,
+    },
+    {
+      id: 4,
+      title: t('services.security'),
+      link: "#",
+      icon: <FiShield />,
+      delay: 0.5,
+    },
+    {
+      id: 5,
+      title: t('services.afterSchool'),
+      link: "#",
+      icon: <FaRegClock />,
+      delay: 0.6,
+    },
+    {
+      id: 6,
+      title: t('services.modernEquipment'),
+      link: "#",
+      icon: <RiComputerLine />,
+      delay: 1.2,
+    },
+  ];
+
   return (
     <section className="bg-white">
       <div className="container pb-14 pt-16">
         <h1 className="text-4xl font-bold text-left pb-10">
-          Facilities and Services We Provide
+          {t('services.title')}
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8">
           {ServicesData.map((service) => (
             <motion.div
+              key={service.id}
               variants={SlideLeft(service.delay)}
               initial="initial"
               whileInView={"animate"}

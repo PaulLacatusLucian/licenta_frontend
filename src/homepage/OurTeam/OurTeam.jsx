@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { BsPersonCircle } from "react-icons/bs";
+import { useTranslation } from 'react-i18next';
 
 const FadeUp = (delay) => {
   return {
@@ -53,12 +54,14 @@ const StaffCard = ({ name, role, subject, description, imageUrl, delay, featured
 );
 
 const OurTeam = () => {
+  const { t } = useTranslation();
+
   const staffMembers = {
     leadership: [
       {
         name: "Maria Raiz",
-        role: "School Principal",
-        description: "Leading our school with dedication and commitment to educational excellence.",
+        role: t('ourTeam.roles.principal'),
+        description: t('ourTeam.principal.description'),
         delay: 0.3,
         featured: true
       }
@@ -66,101 +69,101 @@ const OurTeam = () => {
     viceprincipals: [
       {
         name: "Elek Norbert",
-        role: "Vice Principal",
-        description: "Supporting school administration and coordinating educational programs.",
+        role: t('ourTeam.roles.vicePrincipal'),
+        description: t('ourTeam.vicePrincipalDesc.description'),
         delay: 0.4
       }
     ],
     teachers: [
       {
         name: "Zsolt Kuki",
-        role: "Teacher",
-        subject: "Music",
-        description: "Inspiring students through music education and cultural activities.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.music'),
+        description: t('ourTeam.teacherDescriptions.zsoltKuki'),
         delay: 0.5
       },
       {
         name: "Maria Tompos",
-        role: "Teacher",
-        subject: "Romanian Language",
-        description: "Dedicated to developing students' language proficiency and literary appreciation.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.romanianLanguage'),
+        description: t('ourTeam.teacherDescriptions.mariaTompos'),
         delay: 0.6
       },
       {
         name: "Manuela Dan",
-        role: "Teacher",
-        subject: "Romanian Language",
-        description: "Passionate about Romanian literature and cultural studies.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.romanianLanguage'),
+        description: t('ourTeam.teacherDescriptions.manuelaDan'),
         delay: 0.7
       },
       {
         name: "Renata Hodor",
-        role: "Teacher",
-        subject: "Romanian Language",
-        description: "Specialized in Romanian language teaching methodologies.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.romanianLanguage'),
+        description: t('ourTeam.teacherDescriptions.renataHodor'),
         delay: 0.8
       },
       {
         name: "Renata Veron",
-        role: "Teacher",
-        subject: "Chemistry",
-        description: "Making the world of chemistry accessible and exciting for students.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.chemistry'),
+        description: t('ourTeam.teacherDescriptions.renataVeron'),
         delay: 0.9
       },
       {
         name: "Ildiko Bodnar",
-        role: "Teacher",
-        subject: "German Language",
-        description: "Promoting German language skills and cultural understanding.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.germanLanguage'),
+        description: t('ourTeam.teacherDescriptions.ildikoBodnar'),
         delay: 1.0
       },
       {
         name: "Anzik Ester",
-        role: "Teacher",
-        subject: "German Language",
-        description: "Specializing in German language instruction and literature.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.germanLanguage'),
+        description: t('ourTeam.teacherDescriptions.anzikEster'),
         delay: 1.1
       },
       {
         name: "Erika Gazsa",
-        role: "Teacher",
-        subject: "Mathematics",
-        description: "Dedicated to developing strong mathematical foundations and problem-solving skills.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.mathematics'),
+        description: t('ourTeam.teacherDescriptions.erikaGazsa'),
         delay: 1.2
       },
       {
         name: "Mr. Pop",
-        role: "Teacher",
-        subject: "Mathematics",
-        description: "Helping students discover the beauty and logic of mathematics.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.mathematics'),
+        description: t('ourTeam.teacherDescriptions.mrPop'),
         delay: 1.3
       },
       {
         name: "Mr. Szekely",
-        role: "Teacher",
-        subject: "Philosophy",
-        description: "Encouraging critical thinking and philosophical inquiry.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.philosophy'),
+        description: t('ourTeam.teacherDescriptions.mrSzekely'),
         delay: 1.4
       },
       {
         name: "Adrian Tascu",
-        role: "Teacher",
-        subject: "Physical Education",
-        description: "Promoting physical fitness and team sports.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.physicalEducation'),
+        description: t('ourTeam.teacherDescriptions.adrianTascu'),
         delay: 1.5
       },
       {
         name: "Sebi",
-        role: "Teacher",
-        subject: "Physical Education",
-        description: "Dedicated to students' physical development and sports excellence.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.physicalEducation'),
+        description: t('ourTeam.teacherDescriptions.sebi'),
         delay: 1.6
       },
       {
         name: "Bogdan Stana",
-        role: "Teacher",
-        subject: "History",
-        description: "Making history come alive through engaging teaching methods.",
+        role: t('ourTeam.roles.teacher'),
+        subject: t('ourTeam.subjects.history'),
+        description: t('ourTeam.teacherDescriptions.bogdanStana'),
         delay: 1.7
       }
     ]
@@ -175,7 +178,7 @@ const OurTeam = () => {
           animate="animate"
           className="text-4xl font-bold text-center mb-4"
         >
-          Our Team
+          {t('ourTeam.title')}
         </motion.h2>
         
         <motion.p
@@ -184,13 +187,12 @@ const OurTeam = () => {
           animate="animate"
           className="text-lg text-center text-gray-700 mb-12 max-w-2xl mx-auto"
         >
-          Meet the dedicated professionals who make Liceul Teoretic German "Johann Ettinger" 
-          a center of excellence in bilingual education.
+          {t('ourTeam.subtitle')}
         </motion.p>
 
-        {/* School Leadership */}
+        {/* Schulleitung */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold mb-6 text-center">School Leadership</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-center">{t('ourTeam.leadership')}</h3>
           <div className="grid grid-cols-1 gap-8">
             {staffMembers.leadership.map((member, index) => (
               <StaffCard key={index} {...member} />
@@ -198,9 +200,9 @@ const OurTeam = () => {
           </div>
         </div>
 
-        {/* Vice Principals */}
+        {/* Stellvertretende Schulleitung */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold mb-6 text-center">Vice Principal</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-center">{t('ourTeam.vicePrincipal')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
             {staffMembers.viceprincipals.map((member, index) => (
               <StaffCard key={index} {...member} />
@@ -208,9 +210,9 @@ const OurTeam = () => {
           </div>
         </div>
 
-        {/* Teachers */}
+        {/* Lehrer */}
         <div>
-          <h3 className="text-2xl font-semibold mb-6 text-center">Teachers</h3>
+          <h3 className="text-2xl font-semibold mb-6 text-center">{t('ourTeam.teachers')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {staffMembers.teachers.map((member, index) => (
               <StaffCard key={index} {...member} />

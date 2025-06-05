@@ -2,40 +2,43 @@ import React, { useState, useEffect } from "react";
 import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
-
-const NavbarMenu = [
-  {
-    id: 1,
-    title: "Home",
-    path: "/",
-  },
-  {
-    id: 2,
-    title: "Services",
-    path: "/services",
-  },
-  {
-    id: 3,
-    title: "About Us",
-    path: "/about-us",
-  },
-  {
-    id: 4,
-    title: "Our Team",
-    path: "/our-team",
-  },
-  {
-    id: 5,
-    title: "Contact Us",
-    path: "/contact-us",
-  },
-];
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../components/LanguageSwitcher.jsx';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const NavbarMenu = [
+    {
+      id: 1,
+      title: t('navbar.home'),
+      path: "/",
+    },
+    {
+      id: 2,
+      title: t('navbar.services'),
+      path: "/services",
+    },
+    {
+      id: 3,
+      title: t('navbar.aboutUs'),
+      path: "/about-us",
+    },
+    {
+      id: 4,
+      title: t('navbar.ourTeam'),
+      path: "/our-team",
+    },
+    {
+      id: 5,
+      title: t('navbar.contactUs'),
+      path: "/contact-us",
+    },
+  ];
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -71,7 +74,7 @@ const Navbar = () => {
               className="font-bold text-xl md:text-2xl text-gray-800 cursor-pointer transition-all"
               onClick={() => navigate("/")}
             >
-              Liceul Teoretic German <span className="text-secondary">"Johann Ettinger"</span>
+              {t('navbar.schoolName')}
             </h1>
           </div>
           
@@ -103,18 +106,22 @@ const Navbar = () => {
                 );
               })}
               <li className="ml-2">
+                <LanguageSwitcher />
+              </li>
+              <li className="ml-2">
                 <button
                   className="py-2 px-6 bg-secondary text-white rounded-md font-medium hover:bg-secondary/90 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                   onClick={() => navigate("/login")}
                 >
-                  Sign In
+                  {t('navbar.signIn')}
                 </button>
               </li>
             </ul>
           </div>
           
           {/* Mobile Hamburger menu button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center gap-2">
+            <LanguageSwitcher />
             <button 
               className="p-2 rounded-md text-gray-700 hover:text-secondary hover:bg-gray-100 focus:outline-none transition-all"
               onClick={toggleMenu}
@@ -166,7 +173,7 @@ const Navbar = () => {
                       setIsMenuOpen(false);
                     }}
                   >
-                    Sign In
+                    {t('navbar.signIn')}
                   </button>
                 </li>
               </ul>

@@ -18,11 +18,60 @@ import {
   FaEdit, 
   FaChevronRight, 
   FaClock, 
-  FaArrowLeft
+  FaArrowLeft,
+  FaGlobe
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import StudentNavbar from "../StudentNavbar";
 import { useTranslation } from 'react-i18next';
+
+// Language Switcher Component
+const LanguageSwitcher = () => {
+  const { i18n } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const languages = [
+    { code: 'ro', name: 'Română', flag: '🇷🇴' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+  ];
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setIsOpen(false);
+  };
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+      >
+        <FaGlobe className="w-4 h-4 text-gray-600" />
+        <span className="text-sm font-medium text-gray-700">{currentLanguage.flag} {currentLanguage.name}</span>
+      </button>
+      
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+          {languages.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => changeLanguage(lang.code)}
+              className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2 ${
+                lang.code === i18n.language ? 'bg-gray-50' : ''
+              }`}
+            >
+              <span className="text-lg">{lang.flag}</span>
+              <span className="text-sm text-gray-700">{lang.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const StudentProfile = () => {
   const { t } = useTranslation();
@@ -646,17 +695,18 @@ const StudentProfile = () => {
       <StudentNavbar activeView={activeView} studentData={studentData} />
 
       <div className="flex-1 p-4 md:p-8 bg-light">
-        <header className="flex justify-between items-center mb-6">
-          <button 
-            onClick={() => navigate("/stud")}
-            className="mr-3 text-primary hover:text-secondary"
-          >
-            <FaArrowLeft className="text-xl" />
-          </button>
-          <h2 className="text-2xl font-bold text-dark">{t('student.profile.title')}</h2>
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex items-center">
-            <div className="flex items-center">
-            </div>
+            <button 
+              onClick={() => navigate("/stud")}
+              className="mr-3 text-primary hover:text-secondary"
+            >
+              <FaArrowLeft className="text-xl" />
+            </button>
+            <h2 className="text-xl sm:text-2xl font-bold text-dark">{t('student.profile.title')}</h2>
+          </div>
+          <div className="self-end sm:self-auto">
+            <LanguageSwitcher />
           </div>
         </header>
         

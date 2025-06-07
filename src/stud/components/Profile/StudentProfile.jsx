@@ -22,8 +22,10 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import StudentNavbar from "../StudentNavbar";
+import { useTranslation } from 'react-i18next';
 
 const StudentProfile = () => {
+  const { t } = useTranslation();
   const [studentData, setStudentData] = useState(null);
   const [absences, setAbsences] = useState([]);
   const [grades, setGrades] = useState([]);
@@ -37,94 +39,120 @@ const StudentProfile = () => {
   
   const navigate = useNavigate();
 
-  // Calculate average grade from grades array
+  // Funktion zur Übersetzung von Fächern
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
+  // Funktion zur Übersetzung von Spezialisierungen
+  const getTranslatedSpecialization = (specialization) => {
+    if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
+      return t(`admin.classes.specializations.${specialization}`);
+    }
+    return specialization || '';
+  };
+
+  // Berechne Durchschnittsnote aus Notenarray
   const calculateAverageGrade = (grades) => {
     if (!grades || grades.length === 0) return 0;
     const sum = grades.reduce((acc, grade) => acc + grade.grade, 0);
     return sum / grades.length;
   };
 
-  // Check if student is top performer (has at least 2 grades above 9)
+  // Prüfe ob Schüler Top-Performer ist (mindestens 2 Noten über 9)
   const isTopPerformer = (grades) => {
     if (!grades) return false;
     const highGrades = grades.filter(grade => grade.grade >= 9);
     return highGrades.length >= 2;
   };
   
-  // Check if student has improved grades over time
+  // Prüfe ob Schüler seine Noten im Laufe der Zeit verbessert hat
   const hasImprovedGrades = (grades) => {
     if (!grades || grades.length < 2) return false;
     
-    // Sort grades by date
+    // Sortiere Noten nach Datum
     const sortedGrades = [...grades].sort((a, b) => 
       new Date(a.sessionDate) - new Date(b.sessionDate)
     );
     
-    // Check if last grade is higher than first grade
+    // Prüfe ob letzte Note höher ist als erste Note
     return sortedGrades[sortedGrades.length - 1].grade > sortedGrades[0].grade;
   };
 
-  // Check if student has perfect math grades
+  // Prüfe ob Schüler perfekte Mathe-Noten hat
   const hasPerfectMathGrades = (grades) => {
     if (!grades) return false;
-    const mathGrades = grades.filter(grade => 
-      grade.subject.toLowerCase().includes("math") || 
-      grade.subject.toLowerCase().includes("matematică")
-    );
+    const mathGrades = grades.filter(grade => {
+      const originalSubject = grade.subject.toLowerCase();
+      const translatedSubject = getTranslatedSubject(grade.subject).toLowerCase();
+      return originalSubject.includes("math") || 
+             originalSubject.includes("matematică") ||
+             originalSubject.includes("matematica") ||
+             translatedSubject.includes("math") ||
+             translatedSubject.includes("mathe");
+    });
     return mathGrades.length > 0 && mathGrades.every(grade => grade.grade >= 9.5);
   };
 
-  // Determine if student is in a specialized class
+  // Bestimme ob Schüler in einer spezialisierten Klasse ist
   const isInSpecializedClass = (student) => {
     if (!student?.classSpecialization) return false;
-    return student.classSpecialization.includes("Matematică-Informatică");
+    const originalSpec = student.classSpecialization;
+    const translatedSpec = getTranslatedSpecialization(student.classSpecialization);
+    return originalSpec.includes("Matematică-Informatică") || 
+           originalSpec.includes("matematica-informatica") ||
+           translatedSpec.includes("Mathematics-Computer Science") ||
+           translatedSpec.includes("Mathematik-Informatik");
   };
 
   const achievements = [
     {
       id: "perfect-attendance",
-      title: "Perfect Attendance",
-      description: "No absences this semester",
+      title: t('student.profile.achievements.perfectAttendance.title'),
+      description: t('student.profile.achievements.perfectAttendance.description'),
       icon: FaCalendarCheck,
       condition: () => totalAbsences === 0,
       level: "gold"
     },
     {
       id: "honor-roll",
-      title: "Honor Roll Scholar",
-      description: "Maintained an average grade above 9",
+      title: t('student.profile.achievements.honorRoll.title'),
+      description: t('student.profile.achievements.honorRoll.description'),
       icon: FaGraduationCap,
       condition: () => calculateAverageGrade(grades) >= 9,
       level: "platinum"
     },
     {
       id: "math-wizard",
-      title: "Math Wizard",
-      description: "Perfect grades in Mathematics",
+      title: t('student.profile.achievements.mathWizard.title'),
+      description: t('student.profile.achievements.mathWizard.description'),
       icon: FaChartLine,
       condition: () => hasPerfectMathGrades(grades),
       level: "diamond"
     },
     {
       id: "class-specialist",
-      title: "STEM Specialist",
-      description: "Enrolled in Matematică-Informatică specialization",
+      title: t('student.profile.achievements.stemSpecialist.title'),
+      description: t('student.profile.achievements.stemSpecialist.description'),
       icon: FaClipboardCheck,
       condition: () => isInSpecializedClass(studentData),
       level: "silver"
     },
     {
       id: "improvement-star",
-      title: "Rising Star",
-      description: "Consistently improving grades",
+      title: t('student.profile.achievements.risingStar.title'),
+      description: t('student.profile.achievements.risingStar.description'),
       icon: FaChartLine,
       condition: () => hasImprovedGrades(grades),
       level: "gold"
     },
     {
       id: "academic-excellence",
-      title: "Academic Excellence",
-      description: "Top performer in multiple subjects",
+      title: t('student.profile.achievements.academicExcellence.title'),
+      description: t('student.profile.achievements.academicExcellence.description'),
       icon: FaUserGraduate,
       condition: () => isTopPerformer(grades),
       level: "diamond"
@@ -150,7 +178,7 @@ const StudentProfile = () => {
     const fetchAllData = async () => {
       try {
         setIsLoading(true);
-        // Fetch all required data in parallel
+        // Lade alle benötigten Daten parallel
         const [studentResponse, absencesResponse, gradesResponse, totalAbsencesResponse, upcomingClassesResponse] = await Promise.all([
           axios.get('/students/me'),
           axios.get('/absences/me'),
@@ -164,21 +192,21 @@ const StudentProfile = () => {
         setGrades(gradesResponse.data || []);
         setTotalAbsences(totalAbsencesResponse.data.total);
         
-        // Pentru debugging
+        // Für Debugging
         console.log("Upcoming classes data:", upcomingClassesResponse.data);
         
         setUpcomingClasses(upcomingClassesResponse.data || []);
         setImagePreview(studentResponse.data?.profileImage);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Failed to load profile data. Please try again later.");
+        setError(t('student.profile.errorLoading'));
       } finally {
         setIsLoading(false);
       }
     };
   
     fetchAllData();
-  }, []);
+  }, [t]);
   
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -198,7 +226,7 @@ const StudentProfile = () => {
       setStudentData(prev => ({ ...prev, profileImage: response.data.imageUrl }));
     } catch (error) {
       console.error("Error uploading image:", error);
-      setError("Failed to upload image. Please try again.");
+      setError(t('student.profile.errorUploadingImage'));
     } finally {
       setIsLoading(false);
     }
@@ -212,7 +240,7 @@ const StudentProfile = () => {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-dark2 font-medium">Loading your profile...</p>
+          <p className="text-dark2 font-medium">{t('student.profile.loading')}</p>
         </div>
       </div>
     );
@@ -222,13 +250,13 @@ const StudentProfile = () => {
     return (
       <div className="flex justify-center items-center min-h-screen bg-light">
         <div className="text-xl text-red-500 p-8 bg-light rounded-xl shadow-md border border-gray-200 max-w-lg">
-          <h2 className="font-bold text-2xl mb-4">Something went wrong</h2>
+          <h2 className="font-bold text-2xl mb-4">{t('student.profile.somethingWentWrong')}</h2>
           <p>{error}</p>
           <button 
             onClick={() => window.location.reload()} 
             className="mt-6 bg-primary text-dark px-6 py-2 rounded-lg hover:opacity-90 transition"
           >
-            Try Again
+            {t('student.profile.tryAgain')}
           </button>
         </div>
       </div>
@@ -238,12 +266,12 @@ const StudentProfile = () => {
   const averageGrade = calculateAverageGrade(grades);
   const earnedAchievements = achievements.filter(achievement => achievement.condition());
 
-  // Funcție pentru formatarea datei și orei
+  // Funktion zur Formatierung von Datum und Zeit
   const formatTimeFromISO = (isoString) => {
     if (!isoString) return "";
     if (typeof isoString !== 'string') return isoString;
     
-    // Verificăm dacă string-ul conține un 'T' care separă data de oră
+    // Prüfe ob der String ein 'T' enthält, das Datum von Zeit trennt
     if (isoString.includes('T')) {
       return isoString.split('T')[1].substring(0, 5);
     }
@@ -263,7 +291,7 @@ const StudentProfile = () => {
                    {imagePreview ? (
                     <img
                       src={`http://localhost:8080${imagePreview}`}
-                      alt="Child Profile"
+                      alt={t('student.profile.childProfileAlt')}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -273,7 +301,7 @@ const StudentProfile = () => {
                 <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-all duration-300 transform">
                   <div className="text-center">
                     <FaEdit className="text-2xl mb-1 mx-auto" />
-                    <span className="text-sm font-medium">Change</span>
+                    <span className="text-sm font-medium">{t('student.profile.change')}</span>
                   </div>
                   <input
                     type="file"
@@ -286,21 +314,24 @@ const StudentProfile = () => {
               
               <div className="text-center md:text-left md:flex-1">
                 <h1 className="text-3xl md:text-4xl font-bold mb-2">{studentData?.name}</h1>
-                <p className="text-indigo-100 mb-4">Student at {studentData?.className} - {studentData?.classSpecialization}</p>
+                <p className="text-indigo-100 mb-4">{t('student.profile.studentAt', { 
+                  className: studentData?.className, 
+                  specialization: getTranslatedSpecialization(studentData?.classSpecialization) 
+                })}</p>
                 
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
                   <div className="bg-white bg-opacity-20 px-5 py-3 rounded-lg backdrop-blur-sm">
-                    <p className="text-xs opacity-80">Average Grade</p>
+                    <p className="text-xs opacity-80">{t('student.profile.stats.averageGrade')}</p>
                     <p className="text-2xl font-bold">{averageGrade.toFixed(2)}</p>
                   </div>
                   
                   <div className="bg-white bg-opacity-20 px-5 py-3 rounded-lg backdrop-blur-sm">
-                    <p className="text-xs opacity-80">Absences</p>
+                    <p className="text-xs opacity-80">{t('student.profile.stats.absences')}</p>
                     <p className="text-2xl font-bold">{totalAbsences}</p>
                   </div>
                   
                   <div className="bg-white bg-opacity-20 px-5 py-3 rounded-lg backdrop-blur-sm">
-                    <p className="text-xs opacity-80">Achievements</p>
+                    <p className="text-xs opacity-80">{t('student.profile.stats.achievements')}</p>
                     <p className="text-2xl font-bold">{earnedAchievements.length}</p>
                   </div>
                 </div>
@@ -314,8 +345,8 @@ const StudentProfile = () => {
           <div className="px-4">
             <nav className="flex space-x-8">
               {[
-                { id: "overview", label: "Overview", icon: FaUserCircle },
-                { id: "achievements", label: "Achievements", icon: FaTrophy },
+                { id: "overview", label: t('student.profile.tabs.overview'), icon: FaUserCircle },
+                { id: "achievements", label: t('student.profile.tabs.achievements'), icon: FaTrophy },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -342,15 +373,15 @@ const StudentProfile = () => {
                 <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6">
                   <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
                     <FaUserCircle className="text-primary mr-3" />
-                    Personal Information
+                    {t('student.profile.personalInfo.title')}
                   </h2>
                   <div className="space-y-4">
                     {[
-                      { label: "Email", value: studentData?.email || "N/A", icon: "📧" },
-                      { label: "Class Teacher", value: studentData?.classTeacher?.name || "N/A", icon: "👨‍🏫" },
-                      { label: "Specialization", value: studentData?.classSpecialization || "N/A", icon: "🎓" },
-                      { label: "Phone", value: studentData?.phoneNumber || "N/A", icon: "📱" },
-                      { label: "Student ID", value: studentData?.id || "N/A", icon: "🪪" }
+                      { label: t('student.profile.personalInfo.email'), value: studentData?.email || t('common.notAvailable'), icon: "📧" },
+                      { label: t('student.profile.personalInfo.classTeacher'), value: studentData?.classTeacher?.name || t('common.notAvailable'), icon: "👨‍🏫" },
+                      { label: t('student.profile.personalInfo.specialization'), value: getTranslatedSpecialization(studentData?.classSpecialization) || t('common.notAvailable'), icon: "🎓" },
+                      { label: t('student.profile.personalInfo.phone'), value: studentData?.phoneNumber || t('common.notAvailable'), icon: "📱" },
+                      { label: t('student.profile.personalInfo.studentId'), value: studentData?.id || t('common.notAvailable'), icon: "🪪" }
                     ].map((item, index) => (
                       <div key={index} className="flex items-center p-3 bg-white rounded-lg border border-gray-200">
                         <div className="flex-shrink-0 text-xl mr-3">{item.icon}</div>
@@ -367,25 +398,25 @@ const StudentProfile = () => {
                 <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6 mt-6">
                   <h2 className="text-xl font-bold text-dark mb-4 flex items-center">
                     <FaChartLine className="text-primary mr-3" />
-                    Quick Stats
+                    {t('student.profile.quickStats.title')}
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-primary bg-opacity-10 p-4 rounded-lg text-center border border-primary border-opacity-20">
-                      <p className="text-primary text-sm mb-1">Total Grades</p>
+                      <p className="text-primary text-sm mb-1">{t('student.profile.quickStats.totalGrades')}</p>
                       <p className="text-3xl font-bold text-primary">{grades.length}</p>
                     </div>
                     <div className="bg-secondary bg-opacity-10 p-4 rounded-lg text-center border border-secondary border-opacity-20">
-                      <p className="text-secondary text-sm mb-1">Absences</p>
+                      <p className="text-secondary text-sm mb-1">{t('student.profile.quickStats.absences')}</p>
                       <p className="text-3xl font-bold text-secondary">{totalAbsences}</p>
                     </div>
                     <div className="bg-blue-50 p-4 rounded-lg text-center border border-blue-200">
-                      <p className="text-blue-600 text-sm mb-1">Highest Grade</p>
+                      <p className="text-blue-600 text-sm mb-1">{t('student.profile.quickStats.highestGrade')}</p>
                       <p className="text-3xl font-bold text-blue-600">
-                        {grades.length > 0 ? Math.max(...grades.map(g => g.grade)).toFixed(2) : "N/A"}
+                        {grades.length > 0 ? Math.max(...grades.map(g => g.grade)).toFixed(2) : t('common.notAvailable')}
                       </p>
                     </div>
                     <div className="bg-green-50 p-4 rounded-lg text-center border border-green-200">
-                      <p className="text-green-600 text-sm mb-1">Perfect Subjects</p>
+                      <p className="text-green-600 text-sm mb-1">{t('student.profile.quickStats.perfectSubjects')}</p>
                       <p className="text-3xl font-bold text-green-600">
                         {grades
                           .filter(g => g.grade === 10)
@@ -404,13 +435,13 @@ const StudentProfile = () => {
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-dark flex items-center">
                       <FaTrophy className="text-primary mr-3" />
-                      Top Achievements
+                      {t('student.profile.topAchievements')}
                     </h2>
                     <button 
                       onClick={() => setActiveTab("achievements")}
                       className="text-primary text-sm font-medium hover:text-secondary flex items-center"
                     >
-                      View All <FaChevronRight className="ml-1" />
+                      {t('student.profile.viewAll')} <FaChevronRight className="ml-1" />
                     </button>
                   </div>
 
@@ -440,7 +471,7 @@ const StudentProfile = () => {
                     {earnedAchievements.length === 0 && (
                       <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                         <FaTrophy className="text-gray-400 text-4xl mx-auto mb-3" />
-                        <p className="text-gray-500">No achievements earned yet. Keep working!</p>
+                        <p className="text-gray-500">{t('student.profile.noAchievementsYet')}</p>
                       </div>
                     )}
                   </div>
@@ -451,13 +482,13 @@ const StudentProfile = () => {
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-dark flex items-center">
                       <FaGraduationCap className="text-primary mr-3" />
-                      Recent Grades
+                      {t('student.profile.recentGrades.title')}
                     </h2>
                     <button 
                       onClick={() => navigate("/stud/grades")}
                       className="text-primary text-sm font-medium hover:text-secondary flex items-center"
                     >
-                      View All <FaChevronRight className="ml-1" />
+                      {t('student.profile.viewAll')} <FaChevronRight className="ml-1" />
                     </button>
                   </div>
 
@@ -467,16 +498,16 @@ const StudentProfile = () => {
                         <table className="w-full">
                           <thead>
                             <tr className="bg-light bg-opacity-50">
-                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
-                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
-                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('student.profile.recentGrades.subject')}</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('student.profile.recentGrades.grade')}</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('student.profile.recentGrades.teacher')}</th>
+                              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('student.profile.recentGrades.date')}</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100">
                             {grades.slice(0, 3).map((grade, index) => (
                               <tr key={index} className={index % 2 === 0 ? "bg-light bg-opacity-30" : ""}>
-                                <td className="py-3 px-4 text-sm text-dark">{grade.subject}</td>
+                                <td className="py-3 px-4 text-sm text-dark">{getTranslatedSubject(grade.subject)}</td>
                                 <td className="py-3 px-4">
                                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
                                     grade.grade >= 9 ? 'bg-green-100 text-green-800' : 
@@ -497,7 +528,7 @@ const StudentProfile = () => {
                   ) : (
                     <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                       <FaGraduationCap className="text-gray-400 text-4xl mx-auto mb-3" />
-                      <p className="text-gray-500">No grades available yet.</p>
+                      <p className="text-gray-500">{t('student.profile.recentGrades.noGrades')}</p>
                     </div>
                   )}
                 </div>
@@ -506,13 +537,13 @@ const StudentProfile = () => {
                 <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6">
                   <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
                     <FaCalendarAlt className="text-primary mr-3" />
-                    Upcoming Schedule
+                    {t('student.profile.upcomingSchedule.title')}
                   </h2>
                   
                   <div className="space-y-4">
                     {upcomingClasses && upcomingClasses.length > 0 ? (
                       upcomingClasses.slice(0, 3).map((classSession, index) => {
-                        // Pentru debugging
+                        // Für Debugging
                         console.log("Class session data:", classSession);
                         
                         return (
@@ -522,17 +553,17 @@ const StudentProfile = () => {
                             </div>
                             <div className="flex-1">
                               <p className="font-medium text-dark">
-                                {classSession.subject || 
-                                classSession.classDiscipline?.subject ||
-                                classSession.classSession?.subject || 
-                                (classSession.subjects && classSession.subjects.length > 0 ? classSession.subjects[0] : "Class Session")}
+                                {getTranslatedSubject(classSession.subject) || 
+                                getTranslatedSubject(classSession.classDiscipline?.subject) ||
+                                getTranslatedSubject(classSession.classSession?.subject) || 
+                                (classSession.subjects && classSession.subjects.length > 0 ? getTranslatedSubject(classSession.subjects[0]) : t('student.profile.upcomingSchedule.classSession'))}
                               </p>
                               <p className="text-sm text-gray-500">
                                 {classSession.scheduleDay ? `${classSession.scheduleDay}, ` : ""}
                                 {classSession.startTime ? formatTimeFromISO(classSession.startTime) : ""}
                                 {classSession.startTime && classSession.endTime ? " - " : ""}
                                 {classSession.endTime ? formatTimeFromISO(classSession.endTime) : ""}
-                                {(classSession.scheduleDay || classSession.startTime) ? "" : "Schedule TBD"}
+                                {(classSession.scheduleDay || classSession.startTime) ? "" : t('student.profile.upcomingSchedule.scheduleTBD')}
                               </p>
                               <p className="text-xs text-gray-500 mt-1">
                                 {classSession.teacher?.name || classSession.teacherName || ""}
@@ -544,7 +575,7 @@ const StudentProfile = () => {
                     ) : (
                       <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                         <FaCalendarAlt className="text-gray-400 text-4xl mx-auto mb-3" />
-                        <p className="text-gray-500">No upcoming classes scheduled.</p>
+                        <p className="text-gray-500">{t('student.profile.upcomingSchedule.noClasses')}</p>
                       </div>
                     )}
                   </div>
@@ -557,7 +588,7 @@ const StudentProfile = () => {
             <div className="bg-light rounded-xl shadow-md border border-gray-200 p-6">
               <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
                 <FaTrophy className="text-primary mr-3" />
-                All Achievements
+                {t('student.profile.allAchievements')}
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -593,7 +624,7 @@ const StudentProfile = () => {
                               <span className={`text-xs font-semibold uppercase px-2 py-1 rounded ${
                                 isEarned ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
                               }`}>
-                                {isEarned ? 'Earned' : 'Not Earned'}
+                                {isEarned ? t('student.profile.earned') : t('student.profile.notEarned')}
                               </span>
                             </div>
                           </div>
@@ -612,10 +643,8 @@ const StudentProfile = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Include the shared navbar component */}
       <StudentNavbar activeView={activeView} studentData={studentData} />
 
-      {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
           <button 
@@ -624,7 +653,7 @@ const StudentProfile = () => {
           >
             <FaArrowLeft className="text-xl" />
           </button>
-          <h2 className="text-2xl font-bold text-dark">Student Profile</h2>
+          <h2 className="text-2xl font-bold text-dark">{t('student.profile.title')}</h2>
           <div className="flex items-center">
             <div className="flex items-center">
             </div>

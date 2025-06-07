@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../axiosConfig";
 import Cookies from "js-cookie";
-import { FaSearch, FaArrowRight } from "react-icons/fa";
+import { FaSearch, FaArrowRight, FaChartLine, FaCalendarTimes, FaCalendarAlt, FaUtensils, FaRobot } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import StudentNavbar from "../StudentNavbar";
+import { useTranslation } from 'react-i18next';
 
 const StudentDashboard = () => {
+  const { t } = useTranslation();
   const [studentData, setStudentData] = useState(null);
   const [upcomingClasses, setUpcomingClasses] = useState([]);
   const [absences, setAbsences] = useState(null);
@@ -48,7 +50,7 @@ const StudentDashboard = () => {
         setError(null);
       } catch (error) {
         console.error("Error fetching student data:", error);
-        setError("Failed to load student data. Please try again later.");
+        setError(t('student.dashboard.errorLoading'));
         setStudentData(null);
         setAbsences({ total: 0 });
         setUpcomingClasses([]);
@@ -58,17 +60,17 @@ const StudentDashboard = () => {
     };
   
     fetchStudentData();
-  }, [navigate]);
+  }, [navigate, t]);
   
 
   useEffect(() => {
     const fetchStudentOrders = async () => {
       try {  
         const now = new Date();
-        const month = now.getMonth() + 1; // Months start at 0 in JS
+        const month = now.getMonth() + 1; // Monate beginnen bei 0 in JS
         const year = now.getFullYear();
   
-        // Use the new endpoint for student orders
+        // Verwende den neuen Endpunkt für Schülerbestellungen
         const orderResponse = await axios.get(`/students/me/orders`, {
           params: { month, year }
         });
@@ -91,11 +93,11 @@ const StudentDashboard = () => {
   
   const getAbsenceEmoji = (absenceCount) => {
     if (absenceCount <= 3) {
-      return "😄 Great job attending classes!";
+      return t('student.dashboard.absences.greatJob');
     } else if (absenceCount > 3 && absenceCount <= 9) {
-      return "😐 Try to improve your attendance";
+      return t('student.dashboard.absences.tryImprove');
     } else {
-      return "😱 Urgent! Too many absences!";
+      return t('student.dashboard.absences.urgent');
     }
   };
 
@@ -112,15 +114,15 @@ const StudentDashboard = () => {
   const getUpcomingClassesForToday = () => {
     const now = new Date();
     const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
-    const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // Aktuelle Zeit in Minuten umrechnen
     
     return upcomingClasses.filter(classItem => {
-      // Check if the class is scheduled for today
+      // Prüfe ob der Unterricht für heute geplant ist
       if (classItem.day && classItem.day.toLowerCase() !== currentDay.toLowerCase()) {
         return false;
       }
       
-      // If the class has a startTime, check if it's in the future
+      // Wenn der Unterricht eine Startzeit hat, prüfe ob er in der Zukunft liegt
       if (classItem.startTime) {
         const [hours, minutes] = classItem.startTime.split(':').map(Number);
         const classTimeInMinutes = hours * 60 + minutes;
@@ -128,7 +130,7 @@ const StudentDashboard = () => {
         return classTimeInMinutes > currentTime;
       }
       
-      // If no time info, include it
+      // Wenn keine Zeitinfo vorhanden, einschließen
       return true;
     });
   };
@@ -136,7 +138,7 @@ const StudentDashboard = () => {
   const today = new Date().toLocaleString("en-US", { weekday: "long" });
 
   const renderHomeContent = () => {
-    // Get filtered classes for today
+    // Gefilterte Klassen für heute abrufen
     const todaysUpcomingClasses = getUpcomingClassesForToday();
     
     return (
@@ -144,9 +146,9 @@ const StudentDashboard = () => {
         {/* Welcome Card */}
         <div className="col-span-1 md:col-span-3 bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
           <h3 className="text-2xl font-bold mb-2">
-            Welcome back, {studentData?.name || "Student"}!
+            {t('student.dashboard.welcome', { name: studentData?.name || t('student.dashboard.student') })}
           </h3>
-          <p className="text-indigo-100 mb-4">Today is {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="text-indigo-100 mb-4">{t('student.dashboard.todayIs', { date: new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) })}</p>
           
           {error && (
             <div className="mt-4 p-3 bg-red-50 text-red-600 rounded-lg">
@@ -157,20 +159,20 @@ const StudentDashboard = () => {
           {/* Summary Statistics */}
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">GPA</p>
+              <p className="text-xs text-indigo-100">{t('student.dashboard.stats.gpa')}</p>
               <p className="text-3xl font-bold">{calculateGPA(grades)}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Absences</p>
+              <p className="text-xs text-indigo-100">{t('student.dashboard.stats.absences')}</p>
               <p className="text-3xl font-bold">{absences?.total || 0}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Classes Today</p>
+              <p className="text-xs text-indigo-100">{t('student.dashboard.stats.classesToday')}</p>
               <p className="text-3xl font-bold">{todaysUpcomingClasses.length}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Class</p>
-              <p className="text-3xl font-bold">{studentData?.className || "N/A"}</p>
+              <p className="text-xs text-indigo-100">{t('student.dashboard.stats.class')}</p>
+              <p className="text-3xl font-bold">{studentData?.className || t('common.notAvailable')}</p>
             </div>
           </div>
         </div>
@@ -179,32 +181,32 @@ const StudentDashboard = () => {
         <div className="col-span-1 md:col-span-2 bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <h4 className="text-xl font-semibold text-dark mb-4 flex items-center">
             <FaRobot className="text-primary mr-3" />
-            Quick Actions
+            {t('student.dashboard.quickActions.title')}
           </h4>
           <div className="grid grid-cols-2 gap-4">
             <button 
               className="bg-primary text-dark font-semibold p-4 rounded-lg hover:opacity-90 transition flex items-center justify-center"
               onClick={() => navigate('/stud/grades')}
             >
-              <FaChartLine className="mr-2" /> View Grades
+              <FaChartLine className="mr-2" /> {t('student.dashboard.quickActions.viewGrades')}
             </button>
             <button 
               className="bg-secondary text-white font-semibold p-4 rounded-lg hover:opacity-90 transition flex items-center justify-center"
               onClick={() => navigate('/stud/absences')}
             >
-              <FaCalendarTimes className="mr-2" /> Check Absences
+              <FaCalendarTimes className="mr-2" /> {t('student.dashboard.quickActions.checkAbsences')}
             </button>
             <button 
               className="bg-primary text-dark font-semibold p-4 rounded-lg hover:opacity-90 transition flex items-center justify-center"
               onClick={() => navigate('/stud/calendar')}
             >
-              <FaCalendarAlt className="mr-2" /> View Schedule
+              <FaCalendarAlt className="mr-2" /> {t('student.dashboard.quickActions.viewSchedule')}
             </button>
             <button 
               className="bg-secondary text-white font-semibold p-4 rounded-lg hover:opacity-90 transition flex items-center justify-center"
               onClick={() => navigate('/stud/food-orders')}
             >
-              <FaUtensils className="mr-2" /> View Orders
+              <FaUtensils className="mr-2" /> {t('student.dashboard.quickActions.viewOrders')}
             </button>
           </div>
         </div>
@@ -214,10 +216,10 @@ const StudentDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-xl font-semibold text-dark flex items-center">
               <FaCalendarAlt className="text-primary mr-3" />
-              Today's Schedule
+              {t('student.dashboard.todaySchedule.title')}
             </h4>
             <Link to="/stud/calendar" className="text-secondary hover:underline flex items-center">
-              Full Schedule
+              {t('student.dashboard.todaySchedule.fullSchedule')}
               <FaArrowRight className="ml-2 text-xs" />
             </Link>
           </div>
@@ -228,10 +230,10 @@ const StudentDashboard = () => {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-semibold text-dark">
-                        {classItem.subjects?.join(", ") || "Unknown Subject"}
+                        {classItem.subjects?.join(", ") || t('student.dashboard.unknownSubject')}
                       </p>
                       <p className="text-dark2 text-sm">
-                        {classItem.teacher?.name || "Unknown Teacher"}
+                        {classItem.teacher?.name || t('student.dashboard.unknownTeacher')}
                       </p>
                     </div>
                     <div className="text-right">
@@ -242,7 +244,7 @@ const StudentDashboard = () => {
                 </div>
               ))
             ) : (
-              <p className="text-dark2 text-sm italic">No more classes scheduled for today.</p>
+              <p className="text-dark2 text-sm italic">{t('student.dashboard.todaySchedule.noMoreClasses')}</p>
             )}
           </div>
         </div>
@@ -252,18 +254,18 @@ const StudentDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-xl font-semibold text-dark flex items-center">
               <FaCalendarTimes className="text-primary mr-3" />
-              Absences
+              {t('student.dashboard.absences.title')}
             </h4>
             <Link to="/stud/absences" className="text-secondary hover:underline flex items-center">
-              View All
+              {t('student.dashboard.viewAll')}
               <FaArrowRight className="ml-2 text-xs" />
             </Link>
           </div>
           <div className="flex justify-between items-center mb-4">
             <div>
-              <p className="font-semibold text-dark">Total</p>
+              <p className="font-semibold text-dark">{t('student.dashboard.absences.total')}</p>
               <p className={`text-xl md:text-2xl font-bold ${getAbsenceEmojiColor(absences?.total || 0)}`}>
-                {absences?.total || "No data"}
+                {absences?.total || t('student.dashboard.noData')}
               </p>
             </div>
             <div className="text-right">
@@ -273,7 +275,7 @@ const StudentDashboard = () => {
             </div>
           </div>
           <p className="text-dark2 text-sm mt-4">
-            Remember: Regular attendance is key to academic success!
+            {t('student.dashboard.absences.reminder')}
           </p>
         </div>
 
@@ -283,10 +285,10 @@ const StudentDashboard = () => {
         <div className="flex items-center justify-between mb-4">
           <h4 className="text-xl font-semibold text-dark flex items-center">
             <FaUtensils className="text-primary mr-3" />
-            Food Orders
+            {t('student.dashboard.foodOrders.title')}
           </h4>
           <Link to="/stud/food-orders" className="text-secondary hover:underline flex items-center">
-            View Orders
+            {t('student.dashboard.foodOrders.viewOrders')}
             <FaArrowRight className="ml-2 text-xs" />
           </Link>
         </div>
@@ -302,7 +304,7 @@ const StudentDashboard = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-dark font-medium">Qty: {order.quantity || 1}</p>
+                    <p className="text-dark font-medium">{t('student.dashboard.foodOrders.qty')}: {order.quantity || 1}</p>
                     <p className="text-dark font-medium">${order.price.toFixed(2)}</p>
                   </div>
                 </div>
@@ -311,12 +313,12 @@ const StudentDashboard = () => {
           ) : (
             <div className="text-center py-4">
               <FaUtensils className="text-gray-400 text-4xl mx-auto mb-3" />
-              <p className="text-dark2 mb-4">No food orders this month.</p>
+              <p className="text-dark2 mb-4">{t('student.dashboard.foodOrders.noOrders')}</p>
               <Link 
                 to="/stud/food-orders"
                 className="bg-primary text-dark px-4 py-2 rounded-lg font-medium hover:opacity-90 inline-block"
               >
-                View All Orders
+                {t('student.dashboard.foodOrders.viewAllOrders')}
               </Link>
             </div>
           )}
@@ -328,32 +330,34 @@ const StudentDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-xl font-semibold text-dark flex items-center">
               <FaChartLine className="text-primary mr-3" />
-              Grades
+              {t('student.dashboard.grades.title')}
             </h4>
             <Link to="/stud/grades" className="text-secondary hover:underline flex items-center">
-              All Grades
+              {t('student.dashboard.grades.allGrades')}
               <FaArrowRight className="ml-2 text-xs" />
             </Link>
           </div>
           <div className="flex justify-between items-center mb-4">
             <div>
-              <p className="font-semibold text-dark">Average</p>
+              <p className="font-semibold text-dark">{t('student.dashboard.grades.average')}</p>
               <p className="text-xl md:text-2xl font-bold text-primary">
-                {grades.length > 0 ? calculateGPA(grades) : "N/A"}
+                {grades.length > 0 ? calculateGPA(grades) : t('common.notAvailable')}
               </p>
             </div>
             <div className="text-right">
               <p className="text-lg text-primary">
                 {grades.length > 0 
-                  ? calculateGPA(grades) >= 8 ? "🌟 Excellent!" 
-                    : calculateGPA(grades) >= 6 ? "✨ Keep it up!" 
-                    : "📚 Room to improve"
-                  : "No grades yet"}
+                  ? calculateGPA(grades) >= 8 ? t('student.dashboard.grades.excellent')
+                    : calculateGPA(grades) >= 6 ? t('student.dashboard.grades.keepItUp')
+                    : t('student.dashboard.grades.roomToImprove')
+                  : t('student.dashboard.grades.noGradesYet')}
               </p>
             </div>
           </div>
           <p className="text-dark2 text-sm mt-4">
-            {grades.length > 0 ? `You have ${grades.length} recorded grades this year.` : "No grades recorded yet."}
+            {grades.length > 0 
+              ? t('student.dashboard.grades.recordedCount', { count: grades.length })
+              : t('student.dashboard.grades.noRecorded')}
           </p>
         </div>
 
@@ -361,19 +365,19 @@ const StudentDashboard = () => {
         <div className="col-span-1 md:col-span-3 bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <div className="flex items-center mb-4">
             <FaRobot className="text-xl md:text-2xl text-primary mr-3" />
-            <h4 className="text-lg md:text-xl font-semibold text-dark">Ask Schoolie</h4>
+            <h4 className="text-lg md:text-xl font-semibold text-dark">{t('student.dashboard.askSchoolie.title')}</h4>
           </div>
           <div className="flex flex-col md:flex-row">
             <input
               type="text"
-              placeholder="Ask a question about your school, grades, or schedule..."
+              placeholder={t('student.dashboard.askSchoolie.placeholder')}
               className="w-full md:flex-grow p-3 border rounded-t-lg md:rounded-l-lg md:rounded-tr-none text-dark focus:outline-none focus:ring-2 focus:ring-secondary"
             />
             <button 
               className="w-full md:w-auto bg-secondary text-white px-6 py-3 rounded-b-lg md:rounded-r-lg md:rounded-bl-none hover:opacity-90 transition-opacity duration-200 mt-2 md:mt-0 font-medium"
               onClick={() => navigate('/ask-schoolie')}
             >
-              Ask Now
+              {t('student.dashboard.askSchoolie.askNow')}
             </button>
           </div>
         </div>
@@ -390,7 +394,6 @@ const StudentDashboard = () => {
       {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-dark">Dashboard</h2>
           <div className="flex items-center">
             <div className="flex items-center">
             </div>
@@ -404,7 +407,7 @@ const StudentDashboard = () => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <p className="text-dark2 font-medium">Loading your dashboard...</p>
+              <p className="text-dark2 font-medium">{t('student.dashboard.loading')}</p>
             </div>
           </div>
         ) : (
@@ -414,8 +417,5 @@ const StudentDashboard = () => {
     </div>
   );
 };
-
-// Add necessary icon imports
-import { FaChartLine, FaCalendarTimes, FaCalendarAlt, FaUtensils, FaRobot } from "react-icons/fa";
 
 export default StudentDashboard;

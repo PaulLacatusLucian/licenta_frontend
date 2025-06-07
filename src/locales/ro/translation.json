@@ -1419,6 +1419,278 @@
       "logout": "Deconectare"
     }
   },
+   "student": {
+    "dashboard": {
+      "title": "Panou de control",
+      "welcome": "Bine ai revenit, {{name}}!",
+      "student": "Elev",
+      "todayIs": "Astăzi este {{date}}",
+      "errorLoading": "Eroare la încărcarea datelor. Vă rugăm să încercați din nou mai târziu.",
+      "loading": "Se încarcă panoul de control...",
+      "unknownSubject": "Materie necunoscută",
+      "unknownTeacher": "Profesor necunoscut",
+      "noData": "Fără date",
+      "viewAll": "Vezi toate",
+      "stats": {
+        "gpa": "Media",
+        "absences": "Absențe",
+        "classesToday": "Ore astăzi",
+        "class": "Clasă"
+      },
+      "quickActions": {
+        "title": "Acțiuni rapide",
+        "viewGrades": "Vezi notele",
+        "checkAbsences": "Verifică absențele",
+        "viewSchedule": "Vezi orarul",
+        "viewOrders": "Vezi comenzile"
+      },
+      "todaySchedule": {
+        "title": "Orarul de astăzi",
+        "fullSchedule": "Orar complet",
+        "noMoreClasses": "Nu mai sunt ore programate pentru astăzi."
+      },
+      "absences": {
+        "title": "Absențe",
+        "total": "Total",
+        "greatJob": "😄 Felicitări pentru prezența la ore!",
+        "tryImprove": "😐 Încearcă să îți îmbunătățești prezența",
+        "urgent": "😱 Urgent! Prea multe absențe!",
+        "reminder": "Ține minte: Prezența regulată este cheia succesului academic!"
+      },
+      "foodOrders": {
+        "title": "Comenzi mâncare",
+        "viewOrders": "Vezi comenzile",
+        "qty": "Cant",
+        "noOrders": "Nu sunt comenzi de mâncare în această lună.",
+        "viewAllOrders": "Vezi toate comenzile"
+      },
+      "grades": {
+        "title": "Note",
+        "allGrades": "Toate notele",
+        "average": "Media",
+        "excellent": "🌟 Excelent!",
+        "keepItUp": "✨ Continuă tot așa!",
+        "roomToImprove": "📚 Loc de îmbunătățire",
+        "noGradesYet": "Încă nu sunt note",
+        "recordedCount": "Ai {{count}} note înregistrate în acest an.",
+        "noRecorded": "Nu sunt note înregistrate încă."
+      },
+      "askSchoolie": {
+        "title": "Întreabă-l pe Schoolie",
+        "placeholder": "Pune o întrebare despre școală, note sau orar...",
+        "askNow": "Întreabă acum"
+      }
+    },
+     "navbar": {
+      "dashboard": "Panou de control",
+      "myProfile": "Profilul meu",
+      "grades": "Note",
+      "absences": "Absențe",
+      "schedule": "Orar",
+      "food": "Mâncare",
+      "askSchoolie": "Întreabă Schoolie",
+      "studentPortal": "Portal elev",
+      "schoolLogo": "Logo școală",
+      "student": "Elev",
+      "logout": "Deconectare"
+    },
+    "calendar": {
+      "title": "Orar săptămânal",
+      "noScheduleFound": "Nu a fost găsit niciun orar.",
+      "errorLoading": "Nu am putut încărca orarul. Vă rugăm să încercați din nou.",
+      "loadingSchedule": "Se încarcă orarul...",
+      "weeklySchedule": "Orarul săptămânal",
+      "weeklyTimetable": "Orar săptămânal",
+      "unknownTeacher": "Profesor necunoscut",
+      "noClassesScheduled": "Nicio oră programată",
+      "stats": {
+        "class": "Clasă",
+        "schedule": "Orar",
+        "weekly": "Săptămânal",
+        "days": "Zile"
+      }
+    },
+     "absences": {
+      "title": "Evidența prezențelor",
+      "errorLoading": "Eroare la încărcarea absențelor. Vă rugăm să încercați din nou.",
+      "loading": "Se încarcă absențele...",
+      "yourAbsences": "Absențele tale",
+      "unknownSubject": "Materie necunoscută",
+      "unknownTeacher": "Profesor necunoscut",
+      "unknownDate": "Dată necunoscută",
+      "unjustifiedBySubject": "Absențe nemotivate pe materii",
+      "noUnjustified": "Nu există absențe nemotivate!",
+      "greatJobAttendance": "Felicitări pentru prezența excelentă!",
+      "absenceHistory": "Istoric absențe",
+      "show": "Arată",
+      "noAbsencesFound": "Nu s-au găsit absențe {{filter}}",
+      "perfectAttendance": "Felicitări pentru prezența perfectă!",
+      "sortBySubject": "Sortează după materie",
+      "sortByDate": "Sortează după dată",
+      "stats": {
+        "unjustified": "Absențe nemotivate",
+        "justified": "Absențe motivate",
+        "attendanceStatus": "Status prezență"
+      },
+      "attendanceStatus": {
+        "excellent": "Excelent",
+        "good": "Bun",
+        "atRisk": "Risc"
+      },
+      "filter": {
+        "all": "Toate",
+        "unjustified": "Nemotivate",
+        "justified": "Motivate"
+      },
+      "table": {
+        "subject": "Materie",
+        "teacher": "Profesor",
+        "date": "Data",
+        "status": "Status"
+      },
+      "status": {
+        "justified": "Motivată",
+        "unjustified": "Nemotivată"
+      }
+    },
+    "grades": {
+      "title": "Note școlare",
+      "errorLoading": "Eroare la încărcarea notelor. Vă rugăm să încercați din nou.",
+      "loading": "Se încarcă notele...",
+      "academicPerformance": "Performanța ta academică",
+      "subjectAverages": "Medii pe materii",
+      "gradeHistory": "Istoric note",
+      "gradesCount": "{{count}} note",
+      "noGradesYet": "Nu există note încă",
+      "gradesWillAppear": "Notele vor apărea aici după ce vor fi adăugate",
+      "sortBySubject": "Sortează după materie",
+      "sortByGrade": "Sortează după notă",
+      "stats": {
+        "totalSubjects": "Total materii",
+        "overallAverage": "Media generală",
+        "academicStanding": "Situație școlară"
+      },
+      "academicStanding": {
+        "good": "Bună",
+        "improving": "În progres"
+      },
+      "table": {
+        "subject": "Materie",
+        "teacher": "Profesor",
+        "grade": "Notă",
+        "date": "Data"
+      }
+    },
+    "foodOrders": {
+      "title": "Comenzi recente de mâncare",
+      "errorLoading": "Eroare la încărcarea comenzilor. Vă rugăm să încercați din nou.",
+      "loading": "Se încarcă comenzile de mâncare...",
+      "summaryTitle": "Rezumat ultimele 3 zile",
+      "yourRecentOrders": "Comenzile tale recente",
+      "today": "Astăzi",
+      "qty": "Cant",
+      "noRecentOrders": "Fără comenzi recente",
+      "noOrdersMessage": "Nu aveți comenzi de mâncare în ultimele 3 zile.",
+      "stats": {
+        "totalOrders": "Total comenzi",
+        "totalSpent": "Total cheltuit",
+        "avgOrderPrice": "Preț mediu comandă"
+      }
+    },
+    "profile": {
+      "title": "Profil elev",
+      "errorLoading": "Eroare la încărcarea datelor profilului. Vă rugăm să încercați din nou.",
+      "errorUploadingImage": "Eroare la încărcarea imaginii. Vă rugăm să încercați din nou.",
+      "loading": "Se încarcă profilul...",
+      "somethingWentWrong": "Ceva nu a mers bine",
+      "tryAgain": "Încearcă din nou",
+      "childProfileAlt": "Profil copil",
+      "change": "Schimbă",
+      "studentAt": "Elev la {{className}} - {{specialization}}",
+      "viewAll": "Vezi toate",
+      "topAchievements": "Realizări de top",
+      "allAchievements": "Toate realizările",
+      "noAchievementsYet": "Încă nu ai obținut realizări. Continuă să muncești!",
+      "earned": "Obținut",
+      "notEarned": "Neobținut",
+      "stats": {
+        "averageGrade": "Media generală",
+        "absences": "Absențe",
+        "achievements": "Realizări"
+      },
+      "tabs": {
+        "overview": "Prezentare generală",
+        "achievements": "Realizări"
+      },
+      "personalInfo": {
+        "title": "Informații personale",
+        "email": "Email",
+        "classTeacher": "Diriginte",
+        "specialization": "Specializare",
+        "phone": "Telefon",
+        "studentId": "ID elev"
+      },
+      "quickStats": {
+        "title": "Statistici rapide",
+        "totalGrades": "Total note",
+        "absences": "Absențe",
+        "highestGrade": "Cea mai mare notă",
+        "perfectSubjects": "Materii perfecte"
+      },
+      "recentGrades": {
+        "title": "Note recente",
+        "subject": "Materie",
+        "grade": "Notă",
+        "teacher": "Profesor",
+        "date": "Data",
+        "noGrades": "Nu sunt note disponibile încă."
+      },
+      "upcomingSchedule": {
+        "title": "Program următor",
+        "classSession": "Sesiune de clasă",
+        "scheduleTBD": "Program de stabilit",
+        "noClasses": "Nu sunt ore programate."
+      },
+      "achievements": {
+        "perfectAttendance": {
+          "title": "Prezență perfectă",
+          "description": "Fără absențe în acest semestru"
+        },
+        "honorRoll": {
+          "title": "Premiant de onoare",
+          "description": "Menținut o medie peste 9"
+        },
+        "mathWizard": {
+          "title": "Vrăjitor la matematică",
+          "description": "Note perfecte la matematică"
+        },
+        "stemSpecialist": {
+          "title": "Specialist STEM",
+          "description": "Înscris la specializarea Matematică-Informatică"
+        },
+        "risingStar": {
+          "title": "Stea în ascensiune",
+          "description": "Note în îmbunătățire constantă"
+        },
+        "academicExcellence": {
+          "title": "Excelență academică",
+          "description": "Performanțe de top la mai multe materii"
+        }
+      }
+    }
+  },
+  "common": {
+    "days": {
+      "monday": "Luni",
+      "tuesday": "Marți",
+      "wednesday": "Miercuri",
+      "thursday": "Joi",
+      "friday": "Vineri",
+      "saturday": "Sâmbătă",
+      "sunday": "Duminică"
+    },
+    "notAvailable": "N/D"
+  },
   "common": {
     "notAvailable": "N/D",
     "unknown": "Necunoscut",

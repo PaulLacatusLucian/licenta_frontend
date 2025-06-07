@@ -8,9 +8,11 @@ import {
   FaLayerGroup
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import StudentNavbar from "../StudentNavbar"; // Import the shared navbar component
+import StudentNavbar from "../StudentNavbar";
+import { useTranslation } from 'react-i18next';
 
 const WeeklySchedule = () => {
+  const { t } = useTranslation();
   const [classSchedule, setClassSchedule] = useState([]);
   const [studentClassName, setStudentClassName] = useState("");
   const [error, setError] = useState(null);
@@ -20,12 +22,28 @@ const WeeklySchedule = () => {
   
   const navigate = useNavigate();
 
+  // Funktion zur Übersetzung von Fächern
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
+  // Funktion zur Übersetzung von Spezialisierungen
+  const getTranslatedSpecialization = (specialization) => {
+    if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
+      return t(`admin.classes.specializations.${specialization}`);
+    }
+    return specialization || '';
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
         
-        // Fetch both student data and schedule in parallel
+        // Lade Schülerdaten und Stundenplan parallel
         const [studentResponse, scheduleResponse] = await Promise.all([
           axios.get('/students/me'),
           axios.get('/schedules/me/weekly')
@@ -35,7 +53,7 @@ const WeeklySchedule = () => {
         const scheduleData = scheduleResponse.data;
 
         if (!scheduleData || scheduleData.length === 0) {
-          setError("Nu a fost găsit niciun orar.");
+          setError(t('student.calendar.noScheduleFound'));
         } else {
           setClassSchedule(scheduleData);
           if (studentResponse.data?.studentClass?.name) {
@@ -43,17 +61,23 @@ const WeeklySchedule = () => {
           }
         }
       } catch (err) {
-        console.error("Eroare la încărcarea orarului:", err);
-        setError("Nu am putut încărca orarul. Vă rugăm să încercați din nou.");
+        console.error("Error loading schedule:", err);
+        setError(t('student.calendar.errorLoading'));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [t]);
 
-  const weekdays = ["Luni", "Marți", "Miercuri", "Joi", "Vineri"];
+  const weekdays = [
+    t('common.days.monday'),
+    t('common.days.tuesday'),
+    t('common.days.wednesday'),
+    t('common.days.thursday'),
+    t('common.days.friday')
+  ];
 
   if (isLoading) {
     return (
@@ -63,11 +87,23 @@ const WeeklySchedule = () => {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-dark2 font-medium">Loading schedule...</p>
+          <p className="text-dark2 font-medium">{t('student.calendar.loadingSchedule')}</p>
         </div>
       </div>
     );
   }
+
+  // Map weekday names for schedule filtering
+  const getDayName = (day) => {
+    const dayMap = {
+      'Luni': 'monday',
+      'Marți': 'tuesday',
+      'Miercuri': 'wednesday',
+      'Joi': 'thursday',
+      'Vineri': 'friday'
+    };
+    return dayMap[day] || day;
+  };
 
   const renderScheduleContent = () => {
     return (
@@ -76,20 +112,20 @@ const WeeklySchedule = () => {
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
           <div className="flex items-center mb-6">
             <FaCalendarAlt className="text-3xl mr-3" />
-            <h2 className="text-2xl font-bold">Orarul Săptămânal</h2>
+            <h2 className="text-2xl font-bold">{t('student.calendar.weeklySchedule')}</h2>
           </div>
           
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Class</p>
-              <p className="text-2xl font-bold">{studentData?.className || "N/A"}</p>
+              <p className="text-xs text-indigo-100">{t('student.calendar.stats.class')}</p>
+              <p className="text-2xl font-bold">{studentData?.className || t('common.notAvailable')}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Schedule</p>
-              <p className="text-2xl font-bold">Weekly</p>
+              <p className="text-xs text-indigo-100">{t('student.calendar.stats.schedule')}</p>
+              <p className="text-2xl font-bold">{t('student.calendar.stats.weekly')}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Days</p>
+              <p className="text-xs text-indigo-100">{t('student.calendar.stats.days')}</p>
               <p className="text-2xl font-bold">5</p>
             </div>
           </div>
@@ -105,47 +141,52 @@ const WeeklySchedule = () => {
         <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
             <FaLayerGroup className="text-primary mr-3" />
-            Weekly Timetable
+            {t('student.calendar.weeklyTimetable')}
           </h3>
           
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {weekdays.map((day) => (
-              <div key={day} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-primary to-secondary text-white p-3 text-center">
-                  <h3 className="text-lg font-bold">{day}</h3>
-                </div>
-                <div className="p-4 space-y-4">
-                  {classSchedule
-                    .filter((schedule) => schedule.scheduleDay === day)
-                    .map((schedule, index) => (
-                      <div
-                        key={index}
-                        className="bg-light rounded-lg p-4 border border-gray-200 transition-all duration-300 hover:shadow-md"
-                      >
-                        <h4 className="font-semibold text-dark mb-2 flex items-center">
-                          <FaBook className="text-primary mr-2 text-sm" />
-                          {schedule.subjects.join(", ")}
-                        </h4>
-                        <div className="text-sm text-gray-700 flex items-center mb-1">
-                          <FaClock className="text-primary mr-2 text-sm" />
-                          {schedule.startTime} - {schedule.endTime}
+            {weekdays.map((day, index) => {
+              const originalDays = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri'];
+              const scheduleDay = originalDays[index];
+              
+              return (
+                <div key={day} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-primary to-secondary text-white p-3 text-center">
+                    <h3 className="text-lg font-bold">{day}</h3>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    {classSchedule
+                      .filter((schedule) => schedule.scheduleDay === scheduleDay)
+                      .map((schedule, index) => (
+                        <div
+                          key={index}
+                          className="bg-light rounded-lg p-4 border border-gray-200 transition-all duration-300 hover:shadow-md"
+                        >
+                          <h4 className="font-semibold text-dark mb-2 flex items-center">
+                            <FaBook className="text-primary mr-2 text-sm" />
+                            {schedule.subjects.map(subject => getTranslatedSubject(subject)).join(", ")}
+                          </h4>
+                          <div className="text-sm text-gray-700 flex items-center mb-1">
+                            <FaClock className="text-primary mr-2 text-sm" />
+                            {schedule.startTime} - {schedule.endTime}
+                          </div>
+                          <div className="text-sm text-gray-700 flex items-center">
+                            <FaChalkboardTeacher className="text-primary mr-2 text-sm" />
+                            {schedule.teacher?.name || t('student.calendar.unknownTeacher')}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-700 flex items-center">
-                          <FaChalkboardTeacher className="text-primary mr-2 text-sm" />
-                          {schedule.teacher?.name || "Profesor necunoscut"}
-                        </div>
+                      ))}
+                    {classSchedule.filter(
+                      (schedule) => schedule.scheduleDay === scheduleDay
+                    ).length === 0 && (
+                      <div className="text-gray-500 text-center p-4">
+                        {t('student.calendar.noClassesScheduled')}
                       </div>
-                    ))}
-                  {classSchedule.filter(
-                    (schedule) => schedule.scheduleDay === day
-                  ).length === 0 && (
-                    <div className="text-gray-500 text-center p-4">
-                      Nicio oră programată
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -154,10 +195,8 @@ const WeeklySchedule = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Include the shared navbar component */}
       <StudentNavbar activeView={activeView} studentData={studentData} />
 
-      {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
           <button 
@@ -166,7 +205,7 @@ const WeeklySchedule = () => {
           >
             <FaArrowLeft className="text-xl" />
           </button>
-          <h2 className="text-2xl font-bold text-dark">Weekly Schedule</h2>
+          <h2 className="text-2xl font-bold text-dark">{t('student.calendar.title')}</h2>
           <div className="flex items-center">
             <div className="flex items-center">
             </div>
@@ -179,7 +218,7 @@ const WeeklySchedule = () => {
   );
 };
 
-// Need to add this import for the FaBook icon
+// FaBook icon implementation
 const FaBook = ({ className }) => {
   return (
     <svg 

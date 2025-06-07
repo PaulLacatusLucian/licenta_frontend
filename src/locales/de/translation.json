@@ -1415,6 +1415,278 @@
       "logout": "Abmelden"
     }
   },
+  "student": {
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Willkommen zurück, {{name}}!",
+      "student": "Schüler",
+      "todayIs": "Heute ist {{date}}",
+      "errorLoading": "Fehler beim Laden der Schülerdaten. Bitte versuchen Sie es später erneut.",
+      "loading": "Dashboard wird geladen...",
+      "unknownSubject": "Unbekanntes Fach",
+      "unknownTeacher": "Unbekannter Lehrer",
+      "noData": "Keine Daten",
+      "viewAll": "Alle anzeigen",
+      "stats": {
+        "gpa": "Notendurchschnitt",
+        "absences": "Fehlzeiten",
+        "classesToday": "Unterricht heute",
+        "class": "Klasse"
+      },
+      "quickActions": {
+        "title": "Schnellaktionen",
+        "viewGrades": "Noten anzeigen",
+        "checkAbsences": "Fehlzeiten prüfen",
+        "viewSchedule": "Stundenplan anzeigen",
+        "viewOrders": "Bestellungen anzeigen"
+      },
+      "todaySchedule": {
+        "title": "Heutiger Stundenplan",
+        "fullSchedule": "Vollständiger Stundenplan",
+        "noMoreClasses": "Keine weiteren Stunden für heute geplant."
+      },
+      "absences": {
+        "title": "Fehlzeiten",
+        "total": "Gesamt",
+        "greatJob": "😄 Großartige Anwesenheit!",
+        "tryImprove": "😐 Versuche deine Anwesenheit zu verbessern",
+        "urgent": "😱 Dringend! Zu viele Fehlzeiten!",
+        "reminder": "Denk daran: Regelmäßige Anwesenheit ist der Schlüssel zum akademischen Erfolg!"
+      },
+      "foodOrders": {
+        "title": "Essensbestellungen",
+        "viewOrders": "Bestellungen anzeigen",
+        "qty": "Menge",
+        "noOrders": "Keine Essensbestellungen in diesem Monat.",
+        "viewAllOrders": "Alle Bestellungen anzeigen"
+      },
+      "grades": {
+        "title": "Noten",
+        "allGrades": "Alle Noten",
+        "average": "Durchschnitt",
+        "excellent": "🌟 Ausgezeichnet!",
+        "keepItUp": "✨ Weiter so!",
+        "roomToImprove": "📚 Verbesserungspotenzial",
+        "noGradesYet": "Noch keine Noten",
+        "recordedCount": "Du hast {{count}} eingetragene Noten in diesem Jahr.",
+        "noRecorded": "Noch keine Noten eingetragen."
+      },
+      "askSchoolie": {
+        "title": "Frag Schoolie",
+        "placeholder": "Stelle eine Frage über deine Schule, Noten oder Stundenplan...",
+        "askNow": "Jetzt fragen"
+      }
+    },
+    "navbar": {
+      "dashboard": "Dashboard",
+      "myProfile": "Mein Profil",
+      "grades": "Noten",
+      "absences": "Fehlzeiten",
+      "schedule": "Stundenplan",
+      "food": "Essen",
+      "askSchoolie": "Frag Schoolie",
+      "studentPortal": "Schülerportal",
+      "schoolLogo": "Schullogo",
+      "student": "Schüler",
+      "logout": "Abmelden"
+    },
+    "calendar": {
+      "title": "Wochenplan",
+      "noScheduleFound": "Kein Stundenplan gefunden.",
+      "errorLoading": "Stundenplan konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+      "loadingSchedule": "Stundenplan wird geladen...",
+      "weeklySchedule": "Wochenplan",
+      "weeklyTimetable": "Wochenstundenplan",
+      "unknownTeacher": "Unbekannter Lehrer",
+      "noClassesScheduled": "Keine Stunden geplant",
+      "stats": {
+        "class": "Klasse",
+        "schedule": "Stundenplan",
+        "weekly": "Wöchentlich",
+        "days": "Tage"
+      }
+    },
+     "absences": {
+      "title": "Anwesenheitsnachweis",
+      "errorLoading": "Fehler beim Laden der Fehlzeiten. Bitte versuchen Sie es später erneut.",
+      "loading": "Fehlzeiten werden geladen...",
+      "yourAbsences": "Deine Fehlzeiten",
+      "unknownSubject": "Unbekanntes Fach",
+      "unknownTeacher": "Unbekannter Lehrer",
+      "unknownDate": "Unbekanntes Datum",
+      "unjustifiedBySubject": "Unentschuldigte Fehlzeiten nach Fach",
+      "noUnjustified": "Keine unentschuldigten Fehlzeiten!",
+      "greatJobAttendance": "Großartige Anwesenheitsleistung!",
+      "absenceHistory": "Fehlzeitenverlauf",
+      "show": "Anzeigen",
+      "noAbsencesFound": "Keine {{filter}} Fehlzeiten gefunden",
+      "perfectAttendance": "Perfekte Anwesenheit - weiter so!",
+      "sortBySubject": "Nach Fach sortieren",
+      "sortByDate": "Nach Datum sortieren",
+      "stats": {
+        "unjustified": "Unentschuldigte Fehlzeiten",
+        "justified": "Entschuldigte Fehlzeiten",
+        "attendanceStatus": "Anwesenheitsstatus"
+      },
+      "attendanceStatus": {
+        "excellent": "Ausgezeichnet",
+        "good": "Gut",
+        "atRisk": "Gefährdet"
+      },
+      "filter": {
+        "all": "Alle",
+        "unjustified": "Unentschuldigt",
+        "justified": "Entschuldigt"
+      },
+      "table": {
+        "subject": "Fach",
+        "teacher": "Lehrer",
+        "date": "Datum",
+        "status": "Status"
+      },
+      "status": {
+        "justified": "Entschuldigt",
+        "unjustified": "Unentschuldigt"
+      }
+    },
+    "grades": {
+      "title": "Schulnoten",
+      "errorLoading": "Fehler beim Laden der Noten. Bitte versuchen Sie es später erneut.",
+      "loading": "Noten werden geladen...",
+      "academicPerformance": "Deine akademische Leistung",
+      "subjectAverages": "Fächerdurchschnitte",
+      "gradeHistory": "Notenverlauf",
+      "gradesCount": "{{count}} Noten",
+      "noGradesYet": "Noch keine Noten vorhanden",
+      "gradesWillAppear": "Noten erscheinen hier, sobald sie eingetragen wurden",
+      "sortBySubject": "Nach Fach sortieren",
+      "sortByGrade": "Nach Note sortieren",
+      "stats": {
+        "totalSubjects": "Fächer gesamt",
+        "overallAverage": "Gesamtdurchschnitt",
+        "academicStanding": "Akademischer Stand"
+      },
+      "academicStanding": {
+        "good": "Gut",
+        "improving": "Verbessernd"
+      },
+      "table": {
+        "subject": "Fach",
+        "teacher": "Lehrer",
+        "grade": "Note",
+        "date": "Datum"
+      }
+    },
+    "foodOrders": {
+      "title": "Aktuelle Essensbestellungen",
+      "errorLoading": "Fehler beim Laden der Essensbestellungen. Bitte versuchen Sie es später erneut.",
+      "loading": "Essensbestellungen werden geladen...",
+      "summaryTitle": "Zusammenfassung der letzten 3 Tage",
+      "yourRecentOrders": "Deine aktuellen Bestellungen",
+      "today": "Heute",
+      "qty": "Menge",
+      "noRecentOrders": "Keine aktuellen Bestellungen",
+      "noOrdersMessage": "Sie haben keine Essensbestellungen in den letzten 3 Tagen.",
+      "stats": {
+        "totalOrders": "Gesamtbestellungen",
+        "totalSpent": "Gesamt ausgegeben",
+        "avgOrderPrice": "Durchschnittspreis"
+      }
+    },
+    "profile": {
+      "title": "Schülerprofil",
+      "errorLoading": "Fehler beim Laden der Profildaten. Bitte versuchen Sie es später erneut.",
+      "errorUploadingImage": "Fehler beim Hochladen des Bildes. Bitte versuchen Sie es erneut.",
+      "loading": "Profil wird geladen...",
+      "somethingWentWrong": "Etwas ist schiefgelaufen",
+      "tryAgain": "Erneut versuchen",
+      "childProfileAlt": "Kinderprofil",
+      "change": "Ändern",
+      "studentAt": "Schüler in {{className}} - {{specialization}}",
+      "viewAll": "Alle anzeigen",
+      "topAchievements": "Top-Erfolge",
+      "allAchievements": "Alle Erfolge",
+      "noAchievementsYet": "Noch keine Erfolge erzielt. Weiter so!",
+      "earned": "Erreicht",
+      "notEarned": "Nicht erreicht",
+      "stats": {
+        "averageGrade": "Notendurchschnitt",
+        "absences": "Fehlzeiten",
+        "achievements": "Erfolge"
+      },
+      "tabs": {
+        "overview": "Übersicht",
+        "achievements": "Erfolge"
+      },
+      "personalInfo": {
+        "title": "Persönliche Informationen",
+        "email": "E-Mail",
+        "classTeacher": "Klassenlehrer",
+        "specialization": "Spezialisierung",
+        "phone": "Telefon",
+        "studentId": "Schüler-ID"
+      },
+      "quickStats": {
+        "title": "Schnellstatistiken",
+        "totalGrades": "Gesamtnoten",
+        "absences": "Fehlzeiten",
+        "highestGrade": "Beste Note",
+        "perfectSubjects": "Perfekte Fächer"
+      },
+      "recentGrades": {
+        "title": "Aktuelle Noten",
+        "subject": "Fach",
+        "grade": "Note",
+        "teacher": "Lehrer",
+        "date": "Datum",
+        "noGrades": "Noch keine Noten verfügbar."
+      },
+      "upcomingSchedule": {
+        "title": "Kommender Stundenplan",
+        "classSession": "Unterrichtsstunde",
+        "scheduleTBD": "Zeitplan noch festzulegen",
+        "noClasses": "Keine kommenden Stunden geplant."
+      },
+      "achievements": {
+        "perfectAttendance": {
+          "title": "Perfekte Anwesenheit",
+          "description": "Keine Fehlzeiten in diesem Semester"
+        },
+        "honorRoll": {
+          "title": "Ehrenschüler",
+          "description": "Durchschnittsnote über 9 gehalten"
+        },
+        "mathWizard": {
+          "title": "Mathe-Zauberer",
+          "description": "Perfekte Noten in Mathematik"
+        },
+        "stemSpecialist": {
+          "title": "MINT-Spezialist",
+          "description": "Eingeschrieben in Mathematik-Informatik Spezialisierung"
+        },
+        "risingStar": {
+          "title": "Aufsteigender Stern",
+          "description": "Kontinuierlich verbesserte Noten"
+        },
+        "academicExcellence": {
+          "title": "Akademische Exzellenz",
+          "description": "Top-Leistung in mehreren Fächern"
+        }
+      }
+    }
+  },
+  "common": {
+    "days": {
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag"
+    },
+    "notAvailable": "N/V"
+  },
   "common": {
     "notAvailable": "N/V",
     "unknown": "Unbekannt",

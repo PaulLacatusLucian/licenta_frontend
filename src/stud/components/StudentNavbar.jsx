@@ -13,8 +13,10 @@ import {
   FaSignOutAlt
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const StudentNavbar = ({ activeView, studentData }) => {
+  const { t } = useTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -26,13 +28,13 @@ const StudentNavbar = ({ activeView, studentData }) => {
 
   // Navigation items
   const navItems = [
-    { icon: FaHome, label: "Dashboard", view: "home", path: "/stud" },
-    { icon: FaUserCircle, label: "My Profile", view: "profile", path: "/stud/profile" },
-    { icon: FaChartLine, label: "Grades", view: "grades", path: "/stud/grades" },
-    { icon: FaCalendarTimes, label: "Absences", view: "absences", path: "/stud/absences" },
-    { icon: FaCalendarAlt, label: "Schedule", view: "calendar", path: "/stud/calendar" },
-    { icon: FaUtensils, label: "Food", view: "food", path: "/stud/food-orders" },
-    { icon: FaRobot, label: "Ask Schoolie", view: "ask", path: "/ask-schoolie" }
+    { icon: FaHome, label: t('student.navbar.dashboard'), view: "home", path: "/stud" },
+    { icon: FaUserCircle, label: t('student.navbar.myProfile'), view: "profile", path: "/stud/profile" },
+    { icon: FaChartLine, label: t('student.navbar.grades'), view: "grades", path: "/stud/grades" },
+    { icon: FaCalendarTimes, label: t('student.navbar.absences'), view: "absences", path: "/stud/absences" },
+    { icon: FaCalendarAlt, label: t('student.navbar.schedule'), view: "calendar", path: "/stud/calendar" },
+    { icon: FaUtensils, label: t('student.navbar.food'), view: "food", path: "/stud/food-orders" },
+    { icon: FaRobot, label: t('student.navbar.askSchoolie'), view: "ask", path: "/ask-schoolie" }
   ];
 
   return (
@@ -46,7 +48,7 @@ const StudentNavbar = ({ activeView, studentData }) => {
           <FaBars />
         </button>
         <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
-          Student Portal
+          {t('student.navbar.studentPortal')}
         </h2>
       </div>
 
@@ -61,13 +63,13 @@ const StudentNavbar = ({ activeView, studentData }) => {
           <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
             <img 
               src={logo}
-              alt="School Logo" 
+              alt={t('student.navbar.schoolLogo')} 
               className="w-20 h-20 object-contain"
             />
           </div>
           <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-white">Student Portal</h2>
-            <p className="text-sm text-white text-opacity-80 mt-1">{studentData?.className || "Student"}</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white">{t('student.navbar.studentPortal')}</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">{studentData?.className || t('student.navbar.student')}</p>
           </div>
         </div>
 
@@ -99,7 +101,7 @@ const StudentNavbar = ({ activeView, studentData }) => {
             className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
           >
             <FaSignOutAlt className="mr-3 text-xl" />
-            <span className="font-medium">Logout</span>
+            <span className="font-medium">{t('student.navbar.logout')}</span>
           </button>
         </div>
       </div>

@@ -15,7 +15,10 @@ import {
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import StudentNavbar from "../StudentNavbar";
+import { useTranslation } from 'react-i18next';
+
 const StudentGrades = () => {
+  const { t } = useTranslation();
   const [grades, setGrades] = useState([]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -25,12 +28,20 @@ const StudentGrades = () => {
   
   const navigate = useNavigate();
 
+  // Funktion zur Übersetzung von Fächern
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
         
-        // Fetch both student data and grades in parallel
+        // Lade Schülerdaten und Noten parallel
         const [studentResponse, gradesResponse] = await Promise.all([
           axios.get('/students/me'),
           axios.get('/grades/me')
@@ -41,14 +52,14 @@ const StudentGrades = () => {
         setMessage("");
       } catch (error) {
         console.error("Error fetching data:", error);
-        setMessage("Failed to fetch grades. Please try again later.");
+        setMessage(t('student.grades.errorLoading'));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [t]);
 
   const sortedGrades = useMemo(() => {
     let sortableGrades = [...grades];
@@ -68,16 +79,18 @@ const StudentGrades = () => {
 
   const subjectAverages = useMemo(() => {
     const averages = grades.reduce((acc, grade) => {
-      if (!acc[grade.subject]) {
-        acc[grade.subject] = { total: 0, count: 0 };
+      const translatedSubject = getTranslatedSubject(grade.subject);
+      if (!acc[translatedSubject]) {
+        acc[translatedSubject] = { total: 0, count: 0, originalSubject: grade.subject };
       }
-      acc[grade.subject].total += grade.grade;
-      acc[grade.subject].count += 1;
+      acc[translatedSubject].total += grade.grade;
+      acc[translatedSubject].count += 1;
       return acc;
     }, {});
 
     return Object.entries(averages).map(([subject, data]) => ({
       subject,
+      originalSubject: data.originalSubject,
       average: (data.total / data.count).toFixed(2),
       count: data.count
     }));
@@ -116,6 +129,11 @@ const StudentGrades = () => {
     return "💪";
   };
 
+  const getAcademicStanding = (gpa) => {
+    if (gpa >= 7) return t('student.grades.academicStanding.good');
+    return t('student.grades.academicStanding.improving');
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-light">
@@ -124,7 +142,7 @@ const StudentGrades = () => {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-dark2 font-medium">Loading grades...</p>
+          <p className="text-dark2 font-medium">{t('student.grades.loading')}</p>
         </div>
       </div>
     );
@@ -137,21 +155,21 @@ const StudentGrades = () => {
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
           <div className="flex items-center mb-6">
             <FaGraduationCap className="text-3xl mr-3" />
-            <h2 className="text-2xl font-bold">Your Academic Performance</h2>
+            <h2 className="text-2xl font-bold">{t('student.grades.academicPerformance')}</h2>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Total Subjects</p>
+              <p className="text-xs text-indigo-100">{t('student.grades.stats.totalSubjects')}</p>
               <p className="text-3xl font-bold">{subjectAverages.length}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Overall Average</p>
+              <p className="text-xs text-indigo-100">{t('student.grades.stats.overallAverage')}</p>
               <p className="text-3xl font-bold">{calculateGPA(grades)}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Academic Standing</p>
+              <p className="text-xs text-indigo-100">{t('student.grades.stats.academicStanding')}</p>
               <p className="text-3xl font-bold">
-                {calculateGPA(grades) >= 7 ? "Good" : "Improving"}
+                {getAcademicStanding(calculateGPA(grades))}
               </p>
             </div>
           </div>
@@ -161,7 +179,7 @@ const StudentGrades = () => {
         <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
             <FaBook className="text-primary mr-3" />
-            Subject Averages
+            {t('student.grades.subjectAverages')}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {subjectAverages.map((subjectData) => (
@@ -169,7 +187,7 @@ const StudentGrades = () => {
                 <div className="flex justify-between items-center">
                   <div className="overflow-hidden">
                     <p className="font-medium text-dark truncate">{subjectData.subject}</p>
-                    <p className="text-sm text-dark2">{subjectData.count} grades</p>
+                    <p className="text-sm text-dark2">{t('student.grades.gradesCount', { count: subjectData.count })}</p>
                   </div>
                   <p className={`text-xl font-bold ${getGradeColor(parseFloat(subjectData.average))}`}>
                     {subjectData.average} {getGradeEmoji(parseFloat(subjectData.average))}
@@ -184,7 +202,7 @@ const StudentGrades = () => {
         <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
             <FaChartLine className="text-primary mr-3" />
-            Grade History
+            {t('student.grades.gradeHistory')}
           </h3>
           
           {message ? (
@@ -192,8 +210,8 @@ const StudentGrades = () => {
           ) : sortedGrades.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-dark2">
               <FaBook className="text-5xl mb-4 text-primary opacity-50" />
-              <p className="text-xl">No grades found yet</p>
-              <p className="text-sm mt-2">Grades will appear here once they're added</p>
+              <p className="text-xl">{t('student.grades.noGradesYet')}</p>
+              <p className="text-sm mt-2">{t('student.grades.gradesWillAppear')}</p>
             </div>
           ) : (
             <div>
@@ -208,14 +226,14 @@ const StudentGrades = () => {
                           onClick={() => requestSort('subject')}
                         >
                           <FaBook className="mr-2" />
-                          <span>Subject</span>
+                          <span>{t('student.grades.table.subject')}</span>
                           {getSortIcon('subject')}
                         </button>
                       </th>
                       <th className="p-4 text-left">
                         <div className="flex items-center">
                           <FaUserTie className="text-primary mr-2" />
-                          <span className="text-dark2 font-medium">Teacher</span>
+                          <span className="text-dark2 font-medium">{t('student.grades.table.teacher')}</span>
                         </div>
                       </th>
                       <th className="p-4 text-center">
@@ -223,7 +241,7 @@ const StudentGrades = () => {
                           className="flex items-center justify-center text-dark2 font-medium hover:text-primary mx-auto"
                           onClick={() => requestSort('grade')}
                         >
-                          <span>Grade</span>
+                          <span>{t('student.grades.table.grade')}</span>
                           {getSortIcon('grade')}
                         </button>
                       </th>
@@ -233,7 +251,7 @@ const StudentGrades = () => {
                           onClick={() => requestSort('dateReceived')}
                         >
                           <FaCalendarAlt className="mr-2" />
-                          <span>Date</span>
+                          <span>{t('student.grades.table.date')}</span>
                           {getSortIcon('dateReceived')}
                         </button>
                       </th>
@@ -247,8 +265,8 @@ const StudentGrades = () => {
                           index % 2 === 0 ? "bg-light bg-opacity-30" : ""
                         }`}
                       >
-                        <td className="p-4 font-medium text-dark">{grade.subject || "N/A"}</td>
-                        <td className="p-4 text-dark2">{grade.teacherName || "N/A"}</td>
+                        <td className="p-4 font-medium text-dark">{getTranslatedSubject(grade.subject) || t('common.notAvailable')}</td>
+                        <td className="p-4 text-dark2">{grade.teacherName || t('common.notAvailable')}</td>
                         <td className={`p-4 text-center font-bold ${getGradeColor(grade.grade)}`}>
                           {grade.grade} {getGradeEmoji(grade.grade)}
                         </td>
@@ -261,7 +279,7 @@ const StudentGrades = () => {
                                 hour: "2-digit", 
                                 minute: "2-digit" 
                               }) 
-                            : "N/A"}
+                            : t('common.notAvailable')}
                         </td>
                       </tr>
                     ))}
@@ -276,14 +294,14 @@ const StudentGrades = () => {
                     className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
                     onClick={() => requestSort('subject')}
                   >
-                    <span>Sort by Subject</span>
+                    <span>{t('student.grades.sortBySubject')}</span>
                     {getSortIcon('subject')}
                   </button>
                   <button
                     className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
                     onClick={() => requestSort('grade')}
                   >
-                    <span>Sort by Grade</span>
+                    <span>{t('student.grades.sortByGrade')}</span>
                     {getSortIcon('grade')}
                   </button>
                 </div>
@@ -295,7 +313,7 @@ const StudentGrades = () => {
                     } bg-white`}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <div className="font-medium text-dark">{grade.subject || "N/A"}</div>
+                      <div className="font-medium text-dark">{getTranslatedSubject(grade.subject) || t('common.notAvailable')}</div>
                       <div className={`font-bold text-lg ${getGradeColor(grade.grade)}`}>
                         {grade.grade} {getGradeEmoji(grade.grade)}
                       </div>
@@ -303,7 +321,7 @@ const StudentGrades = () => {
                     <div className="flex flex-col space-y-1 text-sm">
                       <div className="flex items-center text-dark2">
                         <FaUserTie className="mr-2 text-xs" />
-                        <span>{grade.teacherName || "N/A"}</span>
+                        <span>{grade.teacherName || t('common.notAvailable')}</span>
                       </div>
                       <div className="flex items-center text-dark2">
                         <FaCalendarAlt className="mr-2 text-xs" />
@@ -316,7 +334,7 @@ const StudentGrades = () => {
                                 hour: "2-digit", 
                                 minute: "2-digit" 
                               })
-                            : "N/A"}
+                            : t('common.notAvailable')}
                         </span>
                       </div>
                     </div>
@@ -332,10 +350,8 @@ const StudentGrades = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Include the shared navbar component */}
       <StudentNavbar activeView={activeView} studentData={studentData} />
 
-      {/* Main content area */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
         <button 
@@ -344,7 +360,7 @@ const StudentGrades = () => {
         >
           <FaArrowLeft className="text-xl" />
         </button>
-          <h2 className="text-2xl font-bold text-dark">Academic Grades</h2>
+          <h2 className="text-2xl font-bold text-dark">{t('student.grades.title')}</h2>
           <div className="flex items-center">
             <div className="flex items-center">
             </div>

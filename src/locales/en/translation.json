@@ -1419,6 +1419,278 @@
       "logout": "Logout"
     }
   },
+   "student": {
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Welcome back, {{name}}!",
+      "student": "Student",
+      "todayIs": "Today is {{date}}",
+      "errorLoading": "Failed to load student data. Please try again later.",
+      "loading": "Loading your dashboard...",
+      "unknownSubject": "Unknown Subject",
+      "unknownTeacher": "Unknown Teacher",
+      "noData": "No data",
+      "viewAll": "View All",
+      "stats": {
+        "gpa": "GPA",
+        "absences": "Absences",
+        "classesToday": "Classes Today",
+        "class": "Class"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "viewGrades": "View Grades",
+        "checkAbsences": "Check Absences",
+        "viewSchedule": "View Schedule",
+        "viewOrders": "View Orders"
+      },
+      "todaySchedule": {
+        "title": "Today's Schedule",
+        "fullSchedule": "Full Schedule",
+        "noMoreClasses": "No more classes scheduled for today."
+      },
+      "absences": {
+        "title": "Absences",
+        "total": "Total",
+        "greatJob": "😄 Great job attending classes!",
+        "tryImprove": "😐 Try to improve your attendance",
+        "urgent": "😱 Urgent! Too many absences!",
+        "reminder": "Remember: Regular attendance is key to academic success!"
+      },
+      "foodOrders": {
+        "title": "Food Orders",
+        "viewOrders": "View Orders",
+        "qty": "Qty",
+        "noOrders": "No food orders this month.",
+        "viewAllOrders": "View All Orders"
+      },
+      "grades": {
+        "title": "Grades",
+        "allGrades": "All Grades",
+        "average": "Average",
+        "excellent": "🌟 Excellent!",
+        "keepItUp": "✨ Keep it up!",
+        "roomToImprove": "📚 Room to improve",
+        "noGradesYet": "No grades yet",
+        "recordedCount": "You have {{count}} recorded grades this year.",
+        "noRecorded": "No grades recorded yet."
+      },
+      "askSchoolie": {
+        "title": "Ask Schoolie",
+        "placeholder": "Ask a question about your school, grades, or schedule...",
+        "askNow": "Ask Now"
+      }
+    },
+     "navbar": {
+      "dashboard": "Dashboard",
+      "myProfile": "My Profile",
+      "grades": "Grades",
+      "absences": "Absences",
+      "schedule": "Schedule",
+      "food": "Food",
+      "askSchoolie": "Ask Schoolie",
+      "studentPortal": "Student Portal",
+      "schoolLogo": "School Logo",
+      "student": "Student",
+      "logout": "Logout"
+    },
+    "calendar": {
+      "title": "Weekly Schedule",
+      "noScheduleFound": "No schedule found.",
+      "errorLoading": "Could not load schedule. Please try again.",
+      "loadingSchedule": "Loading schedule...",
+      "weeklySchedule": "Weekly Schedule",
+      "weeklyTimetable": "Weekly Timetable",
+      "unknownTeacher": "Unknown teacher",
+      "noClassesScheduled": "No classes scheduled",
+      "stats": {
+        "class": "Class",
+        "schedule": "Schedule",
+        "weekly": "Weekly",
+        "days": "Days"
+      }
+    },
+     "absences": {
+      "title": "Attendance Records",
+      "errorLoading": "Failed to fetch absences. Please try again later.",
+      "loading": "Loading absences...",
+      "yourAbsences": "Your Absences",
+      "unknownSubject": "Unknown Subject",
+      "unknownTeacher": "Unknown Teacher",
+      "unknownDate": "Unknown Date",
+      "unjustifiedBySubject": "Unjustified Absences by Subject",
+      "noUnjustified": "No unjustified absences!",
+      "greatJobAttendance": "Great job maintaining excellent attendance!",
+      "absenceHistory": "Absence History",
+      "show": "Show",
+      "noAbsencesFound": "No {{filter}} absences found",
+      "perfectAttendance": "Great job maintaining perfect attendance!",
+      "sortBySubject": "Sort by Subject",
+      "sortByDate": "Sort by Date",
+      "stats": {
+        "unjustified": "Unjustified Absences",
+        "justified": "Justified Absences",
+        "attendanceStatus": "Attendance Status"
+      },
+      "attendanceStatus": {
+        "excellent": "Excellent",
+        "good": "Good",
+        "atRisk": "At Risk"
+      },
+      "filter": {
+        "all": "All",
+        "unjustified": "Unjustified",
+        "justified": "Justified"
+      },
+      "table": {
+        "subject": "Subject",
+        "teacher": "Teacher",
+        "date": "Date",
+        "status": "Status"
+      },
+      "status": {
+        "justified": "Justified",
+        "unjustified": "Unjustified"
+      }
+    },
+    "grades": {
+      "title": "Academic Grades",
+      "errorLoading": "Failed to fetch grades. Please try again later.",
+      "loading": "Loading grades...",
+      "academicPerformance": "Your Academic Performance",
+      "subjectAverages": "Subject Averages",
+      "gradeHistory": "Grade History",
+      "gradesCount": "{{count}} grades",
+      "noGradesYet": "No grades found yet",
+      "gradesWillAppear": "Grades will appear here once they're added",
+      "sortBySubject": "Sort by Subject",
+      "sortByGrade": "Sort by Grade",
+      "stats": {
+        "totalSubjects": "Total Subjects",
+        "overallAverage": "Overall Average",
+        "academicStanding": "Academic Standing"
+      },
+      "academicStanding": {
+        "good": "Good",
+        "improving": "Improving"
+      },
+      "table": {
+        "subject": "Subject",
+        "teacher": "Teacher",
+        "grade": "Grade",
+        "date": "Date"
+      }
+    },
+     "foodOrders": {
+      "title": "Recent Food Orders",
+      "errorLoading": "Failed to load food orders. Please try again later.",
+      "loading": "Loading your food orders...",
+      "summaryTitle": "Last 3 Days Summary",
+      "yourRecentOrders": "Your Recent Orders",
+      "today": "Today",
+      "qty": "Qty",
+      "noRecentOrders": "No Recent Orders",
+      "noOrdersMessage": "You don't have any food orders in the last 3 days.",
+      "stats": {
+        "totalOrders": "Total Orders",
+        "totalSpent": "Total Spent",
+        "avgOrderPrice": "Avg. Order Price"
+      }
+    },
+    "profile": {
+      "title": "Student Profile",
+      "errorLoading": "Failed to load profile data. Please try again later.",
+      "errorUploadingImage": "Failed to upload image. Please try again.",
+      "loading": "Loading your profile...",
+      "somethingWentWrong": "Something went wrong",
+      "tryAgain": "Try Again",
+      "childProfileAlt": "Child Profile",
+      "change": "Change",
+      "studentAt": "Student at {{className}} - {{specialization}}",
+      "viewAll": "View All",
+      "topAchievements": "Top Achievements",
+      "allAchievements": "All Achievements",
+      "noAchievementsYet": "No achievements earned yet. Keep working!",
+      "earned": "Earned",
+      "notEarned": "Not Earned",
+      "stats": {
+        "averageGrade": "Average Grade",
+        "absences": "Absences",
+        "achievements": "Achievements"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "achievements": "Achievements"
+      },
+      "personalInfo": {
+        "title": "Personal Information",
+        "email": "Email",
+        "classTeacher": "Class Teacher",
+        "specialization": "Specialization",
+        "phone": "Phone",
+        "studentId": "Student ID"
+      },
+      "quickStats": {
+        "title": "Quick Stats",
+        "totalGrades": "Total Grades",
+        "absences": "Absences",
+        "highestGrade": "Highest Grade",
+        "perfectSubjects": "Perfect Subjects"
+      },
+      "recentGrades": {
+        "title": "Recent Grades",
+        "subject": "Subject",
+        "grade": "Grade",
+        "teacher": "Teacher",
+        "date": "Date",
+        "noGrades": "No grades available yet."
+      },
+      "upcomingSchedule": {
+        "title": "Upcoming Schedule",
+        "classSession": "Class Session",
+        "scheduleTBD": "Schedule TBD",
+        "noClasses": "No upcoming classes scheduled."
+      },
+      "achievements": {
+        "perfectAttendance": {
+          "title": "Perfect Attendance",
+          "description": "No absences this semester"
+        },
+        "honorRoll": {
+          "title": "Honor Roll Scholar",
+          "description": "Maintained an average grade above 9"
+        },
+        "mathWizard": {
+          "title": "Math Wizard",
+          "description": "Perfect grades in Mathematics"
+        },
+        "stemSpecialist": {
+          "title": "STEM Specialist",
+          "description": "Enrolled in Matematică-Informatică specialization"
+        },
+        "risingStar": {
+          "title": "Rising Star",
+          "description": "Consistently improving grades"
+        },
+        "academicExcellence": {
+          "title": "Academic Excellence",
+          "description": "Top performer in multiple subjects"
+        }
+      }
+    }
+  },
+  "common": {
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "notAvailable": "N/A"
+  },
   "common": {
     "notAvailable": "N/A",
     "unknown": "Unknown",

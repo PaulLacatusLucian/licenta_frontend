@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../../../axiosConfig';
 import logo from "../../../assets/logo.png";
 import Cookies from 'js-cookie';
-import TeacherNavbar from '../TeacherNavbar'; // Importăm componenta de navbar
+import TeacherNavbar from '../TeacherNavbar';
+import { useTranslation } from 'react-i18next';
 
 const StudentsOverview = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [sortBy, setSortBy] = useState("class");
@@ -18,6 +20,14 @@ const StudentsOverview = () => {
   const [teacherData, setTeacherData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState("students");
+
+  // Funktion zur Übersetzung von Spezialisierungen
+  const getTranslatedSpecialization = (specialization) => {
+    if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
+      return t(`admin.classes.specializations.${specialization}`);
+    }
+    return specialization || '';
+  };
   
   useEffect(() => {
     const token = Cookies.get("jwt-token");
@@ -30,7 +40,7 @@ const StudentsOverview = () => {
         setIsLoading(true);
         const [studentsResponse, teacherResponse] = await Promise.all([
           axios.get('/teachers/me/students'),
-          axios.get(`/teachers/me`) // Added teacher data fetch
+          axios.get(`/teachers/me`)
         ]);
         
         setStudents(studentsResponse.data);
@@ -39,16 +49,16 @@ const StudentsOverview = () => {
         setError(null);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Failed to load students. Please try again later.");
+        setError(t('teacher.students.errorLoading'));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [navigate]);
+  }, [navigate, t]);
 
-  // Sort students
+  // Schüler sortieren
   const handleSort = (criteria) => {
     setSortBy(criteria);
     const sorted = [...filteredStudents].sort((a, b) => {
@@ -66,7 +76,7 @@ const StudentsOverview = () => {
     setFilteredStudents(sorted);
   };
 
-  // Filter students by class or profile
+  // Schüler nach Klasse oder Profil filtern
   const handleFilter = (value) => {
     setFilterBy(value);
     if (value) {
@@ -82,22 +92,21 @@ const StudentsOverview = () => {
     }
   };
 
-  // Find unique class profiles
+  // Eindeutige Klassenprofile finden
   const uniqueProfiles = [...new Set(students
     .map(student => student.studentClass?.specialization)
     .filter(profile => profile)
   )];
 
-  // Count students by class
+  // Schüler nach Klasse zählen
   const classCounts = students.reduce((acc, student) => {
-    const className = student.studentClass?.name || "Unassigned";
+    const className = student.studentClass?.name || t('teacher.students.unassigned');
     acc[className] = (acc[className] || 0) + 1;
     return acc;
   }, {});
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Folosim componenta TeacherNavbar */}
       <TeacherNavbar 
         teacherData={teacherData}
         activeView={activeView}
@@ -107,41 +116,41 @@ const StudentsOverview = () => {
         logo={logo}
       />
 
-      {/* Main content area */}
+      {/* Hauptinhaltsbereich */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
-        <button 
-              onClick={() => navigate("/teacher")}
-              className="mr-3 text-primary hover:text-secondary"
-            >
-              <FaArrowLeft className="text-xl" />
-            </button>
-          <h2 className="text-2xl font-bold text-dark">Students Overview</h2>
+          <button 
+            onClick={() => navigate("/teacher")}
+            className="mr-3 text-primary hover:text-secondary"
+          >
+            <FaArrowLeft className="text-xl" />
+          </button>
+          <h2 className="text-2xl font-bold text-dark">{t('teacher.students.title')}</h2>
           <div className="flex items-center">
           </div>
         </header>
 
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">
           <h3 className="text-2xl font-bold mb-2">
-            Student Management
+            {t('teacher.students.studentManagement')}
           </h3>
-          <p className="text-indigo-100 mb-4">Browse and manage your student roster</p>
+          <p className="text-indigo-100 mb-4">{t('teacher.students.subtitle')}</p>
           
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Total Students</p>
+              <p className="text-xs text-indigo-100">{t('teacher.students.stats.totalStudents')}</p>
               <p className="text-3xl font-bold">{students.length}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Classes</p>
+              <p className="text-xs text-indigo-100">{t('teacher.students.stats.classes')}</p>
               <p className="text-3xl font-bold">{Object.keys(classCounts).length}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Profiles</p>
+              <p className="text-xs text-indigo-100">{t('teacher.students.stats.profiles')}</p>
               <p className="text-3xl font-bold">{uniqueProfiles.length}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Filtered</p>
+              <p className="text-xs text-indigo-100">{t('teacher.students.stats.filtered')}</p>
               <p className="text-3xl font-bold">{filteredStudents.length}</p>
             </div>
           </div>
@@ -154,14 +163,14 @@ const StudentsOverview = () => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <p className="text-dark2 font-medium">Loading students data...</p>
+              <p className="text-dark2 font-medium">{t('teacher.students.loading')}</p>
             </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
             <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
               <FaGraduationCap className="mr-3 text-secondary" />
-              Students List
+              {t('teacher.students.studentsList')}
             </h2>
 
             {error && (
@@ -178,12 +187,12 @@ const StudentsOverview = () => {
             <div className="mb-6">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
                 <div className="w-full md:w-1/2">
-                  <label className="block text-dark font-semibold mb-2">Filter Students</label>
+                  <label className="block text-dark font-semibold mb-2">{t('teacher.students.filterStudents')}</label>
                   <div className="relative">
                     <FaSearch className="absolute left-3 top-3 text-dark2" />
                     <input
                       type="text"
-                      placeholder="Search by name, class or profile"
+                      placeholder={t('teacher.students.searchPlaceholder')}
                       value={filterBy}
                       onChange={(e) => handleFilter(e.target.value)}
                       className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
@@ -192,7 +201,7 @@ const StudentsOverview = () => {
                 </div>
                 
                 <div className="w-full md:w-1/2">
-                  <label className="block text-dark font-semibold mb-2">Sort By</label>
+                  <label className="block text-dark font-semibold mb-2">{t('teacher.students.sortBy')}</label>
                   <div className="flex space-x-2">
                     <button 
                       onClick={() => handleSort("class")}
@@ -201,7 +210,7 @@ const StudentsOverview = () => {
                       }`}
                     >
                       <FaChalkboardTeacher className="mr-2" />
-                      Class
+                      {t('teacher.students.class')}
                     </button>
                     <button 
                       onClick={() => handleSort("profile")}
@@ -210,7 +219,7 @@ const StudentsOverview = () => {
                       }`}
                     >
                       <FaSortAmountDown className="mr-2" />
-                      Profile
+                      {t('teacher.students.profile')}
                     </button>
                   </div>
                 </div>
@@ -221,16 +230,16 @@ const StudentsOverview = () => {
               <table className="min-w-full bg-white rounded-lg overflow-hidden">
                 <thead className="bg-gradient-to-r from-primary to-secondary text-white">
                   <tr>
-                    <th className="py-3 px-4 text-left font-semibold rounded-tl-lg">Name</th>
-                    <th className="py-3 px-4 text-left font-semibold">Class</th>
-                    <th className="py-3 px-4 text-left font-semibold rounded-tr-lg">Profile</th>
+                    <th className="py-3 px-4 text-left font-semibold rounded-tl-lg">{t('teacher.students.table.name')}</th>
+                    <th className="py-3 px-4 text-left font-semibold">{t('teacher.students.table.class')}</th>
+                    <th className="py-3 px-4 text-left font-semibold rounded-tr-lg">{t('teacher.students.table.profile')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredStudents.length === 0 ? (
                     <tr>
                       <td colSpan="3" className="py-6 text-center text-dark2">
-                        No students found matching your criteria.
+                        {t('teacher.students.noStudentsFound')}
                       </td>
                     </tr>
                   ) : (
@@ -241,10 +250,10 @@ const StudentsOverview = () => {
                           {student.name}
                         </td>
                         <td className="py-3 px-4 text-dark">
-                          {student.className || student.studentClass?.name || "N/A"}
+                          {student.className || student.studentClass?.name || t('common.notAvailable')}
                         </td>
                         <td className="py-3 px-4 text-dark">
-                          {student.classSpecialization || student.studentClass?.specialization || "N/A"}
+                          {getTranslatedSpecialization(student.classSpecialization || student.studentClass?.specialization) || t('common.notAvailable')}
                         </td>
                       </tr>
                     ))
@@ -254,7 +263,10 @@ const StudentsOverview = () => {
             </div>
             
             <div className="mt-4 text-sm text-dark2">
-              Showing {filteredStudents.length} of {students.length} students
+              {t('teacher.students.showing', { 
+                filtered: filteredStudents.length, 
+                total: students.length 
+              })}
             </div>
           </div>
         )}

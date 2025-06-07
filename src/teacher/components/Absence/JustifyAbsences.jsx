@@ -6,9 +6,11 @@ import axios from "../../../axiosConfig";
 import logo from "../../../assets/logo.png"
 import Cookies from 'js-cookie';
 import TeacherNavbar from '../TeacherNavbar';
+import { useTranslation } from 'react-i18next';
 
 const JustifyAbsences = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [absences, setAbsences] = useState([]);
   const [filteredAbsences, setFilteredAbsences] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +24,7 @@ const JustifyAbsences = () => {
   const [activeView, setActiveView] = useState("justify");
   const [justifyingAbsence, setJustifyingAbsence] = useState(null);
   const [isHomeroom, setIsHomeroom] = useState(false);
-  const [className, setClassName] = useState("N/A");
+  const [className, setClassName] = useState(t('common.notAvailable'));
 
   useEffect(() => {
     const token = Cookies.get("jwt-token");
@@ -34,34 +36,34 @@ const JustifyAbsences = () => {
       try {
         setIsLoading(true);
         
-        // Fetch teacher data
+        // Lehrerdaten abrufen
         const teacherResponse = await axios.get(`/teachers/me`);
         setTeacherData(teacherResponse.data);
         
-        // Verifică dacă profesorul este diriginte
+        // Überprüfen, ob der Lehrer Klassenlehrer ist
         const hasClass = teacherResponse.data.hasClassAssigned;
         setIsHomeroom(hasClass);
         
         if (!hasClass) {
           setMessageType("error");
-          setMessage("You don't have homeroom teacher privileges to justify absences.");
+          setMessage(t('teacher.justify.noHomeroomPrivileges'));
           setIsLoading(false);
           return;
         }
         
-        // Fetch unjustified absences
+        // Nicht gerechtfertigte Abwesenheiten abrufen
         const absencesResponse = await axios.get('/absences/class/unjustified');
         const absencesData = absencesResponse.data;
         
         setAbsences(absencesData);
         setFilteredAbsences(absencesData);
         
-        // Extrage numele clasei din prima absență (dacă există)
+        // Klassennamen aus der ersten Abwesenheit extrahieren (falls vorhanden)
         if (absencesData.length > 0 && absencesData[0].student?.className) {
           setClassName(absencesData[0].student.className);
         }
         
-        // Modificăm extragerea de subiecte pentru a gestiona și cazul când classSession.subject este null
+        // Fächer extrahieren und Fälle behandeln, wenn classSession.subject null ist
         const subjects = [...new Set(absencesData
           .filter(absence => 
             absence.classSession && 
@@ -70,7 +72,7 @@ const JustifyAbsences = () => {
           )
           .map(absence => absence.classSession.subject))];
         
-        // Dacă nu găsim subiecte direct, încercăm să extragem din teacherWhoMarkedAbsence.subject
+        // Falls keine Fächer direkt gefunden werden, aus teacherWhoMarkedAbsence.subject extrahieren
         if (subjects.length === 0) {
           const subjectsFromTeacher = [...new Set(absencesData
             .filter(absence => 
@@ -90,9 +92,9 @@ const JustifyAbsences = () => {
       } catch (error) {
         setMessageType("error");
         if (error.response?.status === 403) {
-          setMessage("You don't have permission to access this page.");
+          setMessage(t('teacher.justify.noPermission'));
         } else {
-          setMessage("Failed to load data. Please try again.");
+          setMessage(t('teacher.justify.errorLoading'));
         }
       } finally {
         setIsLoading(false);
@@ -100,10 +102,10 @@ const JustifyAbsences = () => {
     };
 
     fetchData();
-  }, [navigate]);
+  }, [navigate, t]);
   
   useEffect(() => {
-    // Filter absences based on search and subject filter
+    // Abwesenheiten basierend auf Suche und Fachfilter filtern
     let result = [...absences];
     
     if (searchQuery) {
@@ -114,7 +116,7 @@ const JustifyAbsences = () => {
     
     if (subjectFilter !== "all") {
       result = result.filter(absence => {
-        // Check subject from multiple sources
+        // Fach aus mehreren Quellen überprüfen
         const sessionSubject = absence.classSession?.subject;
         const teacherSubject = absence.teacherWhoMarkedAbsence?.subject;
         
@@ -131,24 +133,24 @@ const JustifyAbsences = () => {
       
       await axios.put(`/absences/${absenceId}/justify`);
       
-      // Remove the absence from the list after justification
+      // Abwesenheit nach Rechtfertigung aus der Liste entfernen
       setAbsences(prev => prev.filter(absence => absence.id !== absenceId));
       
       setMessageType("success");
-      setMessage("Absence successfully justified!");
+      setMessage(t('teacher.justify.successMessage'));
     } catch (error) {
       setMessageType("error");
-      setMessage("Failed to justify absence. Please try again.");
+      setMessage(t('teacher.justify.errorJustifying'));
     } finally {
       setJustifyingAbsence(null);
     }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return "Unknown date";
+    if (!dateString) return t('teacher.justify.unknownDate');
     
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Invalid date";
+    if (isNaN(date.getTime())) return t('teacher.justify.invalidDate');
     
     return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
   };
@@ -156,12 +158,12 @@ const JustifyAbsences = () => {
   const formatTime = (timeString) => {
     if (!timeString) return "";
     
-    // Try to extract time part from ISO string
+    // Versuchen, Zeitteil aus ISO-String zu extrahieren
     if (typeof timeString === 'string' && timeString.includes('T')) {
       return timeString.split('T')[1].substring(0, 5);
     }
     
-    // Fallback for other formats
+    // Fallback für andere Formate
     try {
       const date = new Date(timeString);
       if (!isNaN(date.getTime())) {
@@ -176,7 +178,7 @@ const JustifyAbsences = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Folosim componenta TeacherNavbar */}
+      {/* TeacherNavbar Komponente verwenden */}
       <TeacherNavbar 
         teacherData={teacherData}
         activeView={activeView}
@@ -186,7 +188,7 @@ const JustifyAbsences = () => {
         logo={logo}
       />
 
-      {/* Main content area */}
+      {/* Hauptinhaltsbereich */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
           <button 
@@ -195,27 +197,27 @@ const JustifyAbsences = () => {
           >
               <FaArrowLeft className="text-xl" />
           </button>
-          <h2 className="text-2xl font-bold text-dark">Justify Student Absences</h2>
-          <div></div> {/* Empty div for flex spacing */}
+          <h2 className="text-2xl font-bold text-dark">{t('teacher.justify.title')}</h2>
+          <div></div> {/* Leeres div für Flex-Spacing */}
         </header>
 
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">
           <h3 className="text-2xl font-bold mb-2">
-            Absences Management
+            {t('teacher.justify.absencesManagement')}
           </h3>
-          <p className="text-indigo-100 mb-4">Review and justify absences for your class students</p>
+          <p className="text-indigo-100 mb-4">{t('teacher.justify.subtitle')}</p>
           
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Unjustified Absences</p>
+              <p className="text-xs text-indigo-100">{t('teacher.justify.stats.unjustified')}</p>
               <p className="text-3xl font-bold">{absences.length}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Subjects</p>
+              <p className="text-xs text-indigo-100">{t('teacher.justify.stats.subjects')}</p>
               <p className="text-3xl font-bold">{availableSubjects.length}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Class</p>
+              <p className="text-xs text-indigo-100">{t('teacher.justify.stats.class')}</p>
               <p className="text-3xl font-bold">{className}</p>
             </div>
           </div>
@@ -226,16 +228,15 @@ const JustifyAbsences = () => {
             <div className="flex items-center justify-center text-center py-8">
               <div className="max-w-md">
                 <FaExclamationCircle className="mx-auto text-5xl text-red-500 mb-4" />
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Access Restricted</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('teacher.justify.accessRestricted')}</h2>
                 <p className="text-gray-600 mb-4">
-                  You need to be a homeroom teacher to access this page. 
-                  Only homeroom teachers can justify absences for their class.
+                  {t('teacher.justify.homeroomOnly')}
                 </p>
                 <button
                   onClick={() => navigate("/teacher")}
                   className="bg-primary text-white font-semibold py-2 px-6 rounded-lg hover:bg-secondary transition"
                 >
-                  Back to Dashboard
+                  {t('teacher.justify.backToDashboard')}
                 </button>
               </div>
             </div>
@@ -247,14 +248,14 @@ const JustifyAbsences = () => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <p className="text-dark2 font-medium">Loading absences data...</p>
+              <p className="text-dark2 font-medium">{t('teacher.justify.loading')}</p>
             </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
             <h2 className="text-xl font-bold text-dark mb-6 flex items-center">
               <FaCheckCircle className="mr-3 text-secondary" />
-              Unjustified Absences
+              {t('teacher.justify.unjustifiedAbsences')}
             </h2>
 
             {messageType === "error" && (
@@ -287,7 +288,7 @@ const JustifyAbsences = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by student name"
+                    placeholder={t('teacher.justify.searchByName')}
                     className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                   />
                 </div>
@@ -300,7 +301,7 @@ const JustifyAbsences = () => {
                     onChange={(e) => setSubjectFilter(e.target.value)}
                     className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                   >
-                    <option value="all">All Subjects</option>
+                    <option value="all">{t('teacher.justify.allSubjects')}</option>
                     {availableSubjects.map((subject, index) => (
                       <option key={index} value={subject}>{subject}</option>
                     ))}
@@ -312,37 +313,37 @@ const JustifyAbsences = () => {
             {filteredAbsences.length === 0 ? (
               <div className="bg-light rounded-lg p-8 text-center">
                 <FaCheckCircle className="mx-auto text-green-500 text-5xl mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No Unjustified Absences</h3>
-                <p className="text-dark2">All absences for your class students have been justified!</p>
+                <h3 className="text-xl font-semibold mb-2">{t('teacher.justify.noUnjustified')}</h3>
+                <p className="text-dark2">{t('teacher.justify.allJustified')}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gradient-to-r from-primary to-secondary text-white">
-                      <th className="py-3 px-4 text-left rounded-l-lg">Student</th>
-                      <th className="py-3 px-4 text-left">Class</th>
-                      <th className="py-3 px-4 text-left">Subject</th>
-                      <th className="py-3 px-4 text-left">Date</th>
-                      <th className="py-3 px-4 text-left">Action</th>
+                      <th className="py-3 px-4 text-left rounded-l-lg">{t('teacher.justify.table.student')}</th>
+                      <th className="py-3 px-4 text-left">{t('teacher.justify.table.class')}</th>
+                      <th className="py-3 px-4 text-left">{t('teacher.justify.table.subject')}</th>
+                      <th className="py-3 px-4 text-left">{t('teacher.justify.table.date')}</th>
+                      <th className="py-3 px-4 text-left">{t('teacher.justify.table.action')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredAbsences.map(absence => {
-                      // Extract information with fallbacks for missing data
-                      const studentName = absence.student?.name || "Unknown Student";
-                      const className = absence.student?.className || "N/A";
+                      // Informationen mit Fallbacks für fehlende Daten extrahieren
+                      const studentName = absence.student?.name || t('teacher.justify.unknownStudent');
+                      const className = absence.student?.className || t('common.notAvailable');
                       
-                      // Try to get subject from multiple sources
-                      let subject = "N/A";
+                      // Versuchen, Fach aus mehreren Quellen zu erhalten
+                      let subject = t('common.notAvailable');
                       if (absence.classSession?.subject) {
                         subject = absence.classSession.subject;
                       } else if (absence.teacherWhoMarkedAbsence?.subject) {
                         subject = absence.teacherWhoMarkedAbsence.subject;
                       }
                       
-                      // Get the date
-                      let displayDate = "Unknown date";
+                      // Datum erhalten
+                      let displayDate = t('teacher.justify.unknownDate');
                       let displayTime = "";
                       if (absence.sessionDate) {
                         displayDate = formatDate(absence.sessionDate);
@@ -374,12 +375,12 @@ const JustifyAbsences = () => {
                               {justifyingAbsence === absence.id ? (
                                 <>
                                   <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full"></div>
-                                  Justifying...
+                                  {t('teacher.justify.justifying')}
                                 </>
                               ) : (
                                 <>
                                   <FaCheckCircle className="mr-2" />
-                                  Justify
+                                  {t('teacher.justify.justify')}
                                 </>
                               )}
                             </button>

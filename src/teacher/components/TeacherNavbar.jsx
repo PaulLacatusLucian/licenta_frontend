@@ -13,6 +13,7 @@ import {
   FaBook
 } from 'react-icons/fa';
 import Cookies from 'js-cookie';
+import { useTranslation } from 'react-i18next';
 
 const TeacherNavbar = ({ 
   teacherData, 
@@ -23,41 +24,57 @@ const TeacherNavbar = ({
   logo 
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
-  // Verificăm dacă profesorul este diriginte
+  // Check if teacher is homeroom teacher
   const isHomeroom = teacherData?.hasClassAssigned || teacherData?.classAsTeacher;
   
-  // Funcția de logout
+  // Logout function
   const handleLogout = () => {
     Cookies.remove("jwt-token");
     Cookies.remove("username");
     navigate("/login");
   };
   
-  // Elementele de navigare de bază
+  // Base navigation items
   const baseNavItems = [
-    { icon: FaHome, label: "Dashboard", view: "home", path: "/teacher" },
-    { icon: FaUserGraduate, label: "Students", view: "students", path: "/teacher/students" },
-    { icon: FaChartLine, label: "Grades", view: "grades", path: "/teacher/grades" },
-    { icon: FaClipboardList, label: "Attendance", view: "attendance", path: "/teacher/attendance" },
-    { icon: FaCalendarAlt, label: "Schedule", view: "schedule", path: "/teacher/schedule" },
-    { icon: FaBook, label: "Catalog", view: "catalog", path: "/teacher/catalog" }
+    { icon: FaHome, label: t('teacher.navbar.dashboard'), view: "home", path: "/teacher" },
+    { icon: FaUserGraduate, label: t('teacher.navbar.students'), view: "students", path: "/teacher/students" },
+    { icon: FaChartLine, label: t('teacher.navbar.grades'), view: "grades", path: "/teacher/grades" },
+    { icon: FaClipboardList, label: t('teacher.navbar.attendance'), view: "attendance", path: "/teacher/attendance" },
+    { icon: FaCalendarAlt, label: t('teacher.navbar.schedule'), view: "schedule", path: "/teacher/schedule" },
+    { icon: FaBook, label: t('teacher.navbar.catalog'), view: "catalog", path: "/teacher/catalog" }
   ];
   
-  // Elemente de navigare doar pentru diriginți
+  // Homeroom teacher specific items
   const homeroomItems = [
-    { icon: FaVideo, label: "Start Meeting", view: "meetings", path: "/teacher/meetings/new" },
-    { icon: FaCheckCircle, label: "Justify Absences", view: "justify", path: "/teacher/justify" }
+    { icon: FaVideo, label: t('teacher.navbar.startMeeting'), view: "meetings", path: "/teacher/meetings/new" },
+    { icon: FaCheckCircle, label: t('teacher.navbar.justifyAbsences'), view: "justify", path: "/teacher/justify" }
   ];
   
-  // Combinăm elementele de navigare în funcție de rolul profesorului
+  // Combine navigation items based on teacher role
   let navItems = [...baseNavItems];
   
-  // Adăugăm opțiunile pentru diriginți
+  // Add homeroom options
   if (isHomeroom) {
-    // Inserăm opțiunile pentru diriginți înainte de "Catalog"
+    // Insert homeroom options before "Catalog"
     navItems.splice(5, 0, ...homeroomItems);
   }
+  
+  // Get title based on active view
+  const getViewTitle = () => {
+    switch(activeView) {
+      case "home": return t('teacher.navbar.teacherPortal');
+      case "students": return t('teacher.navbar.students');
+      case "grades": return t('teacher.navbar.enterGrades');
+      case "attendance": return t('teacher.navbar.recordAttendance');
+      case "schedule": return t('teacher.navbar.schedule');
+      case "meetings": return t('teacher.navbar.createMeeting');
+      case "justify": return t('teacher.navbar.justifyAbsences');
+      case "catalog": return t('teacher.navbar.classCatalog');
+      default: return t('teacher.navbar.teacherPortal');
+    }
+  };
   
   return (
     <>
@@ -70,14 +87,7 @@ const TeacherNavbar = ({
           <FaBars />
         </button>
         <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
-          {activeView === "home" ? "Teacher Portal" : 
-            activeView === "students" ? "Students" :
-            activeView === "grades" ? "Enter Grades" :
-            activeView === "attendance" ? "Record Attendance" :
-            activeView === "schedule" ? "Schedule" :
-            activeView === "meetings" ? "Create Meeting" :
-            activeView === "justify" ? "Justify Absences" :
-            activeView === "catalog" ? "Class Catalog" : "Teacher Portal"}
+          {getViewTitle()}
         </h2>
       </div>
 
@@ -92,16 +102,16 @@ const TeacherNavbar = ({
           <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
             <img 
               src={logo}
-              alt="School Logo" 
+              alt={t('teacher.navbar.schoolLogo')} 
               className="w-20 h-20 object-contain"
             />
           </div>
           <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-white">Teacher Portal</h2>
-            <p className="text-sm text-white text-opacity-80 mt-1">{teacherData?.subject || 'Teacher'}</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white">{t('teacher.navbar.teacherPortal')}</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">{teacherData?.subject || t('teacher.navbar.teacher')}</p>
             {isHomeroom && (
               <span className="bg-white text-primary text-xs font-bold px-2 py-1 rounded-full mt-2 inline-block">
-                Homeroom Teacher
+                {t('teacher.navbar.homeroomTeacher')}
               </span>
             )}
           </div>
@@ -136,7 +146,7 @@ const TeacherNavbar = ({
             className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
           >
             <FaSignOutAlt className="mr-3 text-xl" />
-            <span className="font-medium">Logout</span>
+            <span className="font-medium">{t('teacher.navbar.logout')}</span>
           </button>
         </div>
       </div>

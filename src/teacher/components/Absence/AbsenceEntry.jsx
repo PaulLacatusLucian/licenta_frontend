@@ -5,10 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "../../../axiosConfig";
 import logo from "../../../assets/logo.png"
 import Cookies from 'js-cookie';
-import TeacherNavbar from '../TeacherNavbar'; // Importăm componenta de navbar
+import TeacherNavbar from '../TeacherNavbar';
+import { useTranslation } from 'react-i18next';
 
 const AbsenceEntry = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [sessions, setSessions] = useState([]);
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
@@ -29,7 +31,7 @@ const AbsenceEntry = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState("attendance");
 
-  // Adaugă această funcție pentru a sorta sesiunile după ziua săptămânii
+  // Funktion zur Sortierung der Sessions nach Wochentag
   const sortSessionsByDay = (sessions) => {
     const dayOrder = {
       "Luni": 1,
@@ -40,16 +42,16 @@ const AbsenceEntry = () => {
     };
     
     return [...sessions].sort((a, b) => {
-      // Obține poziția zilelor în ordinea săptămânii
+      // Position der Tage in der Wochenreihenfolge erhalten
       const dayA = dayOrder[a.scheduleDay || "Necunoscut"] || 6;
       const dayB = dayOrder[b.scheduleDay || "Necunoscut"] || 6;
       
-      // Compară zilele
+      // Tage vergleichen
       if (dayA !== dayB) {
         return dayA - dayB;
       }
       
-      // Dacă zilele sunt aceleași, sortează după ora de început
+      // Wenn die Tage gleich sind, nach Startzeit sortieren
       const timeA = a.startTime ? a.startTime.substr(11, 5) : "00:00";
       const timeB = b.startTime ? b.startTime.substr(11, 5) : "00:00";
       
@@ -69,13 +71,13 @@ const AbsenceEntry = () => {
         const [sessionsResponse, studentsResponse, teacherResponse] = await Promise.all([
           axios.get(`/teachers/me/sessions`),
           axios.get(`/teachers/me/students`),
-          axios.get(`/teachers/me`) // Added teacher data fetch
+          axios.get(`/teachers/me`)
         ]);
         
-        // Obține sesiunile și asigură-te că fiecare are informațiile despre profesor
+        // Erhalte Sessions und stelle sicher, dass jede Lehrerinformationen hat
         let sessions = sessionsResponse.data;
         
-        // Fix: Ensure each session has teacher information
+        // Fix: Sicherstellen, dass jede Session Lehrerinformationen hat
         if (teacherResponse.data && sessions.length > 0) {
           sessions.forEach(session => {
             if (!session.teacher) {
@@ -88,12 +90,12 @@ const AbsenceEntry = () => {
           });
         }
         
-        // Filtrează doar sesiunile de Luni până Vineri
+        // Nur Sessions von Montag bis Freitag filtern
         sessions = sessions.filter(session => {
           return ["Luni", "Marți", "Miercuri", "Joi", "Vineri"].includes(session.scheduleDay);
         });
         
-        // Sortează sesiunile după zi și oră
+        // Sessions nach Tag und Zeit sortieren
         const sortedSessions = sortSessionsByDay(sessions);
         
         setSessions(sortedSessions);
@@ -103,10 +105,10 @@ const AbsenceEntry = () => {
         setStudents(studentData);
         setFilteredStudents(studentData);
         
-        // Set teacher data
+        // Lehrerdaten setzen
         setTeacherData(teacherResponse.data);
         
-        // Extract unique class names
+        // Eindeutige Klassennamen extrahieren
         const classes = [...new Set(studentData
           .filter(student => student.studentClass?.name)
           .map(student => student.studentClass.name))];
@@ -117,17 +119,17 @@ const AbsenceEntry = () => {
       } catch (error) {
         console.error("Error fetching data:", error);
         setMessageType("error");
-        setMessage("Failed to load data. Please try again.");
+        setMessage(t('teacher.absence.errorLoading'));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [navigate]);
+  }, [navigate, t]);
 
   useEffect(() => {
-    // Log sessions when they are loaded
+    // Sessions protokollieren, wenn sie geladen werden
     console.log("All sessions:", sessions);
     
     if (selectedSession) {
@@ -138,17 +140,17 @@ const AbsenceEntry = () => {
           setMessage("");
           console.log("Fetching students for session ID:", selectedSession);
           
-          // Get the selected session object for better debugging
+          // Ausgewähltes Session-Objekt für besseres Debugging erhalten
           const sessionObj = sessions.find(s => s.id === Number(selectedSession));
           if (!sessionObj) {
             console.error("Selected session not found in sessions array");
             setMessageType("error");
-            setMessage("Session data not found. Please try again.");
+            setMessage(t('teacher.absence.sessionNotFound'));
             setIsLoading(false);
             return;
           }
           
-          // Obține clasa asociată acestei sesiuni folosind numele clasei
+          // Klasse für diese Session mit Klassennamen erhalten
           const className = sessionObj.className || "Unknown";
   
           console.log("Selected session details:", {
@@ -160,27 +162,27 @@ const AbsenceEntry = () => {
             className: className
           });
   
-          // Verificăm dacă avem numele clasei
+          // Überprüfen, ob wir den Klassennamen haben
           if (!className || className === "Unknown") {
             console.error("Class name is missing for this session");
             setMessageType("error");
-            setMessage("Class information is missing for this session. Please contact administrator.");
+            setMessage(t('teacher.absence.classMissing'));
             setIsLoading(false);
             return;
           }
   
-          // Mai întâi, obținem lista completă de clase pentru a găsi ID-ul
+          // Zuerst die vollständige Klassenliste erhalten, um die ID zu finden
           try {
-            // Obține toate clasele
+            // Alle Klassen erhalten
             const classesResponse = await axios.get('/classes');
             
-            // Caută clasa după nume
+            // Klasse nach Namen suchen
             const classObj = classesResponse.data.find(cls => cls.name === className);
             
             if (!classObj || !classObj.id) {
               console.error(`Class with name ${className} not found`);
               setMessageType("error");
-              setMessage(`Class ${className} not found in the system. Please contact administrator.`);
+              setMessage(t('teacher.absence.classNotFound', { className }));
               setIsLoading(false);
               return;
             }
@@ -188,16 +190,16 @@ const AbsenceEntry = () => {
             const classId = classObj.id;
             console.log(`Found class ID ${classId} for class name ${className}`);
             
-            // Acum folosim endpoint-ul tău implementat cu ID-ul clasei
+            // Jetzt den implementierten Endpunkt mit der Klassen-ID verwenden
             const studentsResponse = await axios.get(`/classes/${classId}/students`, {
               timeout: 15000
             });
             
-            // Handle empty or invalid responses
+            // Leere oder ungültige Antworten behandeln
             if (!studentsResponse.data) {
               console.error("Response has no data");
               setMessageType("error");
-              setMessage("No student data received. The class may have no enrolled students.");
+              setMessage(t('teacher.absence.noStudentData'));
               setFilteredStudents([]);
               setStudents([]);
               setIsLoading(false);
@@ -206,24 +208,24 @@ const AbsenceEntry = () => {
             
             console.log("Students for class (raw):", studentsResponse.data);
             
-            // Folosim direct rezultatul API-ului fără modificări
+            // API-Ergebnis direkt ohne Änderungen verwenden
             const studentsData = studentsResponse.data;
             
-            // If no students were found, show a message
+            // Wenn keine Schüler gefunden wurden, Nachricht anzeigen
             if (studentsData.length === 0) {
               setMessageType("warning");
-              setMessage(`No students found for ${sessionObj.subject} session in class ${className}. Please check class assignments.`);
+              setMessage(t('teacher.absence.noStudentsInClass', { subject: sessionObj.subject, className }));
             } else {
-              // Show success message with count
+              // Erfolgsmeldung mit Anzahl anzeigen
               setMessageType("success");
-              setMessage(`Found ${studentsData.length} students in class ${className} for this session.`);
+              setMessage(t('teacher.absence.studentsFound', { count: studentsData.length, className }));
             }
             
-            // Update the students state directly with the API data
+            // Schülerstatus direkt mit API-Daten aktualisieren
             setFilteredStudents(studentsData);
             setStudents(studentsData);
             
-            // Also update available classes for filtering
+            // Auch verfügbare Klassen für Filterung aktualisieren
             const classes = [...new Set(studentsData
               .filter(student => student.studentClass?.name)
               .map(student => student.studentClass.name))];
@@ -232,61 +234,67 @@ const AbsenceEntry = () => {
           } catch (error) {
             console.error("Error fetching data:", error);
             
-            // Enhanced error handling
+            // Erweiterte Fehlerbehandlung
             if (error.response) {
               console.error("Error data:", error.response.data);
               console.error("Error status:", error.response.status);
               
               if (error.response.status === 404) {
                 setMessageType("error");
-                setMessage("Class not found. It may have been deleted.");
+                setMessage(t('teacher.absence.classDeleted'));
               } else if (error.response.status === 403) {
                 setMessageType("error");
-                setMessage("You don't have permission to access students for this class.");
+                setMessage(t('teacher.absence.noPermission'));
               } else {
                 setMessageType("error");
-                setMessage(`Server error: ${error.response.status} - ${error.response.data || 'Unknown error'}`);
+                setMessage(t('teacher.absence.serverError', { 
+                  status: error.response.status, 
+                  message: error.response.data || t('common.unknownError') 
+                }));
               }
             } else if (error.request) {
               console.error("No response received:", error.request);
               setMessageType("error");
-              setMessage("No response from server. Please check your connection.");
+              setMessage(t('teacher.absence.noResponse'));
             } else {
               console.error("Error message:", error.message);
               setMessageType("error");
-              setMessage(`Error: ${error.message}`);
+              setMessage(t('teacher.absence.error', { message: error.message }));
             }
             
-            // Clear student lists on error
+            // Schülerlisten bei Fehler löschen
             setFilteredStudents([]);
             setStudents([]);
           }
         } catch (error) {
           console.error("Error fetching students for session:", error);
           
-          // Enhanced error handling
+          // Erweiterte Fehlerbehandlung
           if (error.response) {
             console.error("Error data:", error.response.data);
             console.error("Error status:", error.response.status);
             
             if (error.response.status === 404) {
               setMessageType("error");
-              setMessage("Session not found. It may have been deleted.");
+              setMessage(t('teacher.absence.sessionDeleted'));
             } else {
               setMessageType("error");
-              setMessage(`Server error: ${error.response.status} - ${error.response.data || 'Unknown error'}`);
+              setMessage(t('teacher.absence.serverError', { 
+                status: error.response.status, 
+                message: error.response.data || t('common.unknownError') 
+              }));
             }
           } else if (error.request) {
             console.error("No response received:", error.request);
             setMessageType("error");
-            setMessage("No response from server. Please check your connection.");
+            setMessage(t('teacher.absence.noResponse'));
           } else {
             console.error("Error message:", error.message);
             setMessageType("error");
-            setMessage(`Error: ${error.message}`);
+            setMessage(t('teacher.absence.error', { message: error.message }));
           }
           
-          // Clear student lists on error
+          // Schülerlisten bei Fehler löschen
           setFilteredStudents([]);
           setStudents([]);
         } finally {
@@ -296,14 +304,14 @@ const AbsenceEntry = () => {
       
       fetchStudentsForSession();
     } else {
-      // If no session is selected, clear the students lists
+      // Wenn keine Session ausgewählt ist, Schülerlisten löschen
       setFilteredStudents([]);
       setStudents([]);
     }
-  }, [selectedSession, sessions]);
+  }, [selectedSession, sessions, t]);
   
   useEffect(() => {
-    // Filter students based on search and class filter
+    // Schüler basierend auf Suche und Klassenfilter filtern
     let result = [...students];
     
     if (studentSearch) {
@@ -324,7 +332,7 @@ const AbsenceEntry = () => {
   const formatSessionLabel = (session) => {
     try {
       if (!session.startTime || !session.endTime) {
-        return `${session.subject} (oră necunoscută)`;
+        return `${session.subject} (${t('teacher.absence.unknownTime')})`;
       }
       
       const startTime = session.startTime.substr(11, 5);
@@ -337,7 +345,7 @@ const AbsenceEntry = () => {
       return `${dayName}, ${className}, ${startTime}-${endTime}`;
     } catch (error) {
       console.error("Error formatting session:", error, session);
-      return session.subject || "Sesiune necunoscută";
+      return session.subject || t('teacher.absence.unknownSession');
     }
   };
 
@@ -346,7 +354,7 @@ const AbsenceEntry = () => {
   
     if (!selectedSession || !selectedStudent) {
       setMessageType("error");
-      setMessage("Please select a session and a student.");
+      setMessage(t('teacher.absence.selectSessionAndStudent'));
       return;
     }
   
@@ -360,14 +368,14 @@ const AbsenceEntry = () => {
         },
       });
   
-      // Restul codului pentru gestionarea succes rămâne neschimbat
+      // Rest des Codes für Erfolgsbehandlung bleibt unverändert
       const session = sessions.find(s => s.id === Number(selectedSession));
       const student = students.find(s => s.id === selectedStudent);
       
-      // Obține numele clasei
-      let className = session?.className || "Unknown Class";
+      // Klassennamen erhalten
+      let className = session?.className || t('teacher.absence.unknownClass');
       
-      if (className === "Unknown Class") {
+      if (className === t('teacher.absence.unknownClass')) {
         const studentData = filteredStudents.find(s => s.id === selectedStudent);
         if (studentData?.studentClass?.name) {
           className = studentData.studentClass.name;
@@ -378,8 +386,8 @@ const AbsenceEntry = () => {
         {
           id: Date.now(),
           studentId: selectedStudent,
-          studentName: student?.name || "Unknown",
-          sessionName: session?.subject || "Unknown",
+          studentName: student?.name || t('common.unknown'),
+          sessionName: session?.subject || t('common.unknown'),
           date: session?.date || new Date().toISOString(),
           timestamp: new Date(),
           className: className
@@ -388,38 +396,48 @@ const AbsenceEntry = () => {
       ]);
   
       setMessageType("success");
-      setMessage(`Absence successfully recorded for ${student?.name}!`);
+      setMessage(t('teacher.absence.successMessage', { name: student?.name }));
   
       setSelectedStudent("");
       setSelectedStudentName("");
     } catch (error) {
       console.error("Error submitting absence:", error);
   
-      // Verifică toate posibilele surse ale mesajului de eroare
+      // Alle möglichen Fehlerquellen überprüfen
       const errorMessage = 
         error.response?.data || 
         error.message || 
-        "An unknown error occurred";
+        t('common.unknownError');
       
       // Verifică pentru diferite scenarii de eroare
       if (error.response?.status === 409) {
         const errorMessage = error.response?.data || "";
         
-        if (errorMessage.includes("notă") || errorMessage.includes("grade")) {
-          // It's a grade conflict
+        // Verifică pentru conflict de notă în mai multe limbi
+        if (errorMessage.includes("notă") || 
+            errorMessage.includes("grade") || 
+            errorMessage.includes("Note")) {
+          // Este un conflict de notă
           setMessageType("error");
-          setMessage("This student already has a grade and cannot be marked absent.");
+          setMessage(t('teacher.absence.hasGradeError'));
         } 
-        else if (errorMessage.includes("absență") || errorMessage.includes("absence")) {
-          // It's an absence conflict
+        // Verifică pentru conflict de absență în mai multe limbi
+        else if (errorMessage.includes("absență") || 
+                 errorMessage.includes("absence") || 
+                 errorMessage.includes("Abwesenheit")) {
+          // Este un conflict de absență
           setMessageType("warning");
-          setMessage("This student already has an absence recorded for this session.");
+          setMessage(t('teacher.absence.alreadyRecorded'));
         }
         else {
-          // Generic conflict
+          // Pentru alte conflicte, folosește doar mesajul tradus fără cel de la server
           setMessageType("error");
-          setMessage("Conflict: " + errorMessage);
+          setMessage(t('teacher.absence.genericConflictError'));
         }
+      } else {
+        // Pentru alte erori
+        setMessageType("error");
+        setMessage(t('teacher.absence.genericError'));
       }
     } finally {
       setIsSubmitting(false);
@@ -446,10 +464,10 @@ const AbsenceEntry = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return "Data necunoscută";
+    if (!dateString) return t('teacher.absence.unknownDate');
     
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Data invalidă";
+    if (isNaN(date.getTime())) return t('teacher.absence.invalidDate');
     
     return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
   };
@@ -460,7 +478,7 @@ const AbsenceEntry = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-light">
-      {/* Folosim componenta TeacherNavbar */}
+      {/* TeacherNavbar Komponente verwenden */}
       <TeacherNavbar 
         teacherData={teacherData}
         activeView={activeView}
@@ -470,7 +488,7 @@ const AbsenceEntry = () => {
         logo={logo}
       />
 
-      {/* Main content area */}
+      {/* Hauptinhaltsbereich */}
       <div className="flex-1 p-4 md:p-8 bg-light">
         <header className="flex justify-between items-center mb-6">
           <button 
@@ -479,39 +497,39 @@ const AbsenceEntry = () => {
           >
               <FaArrowLeft className="text-xl" />
           </button>
-          <h2 className="text-2xl font-bold text-dark">Record Absences</h2>
+          <h2 className="text-2xl font-bold text-dark">{t('teacher.absence.title')}</h2>
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setShowRecentAbsences(!showRecentAbsences)}
               className="flex items-center text-dark hover:text-secondary transition font-medium"
             >
               <FaHistory className="mr-2" />
-              {showRecentAbsences ? "Hide Recent" : "Recent Absences"}
+              {showRecentAbsences ? t('teacher.absence.hideRecent') : t('teacher.absence.recentAbsences')}
             </button>
           </div>
         </header>
 
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">
           <h3 className="text-2xl font-bold mb-2">
-            Attendance Management
+            {t('teacher.absence.attendanceManagement')}
           </h3>
-          <p className="text-indigo-100 mb-4">Record and track student absences from class sessions</p>
+          <p className="text-indigo-100 mb-4">{t('teacher.absence.subtitle')}</p>
           
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Students</p>
+              <p className="text-xs text-indigo-100">{t('teacher.absence.stats.students')}</p>
               <p className="text-3xl font-bold">{students.length}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Sessions</p>
+              <p className="text-xs text-indigo-100">{t('teacher.absence.stats.sessions')}</p>
               <p className="text-3xl font-bold">{sessions.length}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Classes</p>
+              <p className="text-xs text-indigo-100">{t('teacher.absence.stats.classes')}</p>
               <p className="text-3xl font-bold">{availableClasses.length}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Recent Absences</p>
+              <p className="text-xs text-indigo-100">{t('teacher.absence.stats.recentAbsences')}</p>
               <p className="text-3xl font-bold">{recentAbsences.length}</p>
             </div>
           </div>
@@ -521,24 +539,24 @@ const AbsenceEntry = () => {
           <div className="bg-white rounded-xl shadow-md p-6 mb-6 transition-all border border-gray-200">
             <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
               <FaHistory className="mr-2 text-secondary" />
-              Recently Recorded Absences
+              {t('teacher.absence.recentlyRecorded')}
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="bg-gradient-to-r from-primary to-secondary text-white">
-                    <th className="py-2 px-4 text-left rounded-l-lg">Student</th>
-                    <th className="py-2 px-4 text-left">Class</th>
-                    <th className="py-2 px-4 text-left">Session</th>
-                    <th className="py-2 px-4 text-left">Date</th>
-                    <th className="py-2 px-4 text-left rounded-r-lg">Time</th>
+                    <th className="py-2 px-4 text-left rounded-l-lg">{t('teacher.absence.table.student')}</th>
+                    <th className="py-2 px-4 text-left">{t('teacher.absence.table.class')}</th>
+                    <th className="py-2 px-4 text-left">{t('teacher.absence.table.session')}</th>
+                    <th className="py-2 px-4 text-left">{t('teacher.absence.table.date')}</th>
+                    <th className="py-2 px-4 text-left rounded-r-lg">{t('teacher.absence.table.time')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentAbsences.map(entry => (
                     <tr key={entry.id} className="border-b border-gray-100 hover:bg-primary hover:bg-opacity-5 transition-colors">
                       <td className="py-2 px-4 font-medium">{entry.studentName}</td>
-                      <td className="py-2 px-4">{entry.className || "N/A"}</td>
+                      <td className="py-2 px-4">{entry.className || t('common.notAvailable')}</td>
                       <td className="py-2 px-4">{entry.sessionName}</td>
                       <td className="py-2 px-4">{formatDate(entry.date)}</td>
                       <td className="py-2 px-4 text-dark2">{formatTime(entry.timestamp)}</td>
@@ -557,14 +575,14 @@ const AbsenceEntry = () => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <p className="text-dark2 font-medium">Loading data...</p>
+              <p className="text-dark2 font-medium">{t('teacher.absence.loading')}</p>
             </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
             <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
               <FaExclamationCircle className="mr-3 text-secondary" />
-              Record Absence
+              {t('teacher.absence.recordAbsence')}
             </h2>
 
             {messageType === "error" && (
@@ -604,7 +622,7 @@ const AbsenceEntry = () => {
               <div className="mb-6">
                 <label className="block text-dark font-semibold mb-2 flex items-center">
                   <FaCalendarAlt className="mr-2 text-primary" />
-                  Select Session
+                  {t('teacher.absence.selectSession')}
                 </label>
                   <select
                     className="w-full p-3 border rounded-lg text-dark focus:outline-none focus:ring-2 focus:ring-primary bg-light"
@@ -615,9 +633,9 @@ const AbsenceEntry = () => {
                       setSelectedStudentName("");
                     }}
                   >
-                    <option value="">-- Select a class session --</option>
+                    <option value="">-- {t('teacher.absence.selectClassSession')} --</option>
                     {sessions.length === 0 ? (
-                      <option disabled>No sessions available</option>
+                      <option disabled>{t('teacher.absence.noSessionsAvailable')}</option>
                     ) : (
                       sessions.map((session) => (
                         <option key={session.id} value={session.id}>
@@ -633,10 +651,10 @@ const AbsenceEntry = () => {
                   <div className="flex items-center justify-between w-full md:w-auto mb-2 md:mb-0">
                     <label className="block text-dark font-semibold flex items-center">
                       <FaUserAlt className="mr-2 text-secondary" />
-                      Select Student
+                      {t('teacher.absence.selectStudent')}
                       {selectedStudentName && (
                         <span className="ml-2 bg-secondary text-white text-sm px-3 py-1 rounded-full">
-                          Selected: {selectedStudentName}
+                          {t('teacher.absence.selected')}: {selectedStudentName}
                         </span>
                       )}
                     </label>
@@ -646,7 +664,7 @@ const AbsenceEntry = () => {
                       onClick={() => setShowFilters(!showFilters)}
                       className="md:hidden text-sm text-dark hover:text-secondary bg-white px-3 py-1 rounded border transition-colors"
                     >
-                      {showFilters ? "Hide Filters" : "Show Filters"}
+                      {showFilters ? t('teacher.absence.hideFilters') : t('teacher.absence.showFilters')}
                     </button>
                   </div>
                   
@@ -657,7 +675,7 @@ const AbsenceEntry = () => {
                       className="flex items-center text-sm text-dark hover:text-secondary bg-white px-3 py-1 rounded border transition-colors"
                     >
                       <FaSortAlphaDown className="mr-1" />
-                      Sort by name
+                      {t('teacher.absence.sortByName')}
                     </button>
                     
                     {(selectedStudentName || studentSearch || classFilter !== "all") && (
@@ -671,7 +689,7 @@ const AbsenceEntry = () => {
                         }}
                         className="text-sm text-dark hover:text-red-600 bg-white px-3 py-1 rounded border transition-colors"
                       >
-                        Clear filters
+                        {t('teacher.absence.clearFilters')}
                       </button>
                     )}
                   </div>
@@ -685,7 +703,7 @@ const AbsenceEntry = () => {
                         type="text"
                         value={studentSearch}
                         onChange={(e) => setStudentSearch(e.target.value)}
-                        placeholder="Search by student name"
+                        placeholder={t('teacher.absence.searchByName')}
                         className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                       />
                     </div>
@@ -698,7 +716,7 @@ const AbsenceEntry = () => {
                         onChange={(e) => setClassFilter(e.target.value)}
                         className="w-full pl-10 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                       >
-                        <option value="all">All Classes</option>
+                        <option value="all">{t('teacher.absence.allClasses')}</option>
                         {availableClasses.map((className, index) => (
                           <option key={index} value={className}>{className}</option>
                         ))}
@@ -710,7 +728,7 @@ const AbsenceEntry = () => {
                 <div className="max-h-60 overflow-y-auto border rounded-lg bg-white">
                   {filteredStudents.length === 0 ? (
                     <div className="p-4 text-center text-dark2">
-                      No students found matching your criteria
+                      {t('teacher.absence.noStudentsFound')}
                     </div>
                   ) : (
                     <div className="divide-y">
@@ -734,7 +752,7 @@ const AbsenceEntry = () => {
                           </div>
                           {student.absenceCount > 0 && (
                             <div className="text-sm bg-red-50 px-2 py-1 rounded-lg text-red-800">
-                              {student.absenceCount} {student.absenceCount === 1 ? 'absence' : 'absences'}
+                              {student.absenceCount} {student.absenceCount === 1 ? t('teacher.absence.absence') : t('teacher.absence.absences')}
                             </div>
                           )}
                         </div>
@@ -743,9 +761,9 @@ const AbsenceEntry = () => {
                   )}
                 </div>
                 <div className="mt-2 text-sm text-dark2 flex justify-between">
-                  <span>Showing {filteredStudents.length} of {students.length} students</span>
+                  <span>{t('teacher.absence.showing', { filtered: filteredStudents.length, total: students.length })}</span>
                   {selectedStudentName && (
-                    <span className="text-secondary font-medium">Click on another student to change selection</span>
+                    <span className="text-secondary font-medium">{t('teacher.absence.clickToChange')}</span>
                   )}
                 </div>
               </div>
@@ -756,7 +774,7 @@ const AbsenceEntry = () => {
                   onClick={clearForm}
                   className="w-1/4 bg-primary text-dark font-medium py-3 px-6 rounded-lg hover:opacity-90 transition flex items-center justify-center"
                 >
-                  Clear
+                  {t('teacher.absence.clear')}
                 </button>
                 
                 <button
@@ -767,12 +785,12 @@ const AbsenceEntry = () => {
                   {isSubmitting ? (
                     <>
                       <div className="animate-spin h-5 w-5 mr-3 border-2 border-white border-t-transparent rounded-full"></div>
-                      Submitting...
+                      {t('teacher.absence.submitting')}
                     </>
                   ) : (
                     <>
                       <FaExclamationCircle className="mr-2" />
-                      Record Absence
+                      {t('teacher.absence.recordAbsenceButton')}
                     </>
                   )}
                 </button>

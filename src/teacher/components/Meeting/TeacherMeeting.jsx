@@ -8,15 +8,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import logo from "../../../assets/logo.png";
 import Cookies from 'js-cookie';
 import TeacherNavbar from '../TeacherNavbar';
+import { useTranslation } from 'react-i18next';
 
 const TeacherMeeting = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [parentEmails, setParentEmails] = useState([]);
   const [selectedEmails, setSelectedEmails] = useState([]);
-  const [meetingType, setMeetingType] = useState("immediate"); // "immediate" or "scheduled"
+  const [meetingType, setMeetingType] = useState("immediate");
   const [startDateTime, setStartDateTime] = useState(new Date());
-  const [endDateTime, setEndDateTime] = useState(new Date(new Date().getTime() + 60 * 60 * 1000)); // Default 1 hour later
+  const [endDateTime, setEndDateTime] = useState(new Date(new Date().getTime() + 60 * 60 * 1000));
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [teacherData, setTeacherData] = useState(null);
@@ -35,7 +37,7 @@ const TeacherMeeting = () => {
         setDataLoading(true);
         const [emailsResponse, teacherResponse] = await Promise.all([
           axios.get('/teachers/my-class/parent-emails'),
-          axios.get(`/teachers/me`) // Added teacher data fetch
+          axios.get(`/teachers/me`)
         ]);
         
         setParentEmails(emailsResponse.data);
@@ -44,14 +46,14 @@ const TeacherMeeting = () => {
         setError(null);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Failed to load parent emails. Please try again later.");
+        setError(t('teacher.meeting.errorLoadingEmails'));
       } finally {
         setDataLoading(false);
       }
     };
 
     fetchData();
-  }, [navigate]);
+  }, [navigate, t]);
 
   const formatWithOffset = (date) => {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
@@ -86,7 +88,7 @@ const TeacherMeeting = () => {
 
   const handleStartMeeting = async () => {
     if (selectedEmails.length === 0) {
-      setError("Please select at least one parent email");
+      setError(t('teacher.meeting.selectEmailError'));
       return;
     }
 
@@ -105,8 +107,8 @@ const TeacherMeeting = () => {
             
       await axios.post('/meetings/start', requestBody);
       setSuccess(meetingType === "immediate" ? 
-        "Meeting will start in 5 minutes. Invitations sent!" : 
-        "Meeting scheduled successfully. Invitations sent!");
+        t('teacher.meeting.immediateSuccess') : 
+        t('teacher.meeting.scheduledSuccess'));
       
       setTimeout(() => {
         navigate('/teacher');
@@ -114,7 +116,7 @@ const TeacherMeeting = () => {
       
     } catch (error) {
       console.error("Error starting meeting:", error);
-      setError("Failed to start meeting. Please try again.");
+      setError(t('teacher.meeting.errorStarting'));
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +124,7 @@ const TeacherMeeting = () => {
 
   const validateSchedule = () => {
     if (endDateTime <= startDateTime) {
-      setError("End time must be after start time");
+      setError(t('teacher.meeting.endTimeError'));
       return false;
     }
     return true;
@@ -148,27 +150,27 @@ const TeacherMeeting = () => {
           <FaArrowLeft className="text-xl" />
         </button>
         <h2 className="text-2xl font-bold text-dark w-full text-center">
-          Create New Meeting
+          {t('teacher.meeting.createNewMeeting')}
         </h2>
       </header>
 
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md mb-6">
           <h3 className="text-2xl font-bold mb-2">
-            Virtual Meeting
+            {t('teacher.meeting.virtualMeeting')}
           </h3>
-          <p className="text-indigo-100 mb-4">Connect with parents through online meetings</p>
+          <p className="text-indigo-100 mb-4">{t('teacher.meeting.subtitle')}</p>
           
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Meeting Type</p>
-              <p className="text-lg font-bold">{meetingType === "immediate" ? "Start in 5 min" : "Scheduled"}</p>
+              <p className="text-xs text-indigo-100">{t('teacher.meeting.stats.meetingType')}</p>
+              <p className="text-lg font-bold">{meetingType === "immediate" ? t('teacher.meeting.startIn5Min') : t('teacher.meeting.scheduled')}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Parents</p>
+              <p className="text-xs text-indigo-100">{t('teacher.meeting.stats.parents')}</p>
               <p className="text-lg font-bold">{parentEmails.length}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Selected</p>
+              <p className="text-xs text-indigo-100">{t('teacher.meeting.stats.selected')}</p>
               <p className="text-lg font-bold">{selectedEmails.length}</p>
             </div>
           </div>
@@ -181,14 +183,14 @@ const TeacherMeeting = () => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <p className="text-dark2 font-medium">Loading data...</p>
+              <p className="text-dark2 font-medium">{t('teacher.meeting.loadingData')}</p>
             </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
             <h2 className="text-2xl font-bold text-dark mb-6 flex items-center">
               <FaVideo className="mr-3 text-secondary" />
-              Meeting Details
+              {t('teacher.meeting.meetingDetails')}
             </h2>
 
             {error && (
@@ -214,7 +216,7 @@ const TeacherMeeting = () => {
             )}
 
             <div className="mb-6">
-              <label className="block text-dark font-semibold mb-2">Meeting Type</label>
+              <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.meetingTypeLabel')}</label>
               <div className="flex space-x-4">
                 <button 
                   onClick={() => setMeetingType("immediate")}
@@ -223,7 +225,7 @@ const TeacherMeeting = () => {
                   }`}
                 >
                   <FaClock className="inline mr-2" />
-                  Start in 5 minutes
+                  {t('teacher.meeting.startIn5Minutes')}
                 </button>
                 <button 
                   onClick={() => setMeetingType("scheduled")}
@@ -232,7 +234,7 @@ const TeacherMeeting = () => {
                   }`}
                 >
                   <FaCalendarAlt className="inline mr-2" />
-                  Schedule for later
+                  {t('teacher.meeting.scheduleForLater')}
                 </button>
               </div>
             </div>
@@ -240,7 +242,7 @@ const TeacherMeeting = () => {
             {meetingType === "scheduled" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label className="block text-dark font-semibold mb-2">Start Date & Time</label>
+                  <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.startDateTime')}</label>
                   <DatePicker
                     selected={startDateTime}
                     onChange={(date) => setStartDateTime(date)}
@@ -252,7 +254,7 @@ const TeacherMeeting = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-dark font-semibold mb-2">End Date & Time</label>
+                  <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.endDateTime')}</label>
                   <DatePicker
                     selected={endDateTime}
                     onChange={(date) => setEndDateTime(date)}
@@ -268,26 +270,26 @@ const TeacherMeeting = () => {
 
             <div className="mb-6 bg-light p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-dark font-semibold">Invite Parents</label>
+                <label className="block text-dark font-semibold">{t('teacher.meeting.inviteParents')}</label>
                 <div className="space-x-2">
                   <button 
                     onClick={selectAllEmails}
                     className="text-secondary hover:underline text-sm"
                   >
-                    Select All
+                    {t('teacher.meeting.selectAll')}
                   </button>
                   <button 
                     onClick={deselectAllEmails}
                     className="text-secondary hover:underline text-sm"
                   >
-                    Deselect All
+                    {t('teacher.meeting.deselectAll')}
                   </button>
                 </div>
               </div>
               
               <div className="max-h-60 overflow-y-auto border rounded-lg p-3 bg-white">
                 {parentEmails.length === 0 ? (
-                  <p className="text-dark2 text-center py-4">No parent emails available.</p>
+                  <p className="text-dark2 text-center py-4">{t('teacher.meeting.noParentEmails')}</p>
                 ) : (
                   parentEmails.map((email, index) => (
                     <div 
@@ -312,16 +314,19 @@ const TeacherMeeting = () => {
                 )}
               </div>
               <p className="text-sm text-dark2 mt-2">
-                Selected: {selectedEmails.length} of {parentEmails.length} parents
+                {t('teacher.meeting.selectedCount', { 
+                  selected: selectedEmails.length, 
+                  total: parentEmails.length 
+                })}
               </p>
             </div>
 
             <div className="flex justify-end">
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/teacher')}
                 className="bg-primary text-dark font-medium px-6 py-3 rounded-lg mr-3 hover:opacity-90 transition"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleStartMeeting}
@@ -331,12 +336,12 @@ const TeacherMeeting = () => {
                 {isLoading ? (
                   <>
                     <div className="animate-spin h-5 w-5 mr-3 border-2 border-white border-t-transparent rounded-full"></div>
-                    Processing...
+                    {t('common.processing')}
                   </>
                 ) : (
                   <>
                     <FaVideo className="mr-2" />
-                    {meetingType === "immediate" ? "Start Meeting" : "Schedule Meeting"}
+                    {meetingType === "immediate" ? t('teacher.meeting.startMeeting') : t('teacher.meeting.scheduleMeeting')}
                   </>
                 )}
               </button>

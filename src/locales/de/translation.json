@@ -757,6 +757,285 @@
         "description": "Beschreibung",
         "actions": "Aktionen"
       }
+    },
+     "absences": {
+      "title": "Abwesenheitsverwaltung",
+      "list": {
+        "title": "Abwesenheitsverwaltung",
+        "searchPlaceholder": "Nach Schülername suchen...",
+        "allSubjects": "Alle Fächer",
+        "allClasses": "Alle Klassen",
+        "allAbsences": "Alle Abwesenheiten",
+        "justified": "Entschuldigt",
+        "unjustified": "Unentschuldigt",
+        "noAbsences": "Keine Abwesenheiten verfügbar.",
+        "noAbsencesFound": "Keine Abwesenheiten gefunden, die den Filterkriterien entsprechen.",
+        "errorLoading": "Abwesenheiten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+        "confirmDelete": "Sind Sie sicher, dass Sie diese Abwesenheit löschen möchten?",
+        "deleteError": "Abwesenheit konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+        "justifyError": "Abwesenheit konnte nicht entschuldigt werden. Bitte versuchen Sie es erneut.",
+        "unknownDate": "Unbekanntes Datum",
+        "invalidDate": "Ungültiges Datum",
+        "unknown": "Unbekannt",
+        "unknownStudent": "Unbekannter Schüler",
+        "unknownSubject": "Unbekanntes Fach",
+        "notAvailable": "N/V"
+      },
+      "create": {
+        "title": "Abwesenheit hinzufügen",
+        "selectClass": "Klasse auswählen",
+        "selectClassPlaceholder": "-- Klasse auswählen --",
+        "student": "Schüler",
+        "selectStudentPlaceholder": "-- Schüler auswählen --",
+        "classSession": "Unterrichtssitzung",
+        "selectSessionPlaceholder": "-- Sitzung auswählen --",
+        "justifiedAbsence": "Entschuldigte Abwesenheit",
+        "justifiedNote": "Wenn aktiviert, wird die Abwesenheit automatisch als entschuldigt markiert.",
+        "classSelectionInfo": "Die Auswahl der Klasse lädt automatisch verfügbare Schüler und Sitzungen.",
+        "loadingStudents": "Schüler werden geladen...",
+        "loadingSessions": "Sitzungen werden geladen...",
+        "noStudentsInClass": "Keine Schüler in dieser Klasse",
+        "noSessionsForClass": "Keine Sitzungen für diese Klasse",
+        "success": "Abwesenheit erfolgreich hinzugefügt!",
+        "errors": {
+          "loadingData": "Fehler beim Laden der Daten. Bitte versuchen Sie es erneut.",
+          "loadingClassData": "Fehler beim Laden der Daten für die ausgewählte Klasse.",
+          "requiredFields": "Bitte wählen Sie einen Schüler und eine Sitzung aus.",
+          "conflict": "Konflikt: Schüler hat bereits eine Abwesenheit oder Note für diese Sitzung.",
+          "createError": "Fehler beim Hinzufügen der Abwesenheit. Bitte versuchen Sie es erneut."
+        }
+      },
+      "edit": {
+        "title": "Abwesenheit bearbeiten",
+        "justify": "Entschuldigen",
+        "unjustify": "Nicht entschuldigen",
+        "justifiedNote": "Markieren Sie diese Option, wenn die Abwesenheit entschuldigt ist, oder deaktivieren Sie sie, um sie unentschuldigt zu machen.",
+        "success": "Abwesenheit erfolgreich aktualisiert!",
+        "successJustified": "Abwesenheit wurde entschuldigt und erfolgreich aktualisiert!",
+        "successUnjustified": "Abwesenheit wurde unentschuldigt und erfolgreich aktualisiert!",
+        "errors": {
+          "loadingData": "Fehler beim Laden der Daten. Bitte versuchen Sie es erneut.",
+          "requiredFields": "Bitte füllen Sie alle erforderlichen Felder aus.",
+          "updateError": "Fehler beim Aktualisieren der Abwesenheit. Bitte versuchen Sie es erneut.",
+          "justifyError": "Abwesenheit konnte nicht entschuldigt werden. Bitte versuchen Sie es erneut oder kontaktieren Sie den Administrator.",
+          "unjustifyError": "Abwesenheit konnte nicht unentschuldigt gemacht werden. Bitte versuchen Sie es erneut oder kontaktieren Sie den Administrator."
+        }
+      },
+      "justify": {
+        "title": "Abwesenheiten entschuldigen",
+        "searchPlaceholder": "Nach Schülername suchen",
+        "unjustifiedAbsences": "Unentschuldigte Abwesenheiten",
+        "noUnjustifiedTitle": "Keine unentschuldigten Abwesenheiten",
+        "noUnjustifiedText": "Alle Abwesenheiten wurden entschuldigt!",
+        "loadingData": "Daten werden geladen...",
+        "justifying": "Wird entschuldigt...",
+        "successJustified": "Abwesenheit erfolgreich entschuldigt!",
+        "errors": {
+          "loadingData": "Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+          "justifyError": "Abwesenheit konnte nicht entschuldigt werden. Bitte versuchen Sie es erneut."
+        }
+      },
+      "fields": {
+        "student": "Schüler",
+        "class": "Klasse",
+        "session": "Sitzung",
+        "day": "Tag",
+        "status": "Status",
+        "actions": "Aktionen",
+        "subject": "Fach",
+        "date": "Datum",
+        "action": "Aktion"
+      }
+    },
+    "catalog": {
+      "title": "Katalogverwaltung",
+      "printExport": "Drucken / PDF exportieren",
+      "selectClass": "Klasse auswählen",
+      "selectClassPlaceholder": "-- Klasse auswählen --",
+      "noClassesAvailable": "Keine Klassen verfügbar",
+      "classCatalog": "Klassenkatalog",
+      "schoolYear": "Schuljahr",
+      "searchPlaceholder": "Schüler nach Namen suchen...",
+      "loadingData": "Katalogdaten werden geladen...",
+      "errorTitle": "Fehler beim Laden des Katalogs",
+      "studentSituation": "Schülersituation",
+      "studentCount": "{{count}} Schüler",
+      "noStudentsFound": "Keine Schüler gefunden, die den Kriterien entsprechen",
+      "tryAdjustSearch": "Versuchen Sie, den Suchbegriff anzupassen",
+      "notAvailable": "N/V",
+      "invalidDate": "Ungültiges Datum",
+      "hide": "Ausblenden",
+      "details": "Details",
+      "grades": "Noten",
+      "absences": "Abwesenheiten",
+      "noGradesRecorded": "Keine Noten erfasst",
+      "noAbsencesRecorded": "Keine Abwesenheiten erfasst",
+      "selectClassTitle": "Klasse auswählen",
+      "selectClassMessage": "Wählen Sie eine Klasse aus der obigen Liste aus, um die schulische Situation anzuzeigen.",
+      "stats": {
+        "students": "Schüler",
+        "classAverage": "Klassendurchschnitt",
+        "totalGrades": "Gesamtnoten",
+        "totalAbsences": "Gesamtabwesenheiten"
+      },
+      "sort": {
+        "name": "Name",
+        "average": "Durchschnitt",
+        "absences": "Abwesenheiten"
+      },
+      "table": {
+        "studentName": "Schülername",
+        "average": "Gesamtdurchschnitt",
+        "totalGrades": "Gesamtnoten",
+        "absences": "Abwesenheiten",
+        "details": "Details",
+        "date": "Datum",
+        "subject": "Fach",
+        "grade": "Note",
+        "status": "Status",
+        "totalAbsences": "Gesamtabwesenheiten"
+      },
+      "print": {
+        "school": "Schule",
+        "schoolName": "Schulname",
+        "class": "Klasse",
+        "className": "Klassenname",
+        "generated": "Erstellt",
+        "detailedSituation": "Detaillierte Schülersituation",
+        "administrator": "Systemadministrator"
+      },
+      "errors": {
+        "loadingInitialData": "Fehler beim Laden der Ausgangsdaten. Bitte versuchen Sie es erneut.",
+        "loadingClassData": "Fehler beim Laden der Klassendaten. Bitte versuchen Sie es erneut."
+      }
+    },
+      "pastStudents": {
+      "title": "Absolventenliste",
+      "searchPlaceholder": "Nach Name oder Profil suchen...",
+      "noStudents": "Keine Absolventen verfügbar.",
+      "noStudentsFoundSearch": "Keine Absolventen gefunden, die der Suche entsprechen.",
+      "errorLoading": "Absolventen konnten nicht abgerufen werden. Bitte versuchen Sie es erneut.",
+      "confirmDelete": "Sind Sie sicher, dass Sie diesen Absolventen löschen möchten?",
+      "deleteError": "Beim Löschen des Absolventen ist ein Fehler aufgetreten.",
+      "fields": {
+        "name": "Name",
+        "profile": "Profil",
+        "actions": "Aktionen"
+      }
+    },
+       "chefs": {
+      "create": {
+        "title": "Koch registrieren",
+        "chefName": "Name des Kochs",
+        "namePlaceholder": "z.B. Max Müller",
+        "submitButton": "Koch registrieren",
+        "errorRegistering": "Fehler bei der Registrierung."
+      },
+      "edit": {
+        "title": "Koch bearbeiten",
+        "submitButton": "Änderungen speichern",
+        "successMessage": "Koch erfolgreich aktualisiert!",
+        "errorLoading": "Fehler beim Laden der Kochdaten. Bitte versuchen Sie es erneut.",
+        "errorUpdating": "Fehler beim Aktualisieren des Kochs. Bitte versuchen Sie es erneut."
+      },
+      "delete": {
+        "title": "Koch löschen",
+        "confirmMessage": "Sind Sie sicher, dass Sie diesen Koch löschen möchten?",
+        "confirmButton": "Ja, löschen",
+        "successMessage": "Koch erfolgreich gelöscht.",
+        "errorMessage": "Fehler beim Löschen des Kochs. Bitte versuchen Sie es erneut."
+      },
+      "list": {
+        "title": "Kochliste",
+        "searchPlaceholder": "Nach Name suchen...",
+        "chefNameHeader": "Name des Kochs",
+        "actionsHeader": "Aktionen",
+        "errorLoading": "Fehler beim Laden der Köche. Bitte versuchen Sie es erneut.",
+        "noChefFound": "Kein Koch gefunden.",
+        "noChefsRegistered": "Keine Köche registriert."
+      }
+    },
+    "dashboard": {
+      "title": "Verwaltungspanel",
+      "subtitle": "Verwalten Sie Schüler, Lehrer, Klassen, Noten und Abwesenheiten",
+      "selectOperation": "Wählen Sie eine Operation, um fortzufahren",
+      "yearAdvancedSuccess": "Das Schuljahr wurde erfolgreich vorangebracht!",
+      "yearAdvancedError": "Fehler beim Vorrücken des Schuljahres. Überprüfen Sie die Serverprotokolle.",
+      "sections": {
+        "studentParent": {
+          "title": "Schüler/Eltern",
+          "createStudent": "Schüler/Eltern erstellen",
+          "viewStudents": "Schüler anzeigen",
+          "viewParents": "Eltern anzeigen"
+        },
+        "professor": {
+          "title": "Lehrer",
+          "createProfessor": "Lehrer erstellen",
+          "viewProfessors": "Lehrer anzeigen"
+        },
+        "class": {
+          "title": "Klasse",
+          "createClass": "Klasse erstellen",
+          "viewClasses": "Klassen anzeigen",
+          "goToNextYear": "Zum nächsten Jahr"
+        },
+        "timetable": {
+          "title": "Stundenplan",
+          "createTimetable": "Stundenplan erstellen",
+          "viewTimetables": "Stundenpläne anzeigen"
+        },
+        "grades": {
+          "title": "Noten",
+          "createGrade": "Note erstellen",
+          "manageGrades": "Noten verwalten"
+        },
+        "absences": {
+          "title": "Abwesenheiten",
+          "createAbsence": "Abwesenheit erstellen",
+          "manageAbsences": "Abwesenheiten verwalten",
+          "justifyAbsences": "Abwesenheiten entschuldigen"
+        },
+        "catalog": {
+          "title": "Katalog",
+          "viewCatalog": "Katalog anzeigen"
+        },
+        "pastStudents": {
+          "title": "Ehemalige Schüler",
+          "viewPastStudents": "Ehemalige Schüler anzeigen"
+        },
+        "chefs": {
+          "title": "Köche",
+          "registerChef": "Koch registrieren",
+          "viewChefs": "Köche anzeigen"
+        }
+      }
     }
+  },
+  "common": {
+    "days": {
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag",
+      "luni": "Montag",
+      "marți": "Dienstag",
+      "miercuri": "Mittwoch",
+      "joi": "Donnerstag",
+      "vineri": "Freitag",
+      "sâmbătă": "Samstag",
+      "duminică": "Sonntag"
+    },
+    "processing": "Wird verarbeitet...",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "add": "Hinzufügen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "back": "Zurück",
+    "backToList": "Zurück zur Liste",
+    "loading": "Wird geladen..."
   }
 }

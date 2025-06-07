@@ -757,6 +757,285 @@
         "description": "Descriere",
         "actions": "Acțiuni"
       }
+    },
+      "absences": {
+      "title": "Gestiune Absențe",
+      "list": {
+        "title": "Administrare Absențe",
+        "searchPlaceholder": "Caută după nume elev...",
+        "allSubjects": "Toate materiile",
+        "allClasses": "Toate clasele",
+        "allAbsences": "Toate absențele",
+        "justified": "Motivate",
+        "unjustified": "Nemotivate",
+        "noAbsences": "Nu există absențe disponibile.",
+        "noAbsencesFound": "Nu s-au găsit absențe care să îndeplinească criteriile de filtrare.",
+        "errorLoading": "Eroare la încărcarea absențelor. Vă rugăm să încercați mai târziu.",
+        "confirmDelete": "Sunteți sigur că doriți să ștergeți această absență?",
+        "deleteError": "Nu s-a putut șterge absența. Vă rugăm să încercați din nou.",
+        "justifyError": "Nu s-a putut motiva absența. Vă rugăm să încercați din nou.",
+        "unknownDate": "Data necunoscută",
+        "invalidDate": "Data invalidă",
+        "unknown": "Necunoscut",
+        "unknownStudent": "Elev necunoscut",
+        "unknownSubject": "Materie necunoscută",
+        "notAvailable": "N/D"
+      },
+      "create": {
+        "title": "Adaugă Absență",
+        "selectClass": "Selectează Clasa",
+        "selectClassPlaceholder": "-- Selectează o clasă --",
+        "student": "Elev",
+        "selectStudentPlaceholder": "-- Selectează Elevul --",
+        "classSession": "Sesiune Curs",
+        "selectSessionPlaceholder": "-- Selectează Sesiunea --",
+        "justifiedAbsence": "Absență motivată",
+        "justifiedNote": "Dacă este bifat, absența va fi marcată automat ca motivată.",
+        "classSelectionInfo": "Selectarea clasei va încărca automat elevii și sesiunile disponibile.",
+        "loadingStudents": "Se încarcă elevii...",
+        "loadingSessions": "Se încarcă sesiunile...",
+        "noStudentsInClass": "Nu există elevi în această clasă",
+        "noSessionsForClass": "Nu există sesiuni pentru această clasă",
+        "success": "Absența a fost adăugată cu succes!",
+        "errors": {
+          "loadingData": "Eroare la încărcarea datelor. Te rog încearcă din nou.",
+          "loadingClassData": "Eroare la încărcarea datelor pentru clasa selectată.",
+          "requiredFields": "Selectează un elev și o sesiune.",
+          "conflict": "Conflict: Elevul are deja o absență sau o notă pentru această sesiune.",
+          "createError": "Eroare la adăugarea absenței. Te rog încearcă din nou."
+        }
+      },
+      "edit": {
+        "title": "Editare Absență",
+        "justify": "Motivează",
+        "unjustify": "Demotivează",
+        "justifiedNote": "Marchează această opțiune dacă absența este motivată, sau debifează pentru a o demotiva.",
+        "success": "Absența a fost actualizată cu succes!",
+        "successJustified": "Absența a fost motivată și actualizată cu succes!",
+        "successUnjustified": "Absența a fost demotivată și actualizată cu succes!",
+        "errors": {
+          "loadingData": "Eroare la încărcarea datelor. Te rog încearcă din nou.",
+          "requiredFields": "Te rog completează toate câmpurile obligatorii.",
+          "updateError": "Eroare la actualizarea absenței. Te rog încearcă din nou.",
+          "justifyError": "Nu s-a putut motiva absența. Te rog încearcă din nou sau contactează administratorul.",
+          "unjustifyError": "Nu s-a putut demotiva absența. Te rog încearcă din nou sau contactează administratorul."
+        }
+      },
+      "justify": {
+        "title": "Motivare Absențe",
+        "searchPlaceholder": "Caută după nume elev",
+        "unjustifiedAbsences": "Absențe Nemotivate",
+        "noUnjustifiedTitle": "Nu Există Absențe Nemotivate",
+        "noUnjustifiedText": "Toate absențele au fost motivate!",
+        "loadingData": "Se încarcă datele...",
+        "justifying": "Se motivează...",
+        "successJustified": "Absența a fost motivată cu succes!",
+        "errors": {
+          "loadingData": "Nu s-au putut încărca datele. Vă rugăm să încercați din nou.",
+          "justifyError": "Nu s-a putut motiva absența. Vă rugăm să încercați din nou."
+        }
+      },
+      "fields": {
+        "student": "Elev",
+        "class": "Clasa",
+        "session": "Sesiune",
+        "day": "Ziua",
+        "status": "Status",
+        "actions": "Acțiuni",
+        "subject": "Materie",
+        "date": "Data",
+        "action": "Acțiune"
+      }
+    },
+     "catalog": {
+      "title": "Administrare Catalog",
+      "printExport": "Print / Export PDF",
+      "selectClass": "Selectează Clasa",
+      "selectClassPlaceholder": "-- Selectează o clasă --",
+      "noClassesAvailable": "Nu sunt clase disponibile",
+      "classCatalog": "Catalog Clasă",
+      "schoolYear": "An Școlar",
+      "searchPlaceholder": "Caută elev după nume...",
+      "loadingData": "Se încarcă datele catalog...",
+      "errorTitle": "Eroare încărcare catalog",
+      "studentSituation": "Situație Elevi",
+      "studentCount": "{{count}} elevi",
+      "noStudentsFound": "Nu s-au găsit elevi care să corespundă criteriilor",
+      "tryAdjustSearch": "Încercați să ajustați termenul de căutare",
+      "notAvailable": "N/D",
+      "invalidDate": "Dată invalidă",
+      "hide": "Ascunde",
+      "details": "Detalii",
+      "grades": "Note",
+      "absences": "Absențe",
+      "noGradesRecorded": "Nu sunt note înregistrate",
+      "noAbsencesRecorded": "Nu sunt absențe înregistrate",
+      "selectClassTitle": "Selectează o Clasă",
+      "selectClassMessage": "Selectați o clasă din lista de mai sus pentru a vizualiza situația școlară.",
+      "stats": {
+        "students": "Elevi",
+        "classAverage": "Media Clasei",
+        "totalGrades": "Total Note",
+        "totalAbsences": "Total Absențe"
+      },
+      "sort": {
+        "name": "Nume",
+        "average": "Medie",
+        "absences": "Absențe"
+      },
+      "table": {
+        "studentName": "Nume Elev",
+        "average": "Medie Generală",
+        "totalGrades": "Total Note",
+        "absences": "Absențe",
+        "details": "Detalii",
+        "date": "Data",
+        "subject": "Materie",
+        "grade": "Nota",
+        "status": "Status",
+        "totalAbsences": "Total Absențe"
+      },
+      "print": {
+        "school": "Școala",
+        "schoolName": "Nume Școală",
+        "class": "Clasa",
+        "className": "Nume Clasă",
+        "generated": "Generat",
+        "detailedSituation": "Situație Detaliată Elevi",
+        "administrator": "Administrator Sistem"
+      },
+      "errors": {
+        "loadingInitialData": "Eroare la încărcarea datelor inițiale. Vă rugăm să încercați din nou.",
+        "loadingClassData": "Eroare la încărcarea datelor clasei. Vă rugăm să încercați din nou."
+      }
+    },
+     "pastStudents": {
+      "title": "Lista Absolvenților",
+      "searchPlaceholder": "Caută după nume sau profil...",
+      "noStudents": "Nu există absolvenți disponibili.",
+      "noStudentsFoundSearch": "Nu au fost găsiți absolvenți care corespund căutării.",
+      "errorLoading": "Nu s-au putut prelua absolvenții. Încercați din nou.",
+      "confirmDelete": "Ești sigur că vrei să ștergi acest absolvent?",
+      "deleteError": "A apărut o eroare la ștergerea absolventului.",
+      "fields": {
+        "name": "Nume",
+        "profile": "Profil",
+        "actions": "Acțiuni"
+      }
+    },
+     "chefs": {
+      "create": {
+        "title": "Înregistrează Bucătar",
+        "chefName": "Nume Bucătar",
+        "namePlaceholder": "Ex: Maria Popescu",
+        "submitButton": "Înregistrează Bucătar",
+        "errorRegistering": "Eroare la înregistrare."
+      },
+      "edit": {
+        "title": "Editează Bucătar",
+        "submitButton": "Salvează Modificările",
+        "successMessage": "Bucătarul a fost actualizat cu succes!",
+        "errorLoading": "Eroare la încărcarea datelor bucătarului. Te rog încearcă din nou.",
+        "errorUpdating": "Eroare la actualizarea bucătarului. Te rog încearcă din nou."
+      },
+      "delete": {
+        "title": "Ștergere Bucătar",
+        "confirmMessage": "Sunteți sigur că doriți să ștergeți acest bucătar?",
+        "confirmButton": "Da, Șterge",
+        "successMessage": "Bucătar șters cu succes.",
+        "errorMessage": "Eroare la ștergerea bucătarului. Te rog încearcă din nou."
+      },
+      "list": {
+        "title": "Lista Bucătari",
+        "searchPlaceholder": "Caută după nume...",
+        "chefNameHeader": "Nume Bucătar",
+        "actionsHeader": "Acțiuni",
+        "errorLoading": "Eroare la încărcarea bucătarilor. Te rog încearcă din nou.",
+        "noChefFound": "Niciun bucătar găsit.",
+        "noChefsRegistered": "Nu există bucătari înregistrați."
+      }
+    },
+     "dashboard": {
+      "title": "Panou de Administrare",
+      "subtitle": "Gestionează elevii, profesorii, clasele, notele și absențele",
+      "selectOperation": "Selectează o operațiune pentru a continua",
+      "yearAdvancedSuccess": "Anul școlar a fost avansat cu succes!",
+      "yearAdvancedError": "Eroare la avansarea anului școlar. Verificați logurile serverului.",
+      "sections": {
+        "studentParent": {
+          "title": "Elev/Părinte",
+          "createStudent": "Crează Elev/Părinte",
+          "viewStudents": "Vezi Elevi",
+          "viewParents": "Vezi Părinți"
+        },
+        "professor": {
+          "title": "Profesor",
+          "createProfessor": "Crează Profesor",
+          "viewProfessors": "Vezi Profesori"
+        },
+        "class": {
+          "title": "Clasă",
+          "createClass": "Crează Clasă",
+          "viewClasses": "Vezi Clase",
+          "goToNextYear": "Treci la Anul Următor"
+        },
+        "timetable": {
+          "title": "Orar",
+          "createTimetable": "Crează Orar",
+          "viewTimetables": "Vezi Orare"
+        },
+        "grades": {
+          "title": "Note",
+          "createGrade": "Crează Notă",
+          "manageGrades": "Gestionează Note"
+        },
+        "absences": {
+          "title": "Absențe",
+          "createAbsence": "Crează Absență",
+          "manageAbsences": "Gestionează Absențe",
+          "justifyAbsences": "Motivează Absențe"
+        },
+        "catalog": {
+          "title": "Catalog",
+          "viewCatalog": "Vezi Catalog"
+        },
+        "pastStudents": {
+          "title": "Absolvenți",
+          "viewPastStudents": "Vezi Absolvenți"
+        },
+        "chefs": {
+          "title": "Bucătari",
+          "registerChef": "Înregistrează Bucătar",
+          "viewChefs": "Vizualizează Bucătari"
+        }
+      }
     }
+  },
+  "common": {
+    "days": {
+      "monday": "Luni",
+      "tuesday": "Marți",
+      "wednesday": "Miercuri",
+      "thursday": "Joi",
+      "friday": "Vineri",
+      "saturday": "Sâmbătă",
+      "sunday": "Duminică",
+      "luni": "Luni",
+      "marți": "Marți",
+      "miercuri": "Miercuri",
+      "joi": "Joi",
+      "vineri": "Vineri",
+      "sâmbătă": "Sâmbătă",
+      "duminică": "Duminică"
+    },
+    "processing": "Se procesează...",
+    "edit": "Editează",
+    "delete": "Șterge",
+    "add": "Adaugă",
+    "cancel": "Anulează",
+    "save": "Salvează",
+    "back": "Înapoi",
+    "backToList": "Înapoi la Listă",
+    "loading": "Se încarcă..."
   }
 }

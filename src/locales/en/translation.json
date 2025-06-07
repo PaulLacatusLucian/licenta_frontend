@@ -757,6 +757,285 @@
         "description": "Description",
         "actions": "Actions"
       }
+    },
+        "absences": {
+      "title": "Absence Management",
+      "list": {
+        "title": "Absence Management",
+        "searchPlaceholder": "Search by student name...",
+        "allSubjects": "All Subjects",
+        "allClasses": "All Classes",
+        "allAbsences": "All Absences",
+        "justified": "Justified",
+        "unjustified": "Unjustified",
+        "noAbsences": "No absences available.",
+        "noAbsencesFound": "No absences found matching the filter criteria.",
+        "errorLoading": "Failed to load absences. Please try again later.",
+        "confirmDelete": "Are you sure you want to delete this absence?",
+        "deleteError": "Failed to delete absence. Please try again.",
+        "justifyError": "Failed to justify absence. Please try again.",
+        "unknownDate": "Unknown date",
+        "invalidDate": "Invalid date",
+        "unknown": "Unknown",
+        "unknownStudent": "Unknown Student",
+        "unknownSubject": "Unknown Subject",
+        "notAvailable": "N/A"
+      },
+      "create": {
+        "title": "Add Absence",
+        "selectClass": "Select Class",
+        "selectClassPlaceholder": "-- Select a class --",
+        "student": "Student",
+        "selectStudentPlaceholder": "-- Select Student --",
+        "classSession": "Class Session",
+        "selectSessionPlaceholder": "-- Select Session --",
+        "justifiedAbsence": "Justified absence",
+        "justifiedNote": "If checked, the absence will be automatically marked as justified.",
+        "classSelectionInfo": "Selecting a class will automatically load available students and sessions.",
+        "loadingStudents": "Loading students...",
+        "loadingSessions": "Loading sessions...",
+        "noStudentsInClass": "No students in this class",
+        "noSessionsForClass": "No sessions for this class",
+        "success": "Absence added successfully!",
+        "errors": {
+          "loadingData": "Error loading data. Please try again.",
+          "loadingClassData": "Error loading data for selected class.",
+          "requiredFields": "Please select a student and a session.",
+          "conflict": "Conflict: Student already has an absence or grade for this session.",
+          "createError": "Error adding absence. Please try again."
+        }
+      },
+      "edit": {
+        "title": "Edit Absence",
+        "justify": "Justify",
+        "unjustify": "Unjustify",
+        "justifiedNote": "Check this option if the absence is justified, or uncheck to unjustify it.",
+        "success": "Absence updated successfully!",
+        "successJustified": "Absence justified and updated successfully!",
+        "successUnjustified": "Absence unjustified and updated successfully!",
+        "errors": {
+          "loadingData": "Error loading data. Please try again.",
+          "requiredFields": "Please complete all required fields.",
+          "updateError": "Error updating absence. Please try again.",
+          "justifyError": "Could not justify absence. Please try again or contact administrator.",
+          "unjustifyError": "Could not unjustify absence. Please try again or contact administrator."
+        }
+      },
+      "justify": {
+        "title": "Justify Absences",
+        "searchPlaceholder": "Search by student name",
+        "unjustifiedAbsences": "Unjustified Absences",
+        "noUnjustifiedTitle": "No Unjustified Absences",
+        "noUnjustifiedText": "All absences have been justified!",
+        "loadingData": "Loading data...",
+        "justifying": "Justifying...",
+        "successJustified": "Absence successfully justified!",
+        "errors": {
+          "loadingData": "Failed to load data. Please try again.",
+          "justifyError": "Failed to justify absence. Please try again."
+        }
+      },
+      "fields": {
+        "student": "Student",
+        "class": "Class",
+        "session": "Session",
+        "day": "Day",
+        "status": "Status",
+        "actions": "Actions",
+        "subject": "Subject",
+        "date": "Date",
+        "action": "Action"
+      }
+    },
+     "catalog": {
+      "title": "Catalog Management",
+      "printExport": "Print / Export PDF",
+      "selectClass": "Select Class",
+      "selectClassPlaceholder": "-- Select a class --",
+      "noClassesAvailable": "No classes available",
+      "classCatalog": "Class Catalog",
+      "schoolYear": "School Year",
+      "searchPlaceholder": "Search student by name...",
+      "loadingData": "Loading catalog data...",
+      "errorTitle": "Error loading catalog",
+      "studentSituation": "Student Situation",
+      "studentCount": "{{count}} students",
+      "noStudentsFound": "No students found matching the criteria",
+      "tryAdjustSearch": "Try adjusting the search term",
+      "notAvailable": "N/A",
+      "invalidDate": "Invalid date",
+      "hide": "Hide",
+      "details": "Details",
+      "grades": "Grades",
+      "absences": "Absences",
+      "noGradesRecorded": "No grades recorded",
+      "noAbsencesRecorded": "No absences recorded",
+      "selectClassTitle": "Select a Class",
+      "selectClassMessage": "Select a class from the list above to view the academic situation.",
+      "stats": {
+        "students": "Students",
+        "classAverage": "Class Average",
+        "totalGrades": "Total Grades",
+        "totalAbsences": "Total Absences"
+      },
+      "sort": {
+        "name": "Name",
+        "average": "Average",
+        "absences": "Absences"
+      },
+      "table": {
+        "studentName": "Student Name",
+        "average": "General Average",
+        "totalGrades": "Total Grades",
+        "absences": "Absences",
+        "details": "Details",
+        "date": "Date",
+        "subject": "Subject",
+        "grade": "Grade",
+        "status": "Status",
+        "totalAbsences": "Total Absences"
+      },
+      "print": {
+        "school": "School",
+        "schoolName": "School Name",
+        "class": "Class",
+        "className": "Class Name",
+        "generated": "Generated",
+        "detailedSituation": "Detailed Student Situation",
+        "administrator": "System Administrator"
+      },
+      "errors": {
+        "loadingInitialData": "Failed to load initial data. Please try again.",
+        "loadingClassData": "Failed to load class data. Please try again."
+      }
+    },
+        "pastStudents": {
+      "title": "Alumni List",
+      "searchPlaceholder": "Search by name or profile...",
+      "noStudents": "No alumni available.",
+      "noStudentsFoundSearch": "No alumni found matching the search.",
+      "errorLoading": "Failed to retrieve alumni. Please try again.",
+      "confirmDelete": "Are you sure you want to delete this alumnus?",
+      "deleteError": "An error occurred while deleting the alumnus.",
+      "fields": {
+        "name": "Name",
+        "profile": "Profile",
+        "actions": "Actions"
+      }
+    },
+      "chefs": {
+      "create": {
+        "title": "Register Chef",
+        "chefName": "Chef Name",
+        "namePlaceholder": "e.g. John Smith",
+        "submitButton": "Register Chef",
+        "errorRegistering": "Error registering chef."
+      },
+      "edit": {
+        "title": "Edit Chef",
+        "submitButton": "Save Changes",
+        "successMessage": "Chef updated successfully!",
+        "errorLoading": "Error loading chef data. Please try again.",
+        "errorUpdating": "Error updating chef. Please try again."
+      },
+      "delete": {
+        "title": "Delete Chef",
+        "confirmMessage": "Are you sure you want to delete this chef?",
+        "confirmButton": "Yes, Delete",
+        "successMessage": "Chef deleted successfully.",
+        "errorMessage": "Error deleting chef. Please try again."
+      },
+      "list": {
+        "title": "Chef List",
+        "searchPlaceholder": "Search by name...",
+        "chefNameHeader": "Chef Name",
+        "actionsHeader": "Actions",
+        "errorLoading": "Error loading chefs. Please try again.",
+        "noChefFound": "No chef found.",
+        "noChefsRegistered": "No chefs registered."
+      }
+    },
+      "dashboard": {
+      "title": "Administration Panel",
+      "subtitle": "Manage students, teachers, classes, grades, and absences",
+      "selectOperation": "Select an operation to continue",
+      "yearAdvancedSuccess": "School year has been successfully advanced!",
+      "yearAdvancedError": "Error advancing school year. Check server logs.",
+      "sections": {
+        "studentParent": {
+          "title": "Student/Parent",
+          "createStudent": "Create Student/Parent",
+          "viewStudents": "View Students",
+          "viewParents": "View Parents"
+        },
+        "professor": {
+          "title": "Professor",
+          "createProfessor": "Create Professor",
+          "viewProfessors": "View Professors"
+        },
+        "class": {
+          "title": "Class",
+          "createClass": "Create Class",
+          "viewClasses": "View Classes",
+          "goToNextYear": "Go to Next Year"
+        },
+        "timetable": {
+          "title": "Timetable",
+          "createTimetable": "Create Timetable",
+          "viewTimetables": "View Timetables"
+        },
+        "grades": {
+          "title": "Grades",
+          "createGrade": "Create Grade",
+          "manageGrades": "Manage Grades"
+        },
+        "absences": {
+          "title": "Absences",
+          "createAbsence": "Create Absence",
+          "manageAbsences": "Manage Absences",
+          "justifyAbsences": "Justify Absences"
+        },
+        "catalog": {
+          "title": "Catalog",
+          "viewCatalog": "View Catalog"
+        },
+        "pastStudents": {
+          "title": "Past Students",
+          "viewPastStudents": "View Past Students"
+        },
+        "chefs": {
+          "title": "Chefs",
+          "registerChef": "Register Chef",
+          "viewChefs": "View Chefs"
+        }
+      }
     }
+  },
+  "common": {
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "luni": "Monday",
+      "marți": "Tuesday",
+      "miercuri": "Wednesday",
+      "joi": "Thursday",
+      "vineri": "Friday",
+      "sâmbătă": "Saturday",
+      "duminică": "Sunday"
+    },
+    "processing": "Processing...",
+  "edit": "Edit",
+  "delete": "Delete",
+  "add": "Add",
+  "cancel": "Cancel",
+  "save": "Save",
+  "back": "Back",
+  "backToList": "Back to List",
+  "loading": "Loading..."
   }
 }

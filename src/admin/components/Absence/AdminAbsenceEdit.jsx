@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaSave, FaArrowLeft, FaCheck, FaTimes, FaCalendarCheck, FaBan } from "react-icons/fa";
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const AdminAbsenceEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [absence, setAbsence] = useState(null);
   const [students, setStudents] = useState([]);
   const [sessions, setSessions] = useState([]);
@@ -18,7 +20,24 @@ const AdminAbsenceEdit = () => {
   const [message, setMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [justifyError, setJustifyError] = useState(null);
-  const [wasInitiallyJustified, setWasInitiallyJustified] = useState(false); // Adăugat pentru a ține evidența stării inițiale
+  const [wasInitiallyJustified, setWasInitiallyJustified] = useState(false);
+
+  // Funktion zur Übersetzung von Fächern
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
+  // Funktion zur Übersetzung von Wochentagen
+  const getTranslatedDay = (day) => {
+    const dayKey = `common.days.${day.toLowerCase()}`;
+    if (t(dayKey) !== dayKey) {
+      return t(dayKey);
+    }
+    return day;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,30 +49,23 @@ const AdminAbsenceEdit = () => {
           axios.get('/class-sessions')
         ]);
         
-        // Obținem detaliile absenței
         const absenceData = absenceRes.data;
         
-        // Salvăm starea inițială a absenței pentru a verifica dacă s-a schimbat
         setWasInitiallyJustified(absenceData.justified || false);
         
-        // Obținem lista de sesiuni
         const sessionsData = sessionsRes.data;
         
-        // Logăm datele primite despre absență pentru debugging
         console.log("Absence data received:", absenceData);
         console.log("Initial justified status:", absenceData.justified);
         console.log("Sessions data:", sessionsData);
         
-        // Găsim sesiunea asociată absenței pentru a avea toate datele necesare
         const sessionId = absenceData.classSessionId || absenceData.classSession?.id;
         const matchingSession = sessionId ? sessionsData.find(s => s.id === parseInt(sessionId)) : null;
         
         console.log("Matching session found:", matchingSession);
         
-        // Îmbogățim absența cu datele din sesiune
         const enrichedAbsence = {
           ...absenceData,
-          // Adăugăm proprietăți suplimentare dacă am găsit sesiunea
           sessionInfo: matchingSession ? {
             day: matchingSession.scheduleDay,
             startTime: matchingSession.startTime,
@@ -61,7 +73,6 @@ const AdminAbsenceEdit = () => {
             subject: matchingSession.subject,
             className: matchingSession.className
           } : null,
-          // Salvăm referința la sesiunea întreagă
           fullSession: matchingSession
         };
         
@@ -80,16 +91,15 @@ const AdminAbsenceEdit = () => {
         console.error("Error fetching data:", error);
         setMessage({
           type: "error",
-          text: "Eroare la încărcarea datelor. Te rog încearcă din nou."
+          text: t('admin.absences.edit.errors.loadingData')
         });
         setLoading(false);
       }
     };
     
     fetchData();
-  }, [id]);
+  }, [id, t]);
 
-  // Adăugat un efect pentru a monitoriza schimbările în starea justified
   useEffect(() => {
     console.log("Justified changed:", formData.justified, "Initial state:", wasInitiallyJustified);
   }, [formData.justified, wasInitiallyJustified]);
@@ -97,7 +107,6 @@ const AdminAbsenceEdit = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     
-    // Dacă este checkbox-ul justified, verificăm dacă valoarea se schimbă
     if (name === "justified" && type === "checkbox") {
       console.log("Justified checkbox changed:", checked);
     }
@@ -109,15 +118,14 @@ const AdminAbsenceEdit = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return "Data necunoscută";
+    if (!dateString) return t('admin.absences.list.unknownDate');
     
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Data invalidă";
+    if (isNaN(date.getTime())) return t('admin.absences.list.invalidDate');
     
     return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
   };
 
-  // Formatează ora din timestamp
   const formatTime = (dateString) => {
     if (!dateString) return "";
     
@@ -127,40 +135,42 @@ const AdminAbsenceEdit = () => {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
   };
   
-  // Funcție pentru a obține ziua săptămânii din sesiune
   const getDayOfWeek = (session) => {
     if (!session) return "";
     
-    // Preferăm să folosim direct scheduleDay dacă există
     if (session.scheduleDay) {
-      return session.scheduleDay;
+      return getTranslatedDay(session.scheduleDay);
     }
     
-    // Ca rezervă, calculăm din dată
     if (session.startTime) {
       const date = new Date(session.startTime);
       if (isNaN(date.getTime())) return "";
       
-      const daysOfWeek = ["Duminică", "Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă"];
+      const daysOfWeek = [
+        t('common.days.sunday'),
+        t('common.days.monday'),
+        t('common.days.tuesday'),
+        t('common.days.wednesday'),
+        t('common.days.thursday'),
+        t('common.days.friday'),
+        t('common.days.saturday')
+      ];
       return daysOfWeek[date.getDay()];
     }
     
     return "";
   };
 
-  // Format pentru afișarea sesiunii în select
   const formatSessionLabel = (session) => {
     if (!session) return "";
     
-    let label = session.subject || "Necunoscut";
+    let label = getTranslatedSubject(session.subject) || t('admin.absences.list.unknown');
     
-    // Adaugă ziua săptămânii - PRIORITATE PENTRU scheduleDay
     const dayOfWeek = getDayOfWeek(session);
     if (dayOfWeek) {
       label = `${dayOfWeek}, ${label}`;
     }
     
-    // Adaugă ora
     if (session.startTime && session.endTime) {
       const startTime = formatTime(session.startTime);
       const endTime = formatTime(session.endTime); 
@@ -170,7 +180,6 @@ const AdminAbsenceEdit = () => {
       label += ` (${startTime})`;
     }
     
-    // Adaugă clasa
     if (session.className) {
       label += `, ${session.className}`;
     }
@@ -184,29 +193,25 @@ const AdminAbsenceEdit = () => {
     setMessage(null);
 
     try {
-      // Verificăm dacă avem toate câmpurile necesare
       if (!formData.studentId || !formData.classSessionId) {
         setMessage({
           type: "error",
-          text: "Te rog completează toate câmpurile obligatorii."
+          text: t('admin.absences.edit.errors.requiredFields')
         });
         setIsSubmitting(false);
         return;
       }
 
-      // Construim obiectul pentru request
       const requestData = {
         studentId: formData.studentId,
         classSessionId: formData.classSessionId,
-        justified: formData.justified // Includem explicit starea de justified
+        justified: formData.justified
       };
 
       console.log("Sending update request with data:", requestData);
 
-      // Facem call pentru actualizarea absenței
       const response = await axios.put(`/absences/${id}`, requestData);
       
-      // Actualizăm starea locală
       setAbsence({
         ...absence,
         student: { id: formData.studentId },
@@ -214,30 +219,27 @@ const AdminAbsenceEdit = () => {
         justified: formData.justified
       });
       
-      // Actualizăm și starea inițială pentru următoarele comparații
       setWasInitiallyJustified(formData.justified);
       
-      // Afișăm mesajul corespunzător
       if (formData.justified !== absence.justified) {
         if (formData.justified) {
           setMessage({
             type: "success",
-            text: "Absența a fost motivată și actualizată cu succes!"
+            text: t('admin.absences.edit.successJustified')
           });
         } else {
           setMessage({
             type: "success",
-            text: "Absența a fost demotivată și actualizată cu succes!"
+            text: t('admin.absences.edit.successUnjustified')
           });
         }
       } else {
         setMessage({
           type: "success",
-          text: "Absența a fost actualizată cu succes!"
+          text: t('admin.absences.edit.success')
         });
       }
       
-      // Redirecționare după câteva secunde
       setTimeout(() => {
         navigate("/admin/absences");
       }, 1500);
@@ -245,7 +247,7 @@ const AdminAbsenceEdit = () => {
     } catch (error) {
       console.error("Error updating absence:", error);
       
-      let errorMessage = "Eroare la actualizarea absenței. Te rog încearcă din nou.";
+      let errorMessage = t('admin.absences.edit.errors.updateError');
       if (error.response && error.response.data) {
         errorMessage = error.response.data;
       }
@@ -259,14 +261,12 @@ const AdminAbsenceEdit = () => {
     }
   };
 
-  // Funcție pentru demotivarea absenței
   const handleUnjustify = async () => {
     try {
       setIsSubmitting(true);
       setMessage(null);
       setJustifyError(null);
       
-      // Construim obiectul pentru request cu flag-ul justified=false
       const requestData = {
         studentId: formData.studentId,
         classSessionId: formData.classSessionId,
@@ -275,10 +275,8 @@ const AdminAbsenceEdit = () => {
       
       console.log("Sending unjustify request with data:", requestData);
       
-      // Facem call către server
       const response = await axios.put(`/absences/${id}`, requestData);
       
-      // Actualizăm starea locală
       setAbsence(prev => ({
         ...prev,
         justified: false
@@ -293,11 +291,11 @@ const AdminAbsenceEdit = () => {
       
       setMessage({
         type: "success",
-        text: "Absența a fost demotivată cu succes!"
+        text: t('admin.absences.edit.successUnjustified')
       });
     } catch (error) {
       console.error("Error unjustifying absence:", error);
-      setJustifyError("Nu s-a putut demotiva absența. Te rog încearcă din nou sau contactează administratorul.");
+      setJustifyError(t('admin.absences.edit.errors.unjustifyError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -309,9 +307,7 @@ const AdminAbsenceEdit = () => {
       setMessage(null);
       setJustifyError(null);
       
-      // Metoda alternativă: Actualizăm direct absența cu flag-ul justified=true
       try {
-        // Construim obiectul pentru request cu toate datele existente + justified=true
         const requestData = {
           studentId: formData.studentId,
           classSessionId: formData.classSessionId,
@@ -322,7 +318,6 @@ const AdminAbsenceEdit = () => {
         
         const response = await axios.put(`/absences/${id}`, requestData);
         
-        // Actualizăm starea locală pentru a reflecta schimbarea
         setAbsence(prev => ({
           ...prev,
           justified: true
@@ -337,16 +332,14 @@ const AdminAbsenceEdit = () => {
         
         setMessage({
           type: "success",
-          text: "Absența a fost motivată cu succes!"
+          text: t('admin.absences.edit.successJustified')
         });
       } catch (error) {
         console.error("Error updating absence:", error);
         
-        // Încercăm metoda standard, dar doar ca rezervă
         try {
           const justifyResponse = await axios.put(`/absences/${id}/justify`);
           
-          // Actualizăm starea locală
           setAbsence(prev => ({
             ...prev,
             justified: true
@@ -361,16 +354,16 @@ const AdminAbsenceEdit = () => {
           
           setMessage({
             type: "success",
-            text: "Absența a fost motivată cu succes!"
+            text: t('admin.absences.edit.successJustified')
           });
         } catch (secondError) {
           console.error("Error justifying absence:", secondError);
-          setJustifyError("Nu s-a putut motiva absența. Te rog încearcă din nou sau contactează administratorul.");
+          setJustifyError(t('admin.absences.edit.errors.justifyError'));
         }
       }
     } catch (error) {
       console.error("Error justifying absence:", error);
-      setJustifyError("Nu s-a putut motiva absența. Te rog încearcă din nou sau contactează administratorul.");
+      setJustifyError(t('admin.absences.edit.errors.justifyError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -379,7 +372,7 @@ const AdminAbsenceEdit = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
-        <div className="text-gray-500">Se încarcă...</div>
+        <div className="text-gray-500">{t('common.loading')}</div>
       </div>
     );
   }
@@ -393,9 +386,9 @@ const AdminAbsenceEdit = () => {
             className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
           >
             <FaArrowLeft className="h-4 w-4 mr-2" />
-            Înapoi la Listă
+            {t('common.backToList')}
           </button>
-          <h2 className="text-lg font-semibold">Editare Absență</h2>
+          <h2 className="text-lg font-semibold">{t('admin.absences.edit.title')}</h2>
         </div>
 
         <div className="p-6">
@@ -426,12 +419,12 @@ const AdminAbsenceEdit = () => {
                   {absence?.justified ? (
                     <>
                       <FaCheck className="mr-1 h-3 w-3" />
-                      Motivată
+                      {t('admin.absences.list.justified')}
                     </>
                   ) : (
                     <>
                       <FaTimes className="mr-1 h-3 w-3" />
-                      Nemotivată
+                      {t('admin.absences.list.unjustified')}
                     </>
                   )}
                 </span>
@@ -445,7 +438,7 @@ const AdminAbsenceEdit = () => {
                     className="inline-flex items-center justify-center text-sm px-3 py-1 rounded-md bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors"
                   >
                     <FaBan className="mr-1.5 h-3.5 w-3.5" />
-                    Demotivează
+                    {t('admin.absences.edit.unjustify')}
                   </button>
                 ) : (
                   <button
@@ -455,7 +448,7 @@ const AdminAbsenceEdit = () => {
                     className="inline-flex items-center justify-center text-sm px-3 py-1 rounded-md bg-green-50 text-green-600 border border-green-200 hover:bg-green-100 transition-colors"
                   >
                     <FaCalendarCheck className="mr-1.5 h-3.5 w-3.5" />
-                    Motivează
+                    {t('admin.absences.edit.justify')}
                   </button>
                 )}
               </div>
@@ -463,7 +456,7 @@ const AdminAbsenceEdit = () => {
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Elev:
+                {t('admin.absences.create.student')}:
               </label>
               <select
                 name="studentId"
@@ -471,7 +464,7 @@ const AdminAbsenceEdit = () => {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
               >
-                <option value="">-- Selectează un elev --</option>
+                <option value="">{t('admin.absences.create.selectStudentPlaceholder')}</option>
                 {students.map((student) => (
                   <option key={student.id} value={student.id}>
                     {student.name} {student.className && `(${student.className})`}
@@ -482,7 +475,7 @@ const AdminAbsenceEdit = () => {
 
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Sesiune Curs:
+                {t('admin.absences.create.classSession')}:
               </label>
               <select
                 name="classSessionId"
@@ -490,7 +483,7 @@ const AdminAbsenceEdit = () => {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
               >
-                <option value="">-- Selectează o sesiune --</option>
+                <option value="">{t('admin.absences.create.selectSessionPlaceholder')}</option>
                 {sessions.map((session) => (
                   <option key={session.id} value={session.id}>
                     {formatSessionLabel(session)}
@@ -510,11 +503,11 @@ const AdminAbsenceEdit = () => {
                   className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-500"
                 />
                 <label htmlFor="justified" className="ml-2 block text-sm text-gray-900">
-                  Absență motivată
+                  {t('admin.absences.create.justifiedAbsence')}
                 </label>
               </div>
               <p className="text-xs text-gray-500">
-                Marchează această opțiune dacă absența este motivată, sau debifează pentru a o demotiva.
+                {t('admin.absences.edit.justifiedNote')}
               </p>
             </div>
 
@@ -524,7 +517,7 @@ const AdminAbsenceEdit = () => {
                 onClick={() => navigate("/admin/absences")}
                 className="w-1/2 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
-                Anulează
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
@@ -537,12 +530,12 @@ const AdminAbsenceEdit = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Se procesează...
+                    {t('common.processing')}
                   </span>
                 ) : (
                   <>
                     <FaSave className="mr-2 h-4 w-4" />
-                    Salvează
+                    {t('common.save')}
                   </>
                 )}
               </button>

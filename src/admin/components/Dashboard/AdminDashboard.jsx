@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { 
   FaUsers, FaGraduationCap, FaSchool, FaCalendar, FaPlus, FaEye, 
   FaEdit, FaTrash, FaTimes, FaUserPlus, FaUtensils,
-  FaStar, FaFileAlt, FaCheckSquare
+  FaStar, FaFileAlt, FaCheckSquare, FaGlobe
 } from 'react-icons/fa';
 import axios from "../../../axiosConfig";
+import { useTranslation } from 'react-i18next';
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -31,31 +32,89 @@ const Modal = ({ isOpen, onClose, children }) => {
   );
 };
 
+const LanguageSwitcher = () => {
+  const { i18n } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const languages = [
+    { code: 'ro', name: 'Română', flag: '🇷🇴' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+  ];
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setIsOpen(false);
+  };
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+      >
+        <FaGlobe className="w-4 h-4 text-gray-600" />
+        <span className="text-sm font-medium text-gray-700">{currentLanguage.flag} {currentLanguage.name}</span>
+      </button>
+      
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+          {languages.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => changeLanguage(lang.code)}
+              className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2 ${
+                lang.code === i18n.language ? 'bg-gray-50' : ''
+              }`}
+            >
+              <span className="text-lg">{lang.flag}</span>
+              <span className="text-sm text-gray-700">{lang.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AdminDashboard = () => {
   const [selectedSection, setSelectedSection] = useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const handleGoToNextYear = async () => {
+    try {
+      const response = await axios.post("/api/year/start-new-year");
+      alert(t('admin.dashboard.yearAdvancedSuccess'));
+    } catch (err) {
+      console.error("Error advancing school year:", err);
+      alert(t('admin.dashboard.yearAdvancedError'));
+    }
+  };
 
   const sections = [
     {
       id: 'student',
-      title: 'Student/Parent',
+      title: t('admin.dashboard.sections.studentParent.title'),
       icon: FaUserPlus,
       color: 'bg-indigo-500',
       hoverColor: 'hover:bg-indigo-600',
       lightColor: 'bg-indigo-50',
       operations: [
         { 
-          name: 'Create Student/Parent', 
+          name: t('admin.dashboard.sections.studentParent.createStudent'),
           icon: FaPlus,
           path: '/admin/create-student'
         },
         { 
-          name: 'View Students', 
+          name: t('admin.dashboard.sections.studentParent.viewStudents'),
           icon: FaEye,
           path: '/admin/students'
         },
         { 
-          name: 'View Parents', 
+          name: t('admin.dashboard.sections.studentParent.viewParents'),
           icon: FaEye,
           path: '/admin/parents'
         }
@@ -63,19 +122,19 @@ const AdminDashboard = () => {
     },    
     {
       id: 'professor',
-      title: 'Professor',
+      title: t('admin.dashboard.sections.professor.title'),
       icon: FaGraduationCap,
       color: 'bg-emerald-500',
       hoverColor: 'hover:bg-emerald-600',
       lightColor: 'bg-emerald-50',
       operations: [
         { 
-          name: 'Create Professor', 
+          name: t('admin.dashboard.sections.professor.createProfessor'),
           icon: FaPlus,
           path: '/admin/create-teacher'
         },
         { 
-          name: 'View Professors', 
+          name: t('admin.dashboard.sections.professor.viewProfessors'),
           icon: FaEye,
           path: '/admin/teachers'
         }
@@ -83,24 +142,24 @@ const AdminDashboard = () => {
     },
     {
       id: 'class',
-      title: 'Class',
+      title: t('admin.dashboard.sections.class.title'),
       icon: FaSchool,
       color: 'bg-violet-500',
       hoverColor: 'hover:bg-violet-600',
       lightColor: 'bg-violet-50',
       operations: [
         { 
-          name: 'Create Class', 
+          name: t('admin.dashboard.sections.class.createClass'),
           icon: FaPlus,
           path: '/admin/create-class'
         },
         { 
-          name: 'View Classes', 
+          name: t('admin.dashboard.sections.class.viewClasses'),
           icon: FaEye,
           path: '/admin/classes'
         },
         { 
-          name: 'Go to Next Year', 
+          name: t('admin.dashboard.sections.class.goToNextYear'),
           icon: FaCalendar,
           action: () => handleGoToNextYear()
         }
@@ -108,19 +167,19 @@ const AdminDashboard = () => {
     },
     {
       id: 'timetable',
-      title: 'Timetable',
+      title: t('admin.dashboard.sections.timetable.title'),
       icon: FaCalendar,
       color: 'bg-rose-500',
       hoverColor: 'hover:bg-rose-600',
       lightColor: 'bg-rose-50',
       operations: [
         { 
-          name: 'Create Timetable', 
+          name: t('admin.dashboard.sections.timetable.createTimetable'),
           icon: FaPlus,
           path: '/admin/class-schedule'
         },
         { 
-          name: 'View Timetables', 
+          name: t('admin.dashboard.sections.timetable.viewTimetables'),
           icon: FaEye,
           path: '/admin/class-schedule'
         }
@@ -128,19 +187,19 @@ const AdminDashboard = () => {
     },
     {
       id: 'grades',
-      title: 'Grades',
+      title: t('admin.dashboard.sections.grades.title'),
       icon: FaStar,
       color: 'bg-yellow-500',
       hoverColor: 'hover:bg-yellow-600',
       lightColor: 'bg-yellow-50',
       operations: [
         { 
-          name: 'Create Grade', 
+          name: t('admin.dashboard.sections.grades.createGrade'),
           icon: FaPlus,
           path: '/admin/grades/create'
         },
         { 
-          name: 'Manage Grades', 
+          name: t('admin.dashboard.sections.grades.manageGrades'),
           icon: FaEye,
           path: '/admin/grades'
         }
@@ -148,24 +207,24 @@ const AdminDashboard = () => {
     },
     {
       id: 'absences',
-      title: 'Absences',
+      title: t('admin.dashboard.sections.absences.title'),
       icon: FaCalendar,
       color: 'bg-red-500',
       hoverColor: 'hover:bg-red-600',
       lightColor: 'bg-red-50',
       operations: [
         { 
-          name: 'Create Absence', 
+          name: t('admin.dashboard.sections.absences.createAbsence'),
           icon: FaPlus,
           path: '/admin/absences/create'
         },
         { 
-          name: 'Manage Absences', 
+          name: t('admin.dashboard.sections.absences.manageAbsences'),
           icon: FaEye,
           path: '/admin/absences'
         },
         { 
-          name: 'Justify Absences', 
+          name: t('admin.dashboard.sections.absences.justifyAbsences'),
           icon: FaCheckSquare,
           path: '/admin/absences/justify'
         }
@@ -173,14 +232,14 @@ const AdminDashboard = () => {
     },
     {
       id: 'catalog',
-      title: 'Catalog',
+      title: t('admin.dashboard.sections.catalog.title'),
       icon: FaFileAlt,
       color: 'bg-cyan-500',
       hoverColor: 'hover:bg-cyan-600',
       lightColor: 'bg-cyan-50',
       operations: [
         { 
-          name: 'View Catalog', 
+          name: t('admin.dashboard.sections.catalog.viewCatalog'),
           icon: FaEye,
           path: '/admin/catalog'
         }
@@ -188,14 +247,14 @@ const AdminDashboard = () => {
     },
     {
       id: 'pastStudents',
-      title: 'Past Students',
+      title: t('admin.dashboard.sections.pastStudents.title'),
       icon: FaGraduationCap,
       color: 'bg-blue-500',
       hoverColor: 'hover:bg-blue-600',
       lightColor: 'bg-blue-50',
       operations: [
         { 
-          name: 'View Past Students', 
+          name: t('admin.dashboard.sections.pastStudents.viewPastStudents'),
           icon: FaEye,
           path: '/admin/past-students'
         }
@@ -203,19 +262,19 @@ const AdminDashboard = () => {
     },
     {
       id: "chef",
-      title: "Bucătari",
+      title: t('admin.dashboard.sections.chefs.title'),
       icon: FaUtensils,
       color: "bg-orange-500",
       hoverColor: "hover:bg-orange-600",
       lightColor: "bg-orange-50",
       operations: [
         {
-          name: "Înregistrează Bucătar",
+          name: t('admin.dashboard.sections.chefs.registerChef'),
           icon: FaPlus,
           path: "/admin/create-chef",
         },
         {
-          name: "Vizualizează Bucătari",
+          name: t('admin.dashboard.sections.chefs.viewChefs'),
           icon: FaEye,
           path: "/admin/chefs",
         }
@@ -231,24 +290,17 @@ const AdminDashboard = () => {
     }
     setSelectedSection(null);
   };
-  
-
-  const handleGoToNextYear = async () => {
-    try {
-      const response = await axios.post("/api/year/start-new-year");
-      alert("Anul școlar a fost avansat cu succes!");
-    } catch (err) {
-      console.error("Eroare la avansarea anului școlar:", err);
-      alert("Eroare la avansarea anului școlar. Verificați logurile serverului.");
-    }
-  };
-  
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Panou de Administrare</h1>
-        <p className="text-gray-500 mb-8">Gestionează elevii, profesorii, clasele, notele și absențele</p>
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('admin.dashboard.title')}</h1>
+            <p className="text-gray-500">{t('admin.dashboard.subtitle')}</p>
+          </div>
+          <LanguageSwitcher />
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sections.map((section) => (
@@ -281,7 +333,7 @@ const AdminDashboard = () => {
                   <h2 className="text-2xl font-bold text-gray-900">
                     {selectedSection.title}
                   </h2>
-                  <p className="text-gray-500">Select an operation to continue</p>
+                  <p className="text-gray-500">{t('admin.dashboard.selectOperation')}</p>
                 </div>
               </div>
 

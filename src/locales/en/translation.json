@@ -1715,5 +1715,331 @@
     "notSpecified": "Not specified",
     "yes": "Yes",
     "no": "No"
+  }, 
+    "parent": {
+      "calendar": {
+      "title": "Child's Weekly Schedule",
+      "loading": "Loading your child's schedule...",
+      "noScheduleFound": "No schedule found for your child.",
+      "errorLoading": "Could not load schedule. Please try again.",
+      "childProfileAlt": "Child Profile",
+      "student": "Student",
+      "yourChild": "Your child",
+      "class": "Class",
+      "schedule": "Schedule",
+      "weekly": "Weekly",
+      "days": "Days",
+      "weeklyTimetable": "Weekly Timetable",
+      "subject": "Subject",
+      "unknownTeacher": "Unknown teacher",
+      "noDataAvailable": "No data available for this schedule",
+      "noClassesScheduled": "No classes scheduled",
+      "weekdays": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday"
+      }
+    },
+    "dashboard": {
+      "title": "Parent Dashboard",
+      "loading": "Loading your dashboard...",
+      "errorLoading": "Failed to load dashboard data. Please try again later.",
+      "somethingWentWrong": "Something went wrong",
+      "tryAgain": "Try Again",
+      "noChildData": {
+        "title": "No Child Data Found",
+        "message": "No data available for your child. Please contact the school administration."
+      },
+      "welcome": {
+        "title": "Welcome to the Parent Portal"
+      },
+      "childProfileAlt": "Child Profile",
+      "childInfo": {
+        "class": "Class",
+        "gpa": "GPA",
+        "absences": "Absences",
+        "grades": "Grades"
+      },
+      "quickActions": {
+        "title": "Parent Actions",
+        "viewProfile": "View Profile",
+        "academicReport": "Academic Report",
+        "mealServices": "Meal Services"
+      },
+      "parentInfo": {
+        "title": "Parent Information",
+        "email": "Email",
+        "phone": "Phone"
+      },
+      "academicOverview": {
+        "title": "Academic Overview",
+        "fullReport": "Full Report",
+        "currentGPA": "Current GPA",
+        "trend": "Trend",
+        "recentGrades": "Recent Grades",
+        "subject": "Subject",
+        "noGrades": "No grades recorded yet"
+      },
+      "trend": {
+        "improving": "Improving",
+        "needsAttention": "Needs attention",
+        "stable": "Stable"
+      },
+      "attendance": {
+        "title": "Attendance",
+        "excellent": "😄 Excellent attendance",
+        "needsAttention": "😐 Attendance needs attention",
+        "critical": "😱 Critical attendance issues",
+        "policy": "School policy requires at least 90% attendance. Please ensure your child attends all classes regularly."
+      },
+      "mealServices": {
+        "title": "School Meal Services",
+        "description": "Manage your child's meal plan and view their food orders. You can pre-order meals for the upcoming week.",
+        "viewMenu": "View Menu",
+        "manageMeals": "Manage Meals",
+        "recentOrders": "Recent Orders",
+        "noRecentOrders": "No recent food orders"
+      },
+      "communication": {
+        "title": "Teacher Communication",
+        "description": "Have questions about your child's progress? Send a message to their teacher.",
+        "messageSent": "Message sent successfully!",
+        "selectTeacher": "Select Teacher",
+        "selectTeacherPlaceholder": "Select a teacher",
+        "subjectPlaceholder": "Subject",
+        "messagePlaceholder": "Write your message here...",
+        "sendMessage": "Send Message"
+      },
+      "messages": {
+        "selectTeacherError": "Please select a teacher to send your message to.",
+        "fillFieldsError": "Please enter both subject and message content.",
+        "sendError": "Failed to send message. Please try again later."
+      }
+    },
+    "navbar": {
+      "dashboard": "Dashboard",
+      "profile": "Profile",
+      "academicReport": "Academic Report",
+      "calendar": "Calendar",
+      "mealServices": "Meal Services",
+      "parentPortal": "Parent Portal",
+      "schoolLogoAlt": "School Logo",
+      "parentOf": "Parent of: {{childName}}",
+      "loading": "Loading...",
+      "logout": "Logout"
+    },
+    "profile": {
+      "title": "Parent Profile",
+      "errorLoading": "Failed to load profile data. Please try again later.",
+      "errorUploadingImage": "Failed to upload image. Please try again.",
+      "loading": "Loading your profile...",
+      "somethingWentWrong": "Something went wrong",
+      "tryAgain": "Try Again",
+      "childProfileAlt": "Child Profile",
+      "change": "Change",
+      "parentName": "Parent Name",
+      "studentName": "Student Name",
+      "parentOf": "Parent of {{childName}}",
+      "contactEmail": "Contact Email",
+      "contactPhone": "Contact Phone",
+      "parentId": "Parent ID",
+      "viewDetails": "View Details",
+      "viewFullAcademicReport": "View Full Academic Report",
+      "trend": {
+        "improving": "Improving",
+        "needsAttention": "Needs attention",
+        "stable": "Stable"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "childInfo": "Child Information",
+        "teacherComm": "Teacher Communications"
+      },
+      "personalInfo": {
+        "title": "Personal Information",
+        "email": "Email",
+        "fatherName": "Father's Name",
+        "fatherEmail": "Father's Email",
+        "fatherPhone": "Father's Phone Number",
+        "motherName": "Mother's Name",
+        "motherEmail": "Mother's Email",
+        "motherPhone": "Mother's Phone Number",
+        "parentId": "Parent ID"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "viewAcademicReport": "View Academic Report"
+      },
+      "childOverview": {
+        "title": "Child Overview",
+        "classInfo": "Class: {{class}} | Specialization: {{specialization}}",
+        "classTeacher": "Class Teacher",
+        "totalAbsences": "Total Absences",
+        "studentId": "Student ID"
+      },
+      "academicPreview": {
+        "title": "Academic Performance Preview",
+        "overallGPA": "Overall GPA",
+        "outOf10": "Out of 10",
+        "absences": "Absences",
+        "totalThisYear": "Total absences this year",
+        "performanceTrend": "Performance Trend",
+        "basedOnRecent": "Based on recent grades",
+        "viewFullReport": "View Full Academic Report"
+      },
+      "teacherContacts": {
+        "title": "Teacher Contacts",
+        "noTeachers": "No teacher information available."
+      },
+      "childInfo": {
+        "title": "Child Information",
+        "studentIdLabel": "Student ID: {{id}}",
+        "email": "Email",
+        "phone": "Phone",
+        "dateOfBirth": "Date of Birth",
+        "studentId": "Student ID"
+      },
+      "educationalInfo": {
+        "title": "Educational Information",
+        "class": "Class",
+        "specialization": "Specialization",
+        "classTeacher": "Class Teacher",
+        "totalAbsences": "Total Absences"
+      },
+      "academicSummary": {
+        "title": "Academic Performance Summary",
+        "overallGPA": "Overall GPA",
+        "performanceTrend": "Performance Trend"
+      },
+      "recentGrades": {
+        "title": "Recent Grades",
+        "noGrades": "No recent grades available."
+      },
+      "teacherComm": {
+        "title": "Teacher Communications",
+        "contactTeachers": "Contact Teachers",
+        "sendEmailTo": "Send email to {{name}}",
+        "noTeachersAvailable": "No teachers available at this time."
+      }
+    },
+    "academicReport": {
+  "title": "Academic Performance Report",
+  "loading": "Loading academic report...",
+  "errorLoading": "Failed to load academic data. Please try again later.",
+  "errorTitle": "Error Loading Report",
+  "backToDashboard": "Back to Dashboard",
+  "printTitle": "Academic Performance Report",
+  "generatedOn": "Generated on",
+  "tabs": {
+    "overview": "Overview",
+    "grades": "Grades",
+    "absences": "Absences"
+  },
+  "overview": {
+    "performanceSummary": "Student Performance Summary",
+    "student": "Student",
+    "class": "Class",
+    "schoolYear": "School Year",
+    "reportDate": "Report Date",
+    "overallGPA": "Overall GPA",
+    "outOf10": "Out of 10",
+    "absences": "Absences",
+    "totalThisYear": "Total this year",
+    "performanceTrend": "Performance Trend",
+    "basedOnRecent": "Based on recent grades",
+    "subjectPerformance": "Subject Performance",
+    "teacher": "Teacher",
+    "recentGrades": "Recent grades"
+  },
+  "grades": {
+    "history": "Grade History",
+    "table": {
+      "subject": "Subject",
+      "date": "Date",
+      "grade": "Grade",
+      "teacher": "Teacher",
+      "comments": "Comments"
+    },
+    "noComments": "No comments",
+    "noGradesFound": "No grades found."
+  },
+  "absences": {
+    "title": "Child's Absences",
+    "unjustified": "Unjustified Absences",
+    "justified": "Justified Absences",
+    "attendanceStatus": "Attendance Status",
+    "excellent": "Excellent",
+    "good": "Good",
+    "atRisk": "At Risk",
+    "bySubject": "Unjustified Absences by Subject",
+    "noUnjustified": "No unjustified absences!",
+    "greatAttendance": "Great attendance record!",
+    "history": "Absence History",
+    "filter": {
+      "all": "All",
+      "unjustified": "Unjustified",
+      "justified": "Justified"
+    },
+    "noDetailedData": {
+      "title": "No Detailed Absence Data",
+      "message": "No absences have been recorded yet or the detailed absence data is not available."
+    },
+    "noAbsences": "No absences found",
+    "noFilteredAbsences": "No {{filter}} absences found",
+    "perfectAttendance": "Great job maintaining perfect attendance!",
+    "table": {
+      "subject": "Subject",
+      "teacher": "Teacher",
+      "date": "Date",
+      "status": "Status"
+    },
+    "sortBySubject": "Sort by Subject",
+    "sortByDate": "Sort by Date",
+    "unknownSubject": "Unknown Subject",
+    "unknownTeacher": "Unknown Teacher",
+    "unknownDate": "Unknown Date"
+  },
+  "trend": {
+    "improving": "Improving",
+    "needsAttention": "Needs attention",
+    "stable": "Stable"
+  },
+  "teacherContact": {
+    "title": "Teacher Contact Information",
+    "noInfo": "No teacher information available."
+  },
+  "pdf": {
+    "fileNamePart": "Academic_Report",
+    "libraryError": "PDF library not properly loaded. Please refresh and try again.",
+    "documentTitle": "Academic Report",
+    "documentSubject": "Academic Performance Report",
+    "author": "School Management System",
+    "creator": "School Portal",
+    "title": "Academic Performance Report",
+    "student": "Student",
+    "class": "Class",
+    "dateGenerated": "Date Generated",
+    "schoolYear": "School Year",
+    "performanceSummary": "Performance Summary",
+    "overallGPA": "Overall GPA",
+    "totalAbsences": "Total Absences",
+    "gradeHistory": "Grade History",
+    "table": {
+      "subject": "Subject",
+      "date": "Date",
+      "grade": "Grade",
+      "teacher": "Teacher"
+    },
+    "pageInfo": "Page {{current}} of {{total}}",
+    "savedAs": "PDF saved as \"{{fileName}}\"",
+    "generateError": "Failed to generate PDF. Please try again.",
+    "loadError": "Failed to load PDF libraries properly",
+    "loadLibrariesError": "Failed to load PDF generation libraries",
+    "generating": "Generating...",
+    "saveButton": "Save as PDF"
+  }
+}
   }
 }

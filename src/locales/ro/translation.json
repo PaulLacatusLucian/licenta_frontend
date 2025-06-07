@@ -1715,5 +1715,331 @@
     "notSpecified": "Nespecificat",
     "yes": "Da",
     "no": "Nu"
+  },
+    "parent": {
+       "calendar": {
+      "title": "Orarul săptămânal al copilului",
+      "loading": "Se încarcă orarul copilului dumneavoastră...",
+      "noScheduleFound": "Nu a fost găsit niciun orar pentru copilul dumneavoastră.",
+      "errorLoading": "Nu am putut încărca orarul. Vă rugăm să încercați din nou.",
+      "childProfileAlt": "Profil copil",
+      "student": "Elev",
+      "yourChild": "Copilul dumneavoastră",
+      "class": "Clasă",
+      "schedule": "Orar",
+      "weekly": "Săptămânal",
+      "days": "Zile",
+      "weeklyTimetable": "Orar săptămânal",
+      "subject": "Materie",
+      "unknownTeacher": "Profesor necunoscut",
+      "noDataAvailable": "Nu există date disponibile pentru acest orar",
+      "noClassesScheduled": "Nicio oră programată",
+      "weekdays": {
+        "monday": "Luni",
+        "tuesday": "Marți",
+        "wednesday": "Miercuri",
+        "thursday": "Joi",
+        "friday": "Vineri"
+      }
+    },
+    "dashboard": {
+      "title": "Tablou de bord părinte",
+      "loading": "Se încarcă tabloul de bord...",
+      "errorLoading": "Nu s-au putut încărca datele tabloului de bord. Vă rugăm să încercați din nou mai târziu.",
+      "somethingWentWrong": "Ceva nu a mers bine",
+      "tryAgain": "Încearcă din nou",
+      "noChildData": {
+        "title": "Nu s-au găsit date despre copil",
+        "message": "Nu sunt disponibile date pentru copilul dumneavoastră. Vă rugăm să contactați administrația școlii."
+      },
+      "welcome": {
+        "title": "Bine ați venit în Portalul Părinților"
+      },
+      "childProfileAlt": "Profil copil",
+      "childInfo": {
+        "class": "Clasă",
+        "gpa": "Media",
+        "absences": "Absențe",
+        "grades": "Note"
+      },
+      "quickActions": {
+        "title": "Acțiuni părinte",
+        "viewProfile": "Vezi profil",
+        "academicReport": "Raport academic",
+        "mealServices": "Servicii masă"
+      },
+      "parentInfo": {
+        "title": "Informații părinte",
+        "email": "Email",
+        "phone": "Telefon"
+      },
+      "academicOverview": {
+        "title": "Prezentare generală academică",
+        "fullReport": "Raport complet",
+        "currentGPA": "Media curentă",
+        "trend": "Tendință",
+        "recentGrades": "Note recente",
+        "subject": "Materie",
+        "noGrades": "Nu sunt înregistrate note încă"
+      },
+      "trend": {
+        "improving": "În îmbunătățire",
+        "needsAttention": "Necesită atenție",
+        "stable": "Stabil"
+      },
+      "attendance": {
+        "title": "Prezență",
+        "excellent": "😄 Prezență excelentă",
+        "needsAttention": "😐 Prezența necesită atenție",
+        "critical": "😱 Probleme critice de prezență",
+        "policy": "Politica școlii necesită cel puțin 90% prezență. Vă rugăm să vă asigurați că copilul dumneavoastră participă regulat la toate orele."
+      },
+      "mealServices": {
+        "title": "Servicii de masă școlară",
+        "description": "Gestionați planul de masă al copilului dumneavoastră și vizualizați comenzile de mâncare. Puteți pre-comanda mese pentru săptămâna următoare.",
+        "viewMenu": "Vezi meniul",
+        "manageMeals": "Gestionează mesele",
+        "recentOrders": "Comenzi recente",
+        "noRecentOrders": "Nu există comenzi recente de mâncare"
+      },
+      "communication": {
+        "title": "Comunicare cu profesorii",
+        "description": "Aveți întrebări despre progresul copilului dumneavoastră? Trimiteți un mesaj profesorului.",
+        "messageSent": "Mesaj trimis cu succes!",
+        "selectTeacher": "Selectați profesorul",
+        "selectTeacherPlaceholder": "Selectați un profesor",
+        "subjectPlaceholder": "Subiect",
+        "messagePlaceholder": "Scrieți mesajul dumneavoastră aici...",
+        "sendMessage": "Trimite mesaj"
+      },
+      "messages": {
+        "selectTeacherError": "Vă rugăm să selectați un profesor pentru a trimite mesajul.",
+        "fillFieldsError": "Vă rugăm să introduceți atât subiectul, cât și conținutul mesajului.",
+        "sendError": "Nu s-a putut trimite mesajul. Vă rugăm să încercați din nou mai târziu."
+      }
+    },
+    "navbar": {
+      "dashboard": "Tablou de bord",
+      "profile": "Profil",
+      "academicReport": "Raport academic",
+      "calendar": "Calendar",
+      "mealServices": "Servicii masă",
+      "parentPortal": "Portal Părinți",
+      "schoolLogoAlt": "Logo școală",
+      "parentOf": "Părinte al: {{childName}}",
+      "loading": "Se încarcă...",
+      "logout": "Deconectare"
+    },
+    "profile": {
+      "title": "Profil părinte",
+      "errorLoading": "Eroare la încărcarea datelor profilului. Vă rugăm să încercați din nou.",
+      "errorUploadingImage": "Eroare la încărcarea imaginii. Vă rugăm să încercați din nou.",
+      "loading": "Se încarcă profilul...",
+      "somethingWentWrong": "Ceva nu a mers bine",
+      "tryAgain": "Încearcă din nou",
+      "childProfileAlt": "Profil copil",
+      "change": "Schimbă",
+      "parentName": "Nume părinte",
+      "studentName": "Nume elev",
+      "parentOf": "Părinte al {{childName}}",
+      "contactEmail": "Email de contact",
+      "contactPhone": "Telefon de contact",
+      "parentId": "ID părinte",
+      "viewDetails": "Vezi detalii",
+      "viewFullAcademicReport": "Vezi raportul academic complet",
+      "trend": {
+        "improving": "În îmbunătățire",
+        "needsAttention": "Necesită atenție",
+        "stable": "Stabil"
+      },
+      "tabs": {
+        "overview": "Prezentare generală",
+        "childInfo": "Informații copil",
+        "teacherComm": "Comunicări profesori"
+      },
+      "personalInfo": {
+        "title": "Informații personale",
+        "email": "Email",
+        "fatherName": "Numele tatălui",
+        "fatherEmail": "Email-ul tatălui",
+        "fatherPhone": "Telefonul tatălui",
+        "motherName": "Numele mamei",
+        "motherEmail": "Email-ul mamei",
+        "motherPhone": "Telefonul mamei",
+        "parentId": "ID părinte"
+      },
+      "quickActions": {
+        "title": "Acțiuni rapide",
+        "viewAcademicReport": "Vezi raportul academic"
+      },
+      "childOverview": {
+        "title": "Prezentare generală copil",
+        "classInfo": "Clasă: {{class}} | Specializare: {{specialization}}",
+        "classTeacher": "Diriginte",
+        "totalAbsences": "Total absențe",
+        "studentId": "ID elev"
+      },
+      "academicPreview": {
+        "title": "Previzualizare performanță academică",
+        "overallGPA": "Media generală",
+        "outOf10": "Din 10",
+        "absences": "Absențe",
+        "totalThisYear": "Total absențe în acest an",
+        "performanceTrend": "Tendință performanță",
+        "basedOnRecent": "Bazat pe notele recente",
+        "viewFullReport": "Vezi raportul academic complet"
+      },
+      "teacherContacts": {
+        "title": "Contacte profesori",
+        "noTeachers": "Nu sunt disponibile informații despre profesori."
+      },
+      "childInfo": {
+        "title": "Informații copil",
+        "studentIdLabel": "ID elev: {{id}}",
+        "email": "Email",
+        "phone": "Telefon",
+        "dateOfBirth": "Data nașterii",
+        "studentId": "ID elev"
+      },
+      "educationalInfo": {
+        "title": "Informații educaționale",
+        "class": "Clasă",
+        "specialization": "Specializare",
+        "classTeacher": "Diriginte",
+        "totalAbsences": "Total absențe"
+      },
+      "academicSummary": {
+        "title": "Rezumat performanță academică",
+        "overallGPA": "Media generală",
+        "performanceTrend": "Tendință performanță"
+      },
+      "recentGrades": {
+        "title": "Note recente",
+        "noGrades": "Nu sunt disponibile note recente."
+      },
+      "teacherComm": {
+        "title": "Comunicări cu profesorii",
+        "contactTeachers": "Contactează profesorii",
+        "sendEmailTo": "Trimite email către {{name}}",
+        "noTeachersAvailable": "Nu sunt profesori disponibili în acest moment."
+      }
+    },
+    "academicReport": {
+  "title": "Raport de performanță academică",
+  "loading": "Se încarcă raportul academic...",
+  "errorLoading": "Nu s-au putut încărca datele academice. Vă rugăm să încercați din nou mai târziu.",
+  "errorTitle": "Eroare la încărcarea raportului",
+  "backToDashboard": "Înapoi la tabloul de bord",
+  "printTitle": "Raport de performanță academică",
+  "generatedOn": "Generat pe",
+  "tabs": {
+    "overview": "Prezentare generală",
+    "grades": "Note",
+    "absences": "Absențe"
+  },
+  "overview": {
+    "performanceSummary": "Rezumat performanță elev",
+    "student": "Elev",
+    "class": "Clasă",
+    "schoolYear": "An școlar",
+    "reportDate": "Data raportului",
+    "overallGPA": "Media generală",
+    "outOf10": "Din 10",
+    "absences": "Absențe",
+    "totalThisYear": "Total în acest an",
+    "performanceTrend": "Tendință performanță",
+    "basedOnRecent": "Bazat pe notele recente",
+    "subjectPerformance": "Performanță pe materii",
+    "teacher": "Profesor",
+    "recentGrades": "Note recente"
+  },
+  "grades": {
+    "history": "Istoric note",
+    "table": {
+      "subject": "Materie",
+      "date": "Dată",
+      "grade": "Notă",
+      "teacher": "Profesor",
+      "comments": "Comentarii"
+    },
+    "noComments": "Fără comentarii",
+    "noGradesFound": "Nu s-au găsit note."
+  },
+  "absences": {
+    "title": "Absențele copilului",
+    "unjustified": "Absențe nemotivate",
+    "justified": "Absențe motivate",
+    "attendanceStatus": "Status prezență",
+    "excellent": "Excelent",
+    "good": "Bun",
+    "atRisk": "La risc",
+    "bySubject": "Absențe nemotivate pe materii",
+    "noUnjustified": "Fără absențe nemotivate!",
+    "greatAttendance": "Prezență excelentă!",
+    "history": "Istoric absențe",
+    "filter": {
+      "all": "Toate",
+      "unjustified": "Nemotivate",
+      "justified": "Motivate"
+    },
+    "noDetailedData": {
+      "title": "Nu există date detaliate despre absențe",
+      "message": "Nu au fost înregistrate absențe încă sau datele detaliate nu sunt disponibile."
+    },
+    "noAbsences": "Nu s-au găsit absențe",
+    "noFilteredAbsences": "Nu s-au găsit absențe {{filter}}",
+    "perfectAttendance": "Felicitări pentru menținerea prezenței perfecte!",
+    "table": {
+      "subject": "Materie",
+      "teacher": "Profesor",
+      "date": "Dată",
+      "status": "Status"
+    },
+    "sortBySubject": "Sortare după materie",
+    "sortByDate": "Sortare după dată",
+    "unknownSubject": "Materie necunoscută",
+    "unknownTeacher": "Profesor necunoscut",
+    "unknownDate": "Dată necunoscută"
+  },
+  "trend": {
+    "improving": "În îmbunătățire",
+    "needsAttention": "Necesită atenție",
+    "stable": "Stabil"
+  },
+  "teacherContact": {
+    "title": "Informații contact profesori",
+    "noInfo": "Nu sunt disponibile informații despre profesori."
+  },
+  "pdf": {
+    "fileNamePart": "Raport_Academic",
+    "libraryError": "Biblioteca PDF nu a fost încărcată corect. Vă rugăm reîmprospătați și încercați din nou.",
+    "documentTitle": "Raport Academic",
+    "documentSubject": "Raport de performanță academică",
+    "author": "Sistem de management școlar",
+    "creator": "Portal școlar",
+    "title": "Raport de performanță academică",
+    "student": "Elev",
+    "class": "Clasă",
+    "dateGenerated": "Data generării",
+    "schoolYear": "An școlar",
+    "performanceSummary": "Rezumat performanță",
+    "overallGPA": "Media generală",
+    "totalAbsences": "Total absențe",
+    "gradeHistory": "Istoric note",
+    "table": {
+      "subject": "Materie",
+      "date": "Dată",
+      "grade": "Notă",
+      "teacher": "Profesor"
+    },
+    "pageInfo": "Pagina {{current}} din {{total}}",
+    "savedAs": "PDF salvat ca \"{{fileName}}\"",
+    "generateError": "Nu s-a putut genera PDF-ul. Vă rugăm să încercați din nou.",
+    "loadError": "Nu s-au putut încărca bibliotecile PDF corect",
+    "loadLibrariesError": "Nu s-au putut încărca bibliotecile pentru generarea PDF",
+    "generating": "Se generează...",
+    "saveButton": "Salvează ca PDF"
+  }
+}
   }
 }

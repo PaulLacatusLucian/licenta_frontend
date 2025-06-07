@@ -1711,5 +1711,336 @@
     "notSpecified": "Nicht angegeben",
     "yes": "Ja",
     "no": "Nein"
+  },
+  "parent": {
+    "profile": {
+      "title": "Elternprofil",
+      "errorLoading": "Fehler beim Laden der Profildaten. Bitte versuchen Sie es erneut.",
+      "errorUploadingImage": "Fehler beim Hochladen des Bildes. Bitte versuchen Sie es erneut.",
+      "loading": "Profil wird geladen...",
+      "somethingWentWrong": "Etwas ist schief gelaufen",
+      "tryAgain": "Erneut versuchen",
+      "childProfileAlt": "Kinderprofil",
+      "change": "Ändern",
+      "parentName": "Elternname",
+      "studentName": "Schülername",
+      "parentOf": "Elternteil von {{childName}}",
+      "contactEmail": "Kontakt-E-Mail",
+      "contactPhone": "Kontakttelefon",
+      "parentId": "Eltern-ID",
+      "viewDetails": "Details anzeigen",
+      "viewFullAcademicReport": "Vollständigen Schulbericht anzeigen",
+      "trend": {
+        "improving": "Verbesserung",
+        "needsAttention": "Benötigt Aufmerksamkeit",
+        "stable": "Stabil"
+      },
+      "tabs": {
+        "overview": "Übersicht",
+        "childInfo": "Kinderinformationen",
+        "teacherComm": "Lehrerkommunikation"
+      },
+      "personalInfo": {
+        "title": "Persönliche Informationen",
+        "email": "E-Mail",
+        "fatherName": "Name des Vaters",
+        "fatherEmail": "E-Mail des Vaters",
+        "fatherPhone": "Telefon des Vaters",
+        "motherName": "Name der Mutter",
+        "motherEmail": "E-Mail der Mutter",
+        "motherPhone": "Telefon der Mutter",
+        "parentId": "Eltern-ID"
+      },
+      "quickActions": {
+        "title": "Schnellaktionen",
+        "viewAcademicReport": "Schulbericht anzeigen"
+      },
+      "childOverview": {
+        "title": "Kinderübersicht",
+        "classInfo": "Klasse: {{class}} | Spezialisierung: {{specialization}}",
+        "classTeacher": "Klassenlehrer",
+        "totalAbsences": "Gesamtabwesenheiten",
+        "studentId": "Schüler-ID"
+      },
+      "academicPreview": {
+        "title": "Vorschau der akademischen Leistung",
+        "overallGPA": "Gesamtdurchschnitt",
+        "outOf10": "Von 10",
+        "absences": "Abwesenheiten",
+        "totalThisYear": "Gesamt dieses Jahr",
+        "performanceTrend": "Leistungstrend",
+        "basedOnRecent": "Basierend auf aktuellen Noten",
+        "viewFullReport": "Vollständigen Schulbericht anzeigen"
+      },
+      "teacherContacts": {
+        "title": "Lehrerkontakte",
+        "noTeachers": "Keine Lehrerinformationen verfügbar."
+      },
+      "childInfo": {
+        "title": "Kinderinformationen",
+        "studentIdLabel": "Schüler-ID: {{id}}",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "dateOfBirth": "Geburtsdatum",
+        "studentId": "Schüler-ID"
+      },
+      "educationalInfo": {
+        "title": "Bildungsinformationen",
+        "class": "Klasse",
+        "specialization": "Spezialisierung",
+        "classTeacher": "Klassenlehrer",
+        "totalAbsences": "Gesamtabwesenheiten"
+      },
+      "academicSummary": {
+        "title": "Zusammenfassung der akademischen Leistung",
+        "overallGPA": "Gesamtdurchschnitt",
+        "performanceTrend": "Leistungstrend"
+      },
+      "recentGrades": {
+        "title": "Aktuelle Noten",
+        "noGrades": "Keine aktuellen Noten verfügbar."
+      },
+      "teacherComm": {
+        "title": "Kommunikation mit Lehrern",
+        "contactTeachers": "Lehrer kontaktieren",
+        "sendEmailTo": "E-Mail an {{name}} senden",
+        "noTeachersAvailable": "Derzeit sind keine Lehrer verfügbar."
+      }
+    },
+    "calendar": {
+      "title": "Wochenstundenplan des Kindes",
+      "loading": "Stundenplan Ihres Kindes wird geladen...",
+      "noScheduleFound": "Kein Stundenplan für Ihr Kind gefunden.",
+      "errorLoading": "Stundenplan konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+      "childProfileAlt": "Kinderprofil",
+      "student": "Schüler",
+      "yourChild": "Ihr Kind",
+      "class": "Klasse",
+      "schedule": "Stundenplan",
+      "weekly": "Wöchentlich",
+      "days": "Tage",
+      "weeklyTimetable": "Wochenstundenplan",
+      "subject": "Fach",
+      "unknownTeacher": "Unbekannter Lehrer",
+      "noDataAvailable": "Keine Daten für diesen Stundenplan verfügbar",
+      "noClassesScheduled": "Keine Unterrichtsstunden geplant",
+      "weekdays": {
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag"
+      }
+    },
+    "dashboard": {
+      "title": "Eltern-Dashboard",
+      "loading": "Ihr Dashboard wird geladen...",
+      "errorLoading": "Dashboard-Daten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+      "somethingWentWrong": "Etwas ist schief gelaufen",
+      "tryAgain": "Erneut versuchen",
+      "noChildData": {
+        "title": "Keine Kinderdaten gefunden",
+        "message": "Keine Daten für Ihr Kind verfügbar. Bitte kontaktieren Sie die Schulverwaltung."
+      },
+      "welcome": {
+        "title": "Willkommen im Elternportal"
+      },
+      "childProfileAlt": "Kinderprofil",
+      "childInfo": {
+        "class": "Klasse",
+        "gpa": "Notendurchschnitt",
+        "absences": "Abwesenheiten",
+        "grades": "Noten"
+      },
+      "quickActions": {
+        "title": "Elternaktionen",
+        "viewProfile": "Profil anzeigen",
+        "academicReport": "Schulbericht",
+        "mealServices": "Essensservice"
+      },
+      "parentInfo": {
+        "title": "Elterninformationen",
+        "email": "E-Mail",
+        "phone": "Telefon"
+      },
+      "academicOverview": {
+        "title": "Akademische Übersicht",
+        "fullReport": "Vollständiger Bericht",
+        "currentGPA": "Aktueller Notendurchschnitt",
+        "trend": "Trend",
+        "recentGrades": "Aktuelle Noten",
+        "subject": "Fach",
+        "noGrades": "Noch keine Noten erfasst"
+      },
+      "trend": {
+        "improving": "Verbesserung",
+        "needsAttention": "Benötigt Aufmerksamkeit",
+        "stable": "Stabil"
+      },
+      "attendance": {
+        "title": "Anwesenheit",
+        "excellent": "😄 Ausgezeichnete Anwesenheit",
+        "needsAttention": "😐 Anwesenheit benötigt Aufmerksamkeit",
+        "critical": "😱 Kritische Anwesenheitsprobleme",
+        "policy": "Die Schulrichtlinie erfordert mindestens 90% Anwesenheit. Bitte stellen Sie sicher, dass Ihr Kind regelmäßig alle Unterrichtsstunden besucht."
+      },
+      "mealServices": {
+        "title": "Schulessensservice",
+        "description": "Verwalten Sie den Essensplan Ihres Kindes und sehen Sie seine Essensbestellungen ein. Sie können Mahlzeiten für die kommende Woche vorbestellen.",
+        "viewMenu": "Menü anzeigen",
+        "manageMeals": "Mahlzeiten verwalten",
+        "recentOrders": "Letzte Bestellungen",
+        "noRecentOrders": "Keine aktuellen Essensbestellungen"
+      },
+      "communication": {
+        "title": "Lehrerkommunikation",
+        "description": "Haben Sie Fragen zum Fortschritt Ihres Kindes? Senden Sie eine Nachricht an den Lehrer.",
+        "messageSent": "Nachricht erfolgreich gesendet!",
+        "selectTeacher": "Lehrer auswählen",
+        "selectTeacherPlaceholder": "Wählen Sie einen Lehrer",
+        "subjectPlaceholder": "Betreff",
+        "messagePlaceholder": "Schreiben Sie hier Ihre Nachricht...",
+        "sendMessage": "Nachricht senden"
+      },
+      "messages": {
+        "selectTeacherError": "Bitte wählen Sie einen Lehrer aus, um Ihre Nachricht zu senden.",
+        "fillFieldsError": "Bitte geben Sie sowohl Betreff als auch Nachrichteninhalt ein.",
+        "sendError": "Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es später erneut."
+      }
+    },
+    "navbar": {
+      "dashboard": "Dashboard",
+      "profile": "Profil",
+      "academicReport": "Schulbericht",
+      "calendar": "Kalender",
+      "mealServices": "Essensservice",
+      "parentPortal": "Elternportal",
+      "schoolLogoAlt": "Schullogo",
+      "parentOf": "Elternteil von: {{childName}}",
+      "loading": "Wird geladen...",
+      "logout": "Abmelden"
+    },
+    "academicReport": {
+  "title": "Akademischer Leistungsbericht",
+  "loading": "Akademischer Bericht wird geladen...",
+  "errorLoading": "Akademische Daten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+  "errorTitle": "Fehler beim Laden des Berichts",
+  "backToDashboard": "Zurück zum Dashboard",
+  "printTitle": "Akademischer Leistungsbericht",
+  "generatedOn": "Erstellt am",
+  "tabs": {
+    "overview": "Übersicht",
+    "grades": "Noten",
+    "absences": "Abwesenheiten"
+  },
+  "overview": {
+    "performanceSummary": "Zusammenfassung der Schülerleistung",
+    "student": "Schüler",
+    "class": "Klasse",
+    "schoolYear": "Schuljahr",
+    "reportDate": "Berichtsdatum",
+    "overallGPA": "Gesamtdurchschnitt",
+    "outOf10": "Von 10",
+    "absences": "Abwesenheiten",
+    "totalThisYear": "Gesamt dieses Jahr",
+    "performanceTrend": "Leistungstrend",
+    "basedOnRecent": "Basierend auf aktuellen Noten",
+    "subjectPerformance": "Leistung nach Fächern",
+    "teacher": "Lehrer",
+    "recentGrades": "Aktuelle Noten"
+  },
+  "grades": {
+    "history": "Notenverlauf",
+    "table": {
+      "subject": "Fach",
+      "date": "Datum",
+      "grade": "Note",
+      "teacher": "Lehrer",
+      "comments": "Kommentare"
+    },
+    "noComments": "Keine Kommentare",
+    "noGradesFound": "Keine Noten gefunden."
+  },
+  "absences": {
+    "title": "Abwesenheiten des Kindes",
+    "unjustified": "Unentschuldigte Abwesenheiten",
+    "justified": "Entschuldigte Abwesenheiten",
+    "attendanceStatus": "Anwesenheitsstatus",
+    "excellent": "Ausgezeichnet",
+    "good": "Gut",
+    "atRisk": "Gefährdet",
+    "bySubject": "Unentschuldigte Abwesenheiten nach Fächern",
+    "noUnjustified": "Keine unentschuldigten Abwesenheiten!",
+    "greatAttendance": "Hervorragende Anwesenheit!",
+    "history": "Abwesenheitsverlauf",
+    "filter": {
+      "all": "Alle",
+      "unjustified": "Unentschuldigt",
+      "justified": "Entschuldigt"
+    },
+    "noDetailedData": {
+      "title": "Keine detaillierten Abwesenheitsdaten",
+      "message": "Es wurden noch keine Abwesenheiten erfasst oder die detaillierten Daten sind nicht verfügbar."
+    },
+    "noAbsences": "Keine Abwesenheiten gefunden",
+    "noFilteredAbsences": "Keine {{filter}} Abwesenheiten gefunden",
+    "perfectAttendance": "Großartige Leistung bei der Aufrechterhaltung perfekter Anwesenheit!",
+    "table": {
+      "subject": "Fach",
+      "teacher": "Lehrer",
+      "date": "Datum",
+      "status": "Status"
+    },
+    "sortBySubject": "Nach Fach sortieren",
+    "sortByDate": "Nach Datum sortieren",
+    "unknownSubject": "Unbekanntes Fach",
+    "unknownTeacher": "Unbekannter Lehrer",
+    "unknownDate": "Unbekanntes Datum"
+  },
+  "trend": {
+    "improving": "Verbesserung",
+    "needsAttention": "Benötigt Aufmerksamkeit",
+    "stable": "Stabil"
+  },
+  "teacherContact": {
+    "title": "Lehrerkontaktinformationen",
+    "noInfo": "Keine Lehrerinformationen verfügbar."
+  },
+  "pdf": {
+    "fileNamePart": "Akademischer_Bericht",
+    "libraryError": "PDF-Bibliothek nicht ordnungsgemäß geladen. Bitte aktualisieren und erneut versuchen.",
+    "documentTitle": "Akademischer Bericht",
+    "documentSubject": "Akademischer Leistungsbericht",
+    "author": "Schulverwaltungssystem",
+    "creator": "Schulportal",
+    "title": "Akademischer Leistungsbericht",
+    "student": "Schüler",
+    "class": "Klasse",
+    "dateGenerated": "Erstellungsdatum",
+    "schoolYear": "Schuljahr",
+    "performanceSummary": "Leistungszusammenfassung",
+    "overallGPA": "Gesamtdurchschnitt",
+    "totalAbsences": "Gesamtabwesenheiten",
+    "gradeHistory": "Notenverlauf",
+    "table": {
+      "subject": "Fach",
+      "date": "Datum",
+      "grade": "Note",
+      "teacher": "Lehrer"
+    },
+    "pageInfo": "Seite {{current}} von {{total}}",
+    "savedAs": "PDF gespeichert als \"{{fileName}}\"",
+    "generateError": "PDF konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+    "loadError": "PDF-Bibliotheken konnten nicht ordnungsgemäß geladen werden",
+    "loadLibrariesError": "PDF-Generierungsbibliotheken konnten nicht geladen werden",
+    "generating": "Wird erstellt...",
+    "saveButton": "Als PDF speichern"
+  }
+}
+  },
+  "common": {
+    "notAvailable": "N.V.",
+    "notAssigned": "Nicht zugewiesen",
+    "locale": "de-DE"
   }
 }

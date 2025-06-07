@@ -21,14 +21,16 @@ import {
   FaCheckCircle,
   FaFilter
 } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 import ParentNavbar from "../ParentNavbar";
 import StructuredPDFButton from "./StructuredPDFExport";
 
 const AcademicReportPage = () => {
+  const { t, i18n } = useTranslation();
   const [studentData, setStudentData] = useState(null);
   const [grades, setGrades] = useState([]);
-  const [absences, setAbsences] = useState([]);  // Modificat pentru a fi array
-  const [absencesTotal, setAbsencesTotal] = useState(0);  // Total absențe pentru overview
+  const [absences, setAbsences] = useState([]);  // Array für detaillierte Abwesenheiten
+  const [absencesTotal, setAbsencesTotal] = useState(0);  // Gesamtabwesenheiten für Übersicht
   const [teachers, setTeachers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,7 +39,7 @@ const AcademicReportPage = () => {
   const [activeTab, setActiveTab] = useState("overview"); // "overview", "grades", "absences"
   const [parentData, setParentData] = useState(null);
   
-  // State pentru absențe
+  // State für Abwesenheiten
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [filter, setFilter] = useState("all"); // "all", "justified", "unjustified"
   
@@ -51,6 +53,14 @@ const AcademicReportPage = () => {
     setTimeout(() => setNotification(null), 3000);
   };
 
+  // Funktion zur Übersetzung von Fächern
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
+
   useEffect(() => {
     const token = Cookies.get("jwt-token");
     if (!token) {
@@ -62,7 +72,7 @@ const AcademicReportPage = () => {
       try {
         setIsLoading(true);
         
-        // Fetch all required data in parallel for better performance
+        // Lade alle erforderlichen Daten parallel für bessere Leistung
         const [
           parentResponse, 
           studentResponse, 
@@ -73,17 +83,17 @@ const AcademicReportPage = () => {
           axios.get('/parents/me'),
           axios.get('/parents/me/child'),
           axios.get('/parents/me/child/grades'),
-          axios.get('/parents/child/total-absences'),  // Endpoint pentru total absențe
+          axios.get('/parents/child/total-absences'),  // Endpoint für Gesamtabwesenheiten
           axios.get('/parents/me/child/teachers')
         ]);
         
         setParentData(parentResponse.data);
         setStudentData(studentResponse.data);
         setGrades(gradesResponse.data || []);
-        setAbsencesTotal(totalAbsencesResponse.data?.total || 0);  // Setăm totalul inițial
+        setAbsencesTotal(totalAbsencesResponse.data?.total || 0);  // Setze Gesamtzahl initial
         setTeachers(teachersResponse.data || []);
 
-        // Când se încarcă tab-ul de absențe, facem un request separat pentru detalii
+        // Wenn der Abwesenheiten-Tab geladen wird, mache einen separaten Request für Details
         if (activeTab === "absences") {
           await fetchDetailedAbsences();
         }
@@ -91,53 +101,53 @@ const AcademicReportPage = () => {
         setError(null);
       } catch (err) {
         console.error("Failed to fetch academic data:", err);
-        setError("Failed to load academic data. Please try again later.");
+        setError(t('parent.academicReport.errorLoading'));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [navigate, activeTab]);
+  }, [navigate, activeTab, t]);
 
-  // Funcție separată pentru a încărca absențele detaliate
+  // Separate Funktion zum Laden detaillierter Abwesenheiten
   const fetchDetailedAbsences = async () => {
     try {
-      // Aici folosim noul endpoint care returnează lista detaliată
+      // Hier verwenden wir den neuen Endpoint, der die detaillierte Liste zurückgibt
       const detailedAbsencesResponse = await axios.get('/parents/me/child/detailed-absences');
       setAbsences(detailedAbsencesResponse.data || []);
-      console.log("Absențe detaliate încărcate:", detailedAbsencesResponse.data);
+      console.log("Detaillierte Abwesenheiten geladen:", detailedAbsencesResponse.data);
     } catch (error) {
       console.error("Error fetching detailed absences:", error);
-      // Inițializăm cu array gol în caz de eroare
+      // Initialisiere mit leerem Array bei Fehler
       setAbsences([]);
     }
   };
 
-  // Încărcăm absențele detaliate când se schimbă tabul
+  // Lade detaillierte Abwesenheiten wenn Tab gewechselt wird
   useEffect(() => {
     if (activeTab === "absences" && !isLoading) {
       fetchDetailedAbsences();
     }
   }, [activeTab, isLoading]);
 
-  // Calculăm doar absențele nemotivate pentru statistici
+  // Berechne nur unentschuldigte Abwesenheiten für Statistiken
   const unjustifiedAbsences = useMemo(() => {
     return Array.isArray(absences) ? absences.filter(absence => !absence.justified) : [];
   }, [absences]);
 
-  // Calculăm absențele motivate separat
+  // Berechne entschuldigte Abwesenheiten separat
   const justifiedAbsences = useMemo(() => {
     return Array.isArray(absences) ? absences.filter(absence => absence.justified) : [];
   }, [absences]);
 
-  // Subiecte cu absențe nemotivate
+  // Fächer mit unentschuldigten Abwesenheiten
   const subjectAbsences = useMemo(() => {
     if (!Array.isArray(absences) || absences.length === 0) return [];
     
-    // Folosim doar absențele nemotivate pentru statistici pe materii
+    // Verwende nur unentschuldigte Abwesenheiten für Fächerstatistiken
     const counts = unjustifiedAbsences.reduce((acc, absence) => {
-      const subject = absence.teacherWhoMarkedAbsence?.subject || "Unknown Subject";
+      const subject = absence.teacherWhoMarkedAbsence?.subject || t('parent.academicReport.absences.unknownSubject');
       if (!acc[subject]) {
         acc[subject] = 0;
       }
@@ -149,23 +159,23 @@ const AcademicReportPage = () => {
       subject,
       count
     }));
-  }, [unjustifiedAbsences, absences]);
+  }, [unjustifiedAbsences, absences, t]);
 
-  // Total pentru absențe nemotivate
+  // Gesamt für unentschuldigte Abwesenheiten
   const totalUnjustifiedAbsences = useMemo(() => {
     return unjustifiedAbsences.length;
   }, [unjustifiedAbsences]);
 
-  // Total pentru absențe motivate
+  // Gesamt für entschuldigte Abwesenheiten
   const totalJustifiedAbsences = useMemo(() => {
     return justifiedAbsences.length;
   }, [justifiedAbsences]);
 
-  // Absențe sortate
+  // Sortierte Abwesenheiten
   const sortedAbsences = useMemo(() => {
     if (!Array.isArray(absences)) return [];
     
-    // Filter absences based on selected filter
+    // Filtere Abwesenheiten basierend auf ausgewähltem Filter
     let filteredAbsences = [...absences];
     if (filter === "justified") {
       filteredAbsences = absences.filter(absence => absence.justified);
@@ -176,9 +186,9 @@ const AcademicReportPage = () => {
     let sortableAbsences = [...filteredAbsences];
     if (sortConfig.key !== null) {
       sortableAbsences.sort((a, b) => {
-        // Handle nested properties for sorting
+        // Behandle verschachtelte Eigenschaften für Sortierung
         if (sortConfig.key === 'subject') {
-          // Pentru sortarea după subject, folosim teacherWhoMarkedAbsence.subject
+          // Für Sortierung nach Fach verwenden wir teacherWhoMarkedAbsence.subject
           const aValue = a.teacherWhoMarkedAbsence?.subject || "";
           const bValue = b.teacherWhoMarkedAbsence?.subject || "";
           
@@ -190,7 +200,7 @@ const AcademicReportPage = () => {
           }
           return 0;
         } else if (sortConfig.key === 'date') {
-          // Pentru sortarea după dată
+          // Für Sortierung nach Datum
           const aDate = a.sessionDate ? new Date(a.sessionDate) : new Date(0);
           const bDate = b.sessionDate ? new Date(b.sessionDate) : new Date(0);
           
@@ -202,7 +212,7 @@ const AcademicReportPage = () => {
           }
           return 0;
         } else {
-          // Pentru alte sortări, folosim metoda standard
+          // Für andere Sortierungen verwende Standardmethode
           const aValue = sortConfig.key.includes('.') 
             ? sortConfig.key.split('.').reduce((obj, key) => obj && obj[key], a)
             : a[sortConfig.key];
@@ -229,16 +239,16 @@ const AcademicReportPage = () => {
     return (sum / gradesList.length).toFixed(2);
   };
 
-  // Calculate performance trend
+  // Berechne Leistungstrend
   const calculateTrend = () => {
     if (!grades || grades.length < 2) return "stable";
     
-    // Sort grades by date
+    // Sortiere Noten nach Datum
     const sortedGrades = [...grades].sort((a, b) => 
       new Date(a.date) - new Date(b.date)
     );
     
-    // Compare first and last grades
+    // Vergleiche erste und letzte Note
     const firstGrade = sortedGrades[0].grade;
     const lastGrade = sortedGrades[sortedGrades.length - 1].grade;
     
@@ -258,11 +268,11 @@ const AcademicReportPage = () => {
   const getTrendIcon = () => {
     switch (performanceTrend) {
       case "improving":
-        return <div className="text-green-600">↗ Improving</div>;
+        return <div className="text-green-600">↗ {t('parent.academicReport.trend.improving')}</div>;
       case "declining":
-        return <div className="text-red-600">↘ Needs attention</div>;
+        return <div className="text-red-600">↘ {t('parent.academicReport.trend.needsAttention')}</div>;
       default:
-        return <div className="text-blue-600">→ Stable</div>;
+        return <div className="text-blue-600">→ {t('parent.academicReport.trend.stable')}</div>;
     }
   };
 
@@ -283,16 +293,16 @@ const AcademicReportPage = () => {
     navigate("/parent");
   };
 
-  // Conținutul tab-ului de Absențe
+  // Inhalt des Abwesenheiten-Tabs
   const renderAbsencesContent = () => {
-    // Verifică dacă avem absențe încărcate
+    // Überprüfe ob Abwesenheiten geladen wurden
     if (!Array.isArray(absences) || absences.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center py-10 bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <FaCalendarTimes className="text-5xl mb-4 text-primary opacity-50" />
-          <h3 className="text-xl font-bold mb-2">No Detailed Absence Data</h3>
+          <h3 className="text-xl font-bold mb-2">{t('parent.academicReport.absences.noDetailedData.title')}</h3>
           <p className="text-dark2 text-center max-w-md">
-            No absences have been recorded yet or the detailed absence data is not available.
+            {t('parent.academicReport.absences.noDetailedData.message')}
           </p>
         </div>
       );
@@ -300,41 +310,43 @@ const AcademicReportPage = () => {
 
     return (
       <div className="space-y-6">
-        {/* Main Stats - Modified to show both justified and unjustified */}
+        {/* Hauptstatistiken - Zeigt sowohl entschuldigte als auch unentschuldigte */}
         <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
           <div className="flex items-center mb-6">
             <FaCalendarTimes className="text-3xl mr-3" />
-            <h2 className="text-2xl font-bold">Child's Absences</h2>
+            <h2 className="text-2xl font-bold">{t('parent.academicReport.absences.title')}</h2>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Unjustified Absences</p>
+              <p className="text-xs text-indigo-100">{t('parent.academicReport.absences.unjustified')}</p>
               <p className="text-3xl font-bold">{totalUnjustifiedAbsences}</p>
             </div>
             <div className="text-center px-6 py-2 md:border-r border-white border-opacity-20">
-              <p className="text-xs text-indigo-100">Justified Absences</p>
+              <p className="text-xs text-indigo-100">{t('parent.academicReport.absences.justified')}</p>
               <p className="text-3xl font-bold">{totalJustifiedAbsences}</p>
             </div>
             <div className="text-center px-6 py-2">
-              <p className="text-xs text-indigo-100">Attendance Status</p>
+              <p className="text-xs text-indigo-100">{t('parent.academicReport.absences.attendanceStatus')}</p>
               <p className="text-3xl font-bold">
-                {totalUnjustifiedAbsences <= 5 ? "Excellent" : totalUnjustifiedAbsences <= 15 ? "Good" : "At Risk"}
+                {totalUnjustifiedAbsences <= 5 ? t('parent.academicReport.absences.excellent') : 
+                 totalUnjustifiedAbsences <= 15 ? t('parent.academicReport.absences.good') : 
+                 t('parent.academicReport.absences.atRisk')}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Subject Absences - Now showing only unjustified absences */}
+        {/* Fächer-Abwesenheiten - Zeigt nur unentschuldigte Abwesenheiten */}
         <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <h3 className="text-xl font-bold text-dark mb-4 flex items-center">
             <FaBook className="text-primary mr-3" />
-            Unjustified Absences by Subject
+            {t('parent.academicReport.absences.bySubject')}
           </h3>
           {subjectAbsences.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-dark2">
               <FaCheckCircle className="text-5xl mb-4 text-green-500" />
-              <p className="text-xl">No unjustified absences!</p>
-              <p className="text-sm mt-2">Great attendance record!</p>
+              <p className="text-xl">{t('parent.academicReport.absences.noUnjustified')}</p>
+              <p className="text-sm mt-2">{t('parent.academicReport.absences.greatAttendance')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -342,7 +354,7 @@ const AcademicReportPage = () => {
                 <div key={subjectData.subject} className="bg-white p-4 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-center">
                     <div className="overflow-hidden">
-                      <p className="font-medium text-dark truncate">{subjectData.subject}</p>
+                      <p className="font-medium text-dark truncate">{getTranslatedSubject(subjectData.subject)}</p>
                     </div>
                     <div className="flex items-center">
                       <p className={`text-xl font-bold ${subjectData.count > 5 ? "text-red-600" : "text-yellow-600"}`}>
@@ -357,34 +369,34 @@ const AcademicReportPage = () => {
           )}
         </div>
 
-        {/* Absences Table with Filter */}
+        {/* Abwesenheitstabelle mit Filter */}
         <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
             <h3 className="text-xl font-bold text-dark flex items-center mb-3 md:mb-0">
               <FaCalendarTimes className="text-primary mr-3" />
-              Absence History
+              {t('parent.academicReport.absences.history')}
             </h3>
             
-            {/* Filter controls */}
+            {/* Filter-Kontrollen */}
             <div className="flex items-center space-x-2 bg-white p-2 rounded-lg border border-gray-200">
               <FaFilter className="text-dark2 mr-2" />
               <button 
                 className={`px-3 py-1 rounded-lg text-sm ${filter === 'all' ? 'bg-primary text-white' : 'text-dark2 hover:bg-light'}`}
                 onClick={() => setFilter('all')}
               >
-                All
+                {t('parent.academicReport.absences.filter.all')}
               </button>
               <button 
                 className={`px-3 py-1 rounded-lg text-sm ${filter === 'unjustified' ? 'bg-red-500 text-white' : 'text-dark2 hover:bg-light'}`}
                 onClick={() => setFilter('unjustified')}
               >
-                Unjustified
+                {t('parent.academicReport.absences.filter.unjustified')}
               </button>
               <button 
                 className={`px-3 py-1 rounded-lg text-sm ${filter === 'justified' ? 'bg-green-500 text-white' : 'text-dark2 hover:bg-light'}`}
                 onClick={() => setFilter('justified')}
               >
-                Justified
+                {t('parent.academicReport.absences.filter.justified')}
               </button>
             </div>
           </div>
@@ -392,14 +404,19 @@ const AcademicReportPage = () => {
           {sortedAbsences.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-dark2">
               <FaCalendarTimes className="text-5xl mb-4 text-primary opacity-50" />
-              <p className="text-xl">No {filter !== 'all' ? filter : ''} absences found</p>
+              <p className="text-xl">
+                {filter !== 'all' 
+                  ? t('parent.academicReport.absences.noFilteredAbsences', { filter: t(`parent.academicReport.absences.filter.${filter}`) })
+                  : t('parent.academicReport.absences.noAbsences')
+                }
+              </p>
               {filter === 'unjustified' && (
-                <p className="text-sm mt-2">Great job maintaining perfect attendance!</p>
+                <p className="text-sm mt-2">{t('parent.academicReport.absences.perfectAttendance')}</p>
               )}
             </div>
           ) : (
             <div>
-              {/* Desktop view - Table */}
+              {/* Desktop-Ansicht - Tabelle */}
               <div className="hidden md:block overflow-x-auto bg-white rounded-lg border border-gray-200">
                 <table className="w-full">
                   <thead>
@@ -410,14 +427,14 @@ const AcademicReportPage = () => {
                           onClick={() => requestSort('subject')}
                         >
                           <FaBook className="mr-2" />
-                          <span>Subject</span>
+                          <span>{t('parent.academicReport.absences.table.subject')}</span>
                           {getSortIcon('subject')}
                         </button>
                       </th>
                       <th className="p-4 text-left">
                         <div className="flex items-center">
                           <FaUserTie className="text-primary mr-2" />
-                          <span className="text-dark2 font-medium">Teacher</span>
+                          <span className="text-dark2 font-medium">{t('parent.academicReport.absences.table.teacher')}</span>
                         </div>
                       </th>
                       <th className="p-4 text-center">
@@ -425,11 +442,11 @@ const AcademicReportPage = () => {
                           className="flex items-center justify-center text-dark2 font-medium hover:text-primary mx-auto"
                           onClick={() => requestSort('date')}
                         >
-                          <span>Date</span>
+                          <span>{t('parent.academicReport.absences.table.date')}</span>
                           {getSortIcon('date')}
                         </button>
                       </th>
-                      <th className="p-4 text-center">Status</th>
+                      <th className="p-4 text-center">{t('parent.academicReport.absences.table.status')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -441,25 +458,27 @@ const AcademicReportPage = () => {
                         }`}
                       >
                         <td className="p-4 font-medium text-dark">
-                          {absence.teacherWhoMarkedAbsence?.subject || "Unknown Subject"}
+                          {getTranslatedSubject(absence.teacherWhoMarkedAbsence?.subject) || t('parent.academicReport.absences.unknownSubject')}
                         </td>
                         <td className="p-4 text-dark2">
-                          {absence.teacherWhoMarkedAbsence?.name || "Unknown Teacher"}
+                          {absence.teacherWhoMarkedAbsence?.name || t('parent.academicReport.absences.unknownTeacher')}
                         </td>
                         <td className="p-4 text-center text-dark2">
                           {absence.sessionDate 
-                            ? new Date(absence.sessionDate).toLocaleString("ro-RO", { 
+                            ? new Date(absence.sessionDate).toLocaleString(i18n.language === 'de' ? 'de-DE' : i18n.language === 'ro' ? 'ro-RO' : 'en-US', { 
                                 year: "numeric", 
                                 month: "long", 
                                 day: "numeric"
                               }) 
-                            : "Unknown Date"}
+                            : t('parent.academicReport.absences.unknownDate')}
                         </td>
                         <td className="p-4 text-center">
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                             absence.justified ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                           }`}>
-                            {absence.justified ? "Justified" : "Unjustified"}
+                            {absence.justified 
+                              ? t('parent.academicReport.absences.justified') 
+                              : t('parent.academicReport.absences.unjustified')}
                           </span>
                         </td>
                       </tr>
@@ -468,21 +487,21 @@ const AcademicReportPage = () => {
                 </table>
               </div>
 
-              {/* Mobile view - Cards */}
+              {/* Mobile-Ansicht - Karten */}
               <div className="md:hidden">
                 <div className="flex justify-between mb-3 px-2">
                   <button
                     className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
                     onClick={() => requestSort('subject')}
                   >
-                    <span>Sort by Subject</span>
+                    <span>{t('parent.academicReport.absences.sortBySubject')}</span>
                     {getSortIcon('subject')}
                   </button>
                   <button
                     className="flex items-center text-xs text-dark2 font-medium hover:text-primary"
                     onClick={() => requestSort('date')}
                   >
-                    <span>Sort by Date</span>
+                    <span>{t('parent.academicReport.absences.sortByDate')}</span>
                     {getSortIcon('date')}
                   </button>
                 </div>
@@ -495,31 +514,33 @@ const AcademicReportPage = () => {
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div className="font-medium text-dark truncate max-w-[70%]">
-                        {absence.teacherWhoMarkedAbsence?.subject || "Unknown Subject"}
+                        {getTranslatedSubject(absence.teacherWhoMarkedAbsence?.subject) || t('parent.academicReport.absences.unknownSubject')}
                       </div>
                       <div>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           absence.justified ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                         }`}>
-                          {absence.justified ? "Justified" : "Unjustified"}
+                          {absence.justified 
+                            ? t('parent.academicReport.absences.justified') 
+                            : t('parent.academicReport.absences.unjustified')}
                         </span>
                       </div>
                     </div>
                     <div className="flex flex-col space-y-1 text-sm">
                       <div className="flex items-center text-dark2">
                         <FaUserTie className="mr-2 text-xs" />
-                        <span className="truncate">{absence.teacherWhoMarkedAbsence?.name || "Unknown Teacher"}</span>
+                        <span className="truncate">{absence.teacherWhoMarkedAbsence?.name || t('parent.academicReport.absences.unknownTeacher')}</span>
                       </div>
                       <div className="flex items-center text-dark2">
                         <FaCalendarTimes className="mr-2 text-xs" />
                         <span>
                           {absence.sessionDate 
-                            ? new Date(absence.sessionDate).toLocaleString("ro-RO", { 
+                            ? new Date(absence.sessionDate).toLocaleString(i18n.language === 'de' ? 'de-DE' : i18n.language === 'ro' ? 'ro-RO' : 'en-US', { 
                                 year: "numeric", 
                                 month: "short", 
                                 day: "numeric"
                               })
-                            : "Unknown Date"}
+                            : t('parent.academicReport.absences.unknownDate')}
                         </span>
                       </div>
                     </div>
@@ -533,22 +554,24 @@ const AcademicReportPage = () => {
     );
   };
 
-  // Funcția pentru a afișa conținutul bazat pe tab-ul activ
+  // Funktion zum Anzeigen des Inhalts basierend auf aktivem Tab
   const renderTabContent = () => {
     switch (activeTab) {
       case "overview":
         return (
           <>
-            {/* Hero Header - Rezumat general */}
+            {/* Hero Header - Gesamtübersicht */}
             <div className="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-xl shadow-md">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">Student Performance Summary</h3>
+                  <h3 className="text-2xl font-bold mb-2">{t('parent.academicReport.overview.performanceSummary')}</h3>
                   <p className="text-indigo-100">
-                    Student: {studentData?.name || "N/A"} | Class: {studentData?.className || "N/A"}
+                    {t('parent.academicReport.overview.student')}: {studentData?.name || t('common.notAvailable')} | 
+                    {t('parent.academicReport.overview.class')}: {studentData?.className || t('common.notAvailable')}
                   </p>
                   <p className="text-indigo-100">
-                    School Year: {new Date().getFullYear()} | Report Date: {new Date().toLocaleDateString()}
+                    {t('parent.academicReport.overview.schoolYear')}: {new Date().getFullYear()} | 
+                    {t('parent.academicReport.overview.reportDate')}: {new Date().toLocaleDateString()}
                   </p>
                 </div>
               </div>
@@ -556,23 +579,23 @@ const AcademicReportPage = () => {
               {/* Summary Cards */}
               <div className="flex flex-col md:flex-row justify-between items-center bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm">
                 <div className="text-center px-8 py-4">
-                  <p className="text-indigo-100 text-sm">Overall GPA</p>
+                  <p className="text-indigo-100 text-sm">{t('parent.academicReport.overview.overallGPA')}</p>
                   <p className="text-3xl font-bold">{calculateGPA(grades)}</p>
-                  <p className="text-indigo-100 text-xs">Out of 10</p>
+                  <p className="text-indigo-100 text-xs">{t('parent.academicReport.overview.outOf10')}</p>
                 </div>
                 
                 <div className="text-center px-8 py-4 border-t md:border-t-0 md:border-l md:border-r border-white border-opacity-30">
-                  <p className="text-indigo-100 text-sm">Absences</p>
+                  <p className="text-indigo-100 text-sm">{t('parent.academicReport.overview.absences')}</p>
                   <p className="text-3xl font-bold">{absencesTotal}</p>
-                  <p className="text-indigo-100 text-xs">Total this year</p>
+                  <p className="text-indigo-100 text-xs">{t('parent.academicReport.overview.totalThisYear')}</p>
                 </div>
                 
                 <div className="text-center px-8 py-4">
-                  <p className="text-indigo-100 text-sm">Performance Trend</p>
+                  <p className="text-indigo-100 text-sm">{t('parent.academicReport.overview.performanceTrend')}</p>
                   <div className="text-xl font-bold text-white">
                     {getTrendIcon()}
                   </div>
-                  <p className="text-indigo-100 text-xs">Based on recent grades</p>
+                  <p className="text-indigo-100 text-xs">{t('parent.academicReport.overview.basedOnRecent')}</p>
                 </div>
               </div>
             </div>
@@ -581,7 +604,7 @@ const AcademicReportPage = () => {
             <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200 print:break-inside-avoid mt-6">
               <h4 className="text-xl font-semibold text-dark mb-4 flex items-center">
                 <FaBook className="text-primary mr-3" />
-                Subject Performance
+                {t('parent.academicReport.overview.subjectPerformance')}
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -594,8 +617,8 @@ const AcademicReportPage = () => {
                     <div key={subject} className="border rounded-lg p-4 bg-white">
                       <div className="flex justify-between items-start mb-3">
                         <div>
-                          <h5 className="font-semibold text-dark">{subject}</h5>
-                          <p className="text-dark2 text-sm">Teacher: {teacher?.name || "N/A"}</p>
+                          <h5 className="font-semibold text-dark">{getTranslatedSubject(subject)}</h5>
+                          <p className="text-dark2 text-sm">{t('parent.academicReport.overview.teacher')}: {teacher?.name || t('common.notAvailable')}</p>
                         </div>
                         <div className={`px-3 py-1 rounded-full ${getGradeColor(avgGrade)} font-bold`}>
                           {avgGrade}
@@ -603,7 +626,7 @@ const AcademicReportPage = () => {
                       </div>
                       
                       <div className="mt-3">
-                        <p className="text-dark2 text-sm mb-1">Recent grades:</p>
+                        <p className="text-dark2 text-sm mb-1">{t('parent.academicReport.overview.recentGrades')}:</p>
                         <div className="flex space-x-2">
                           {subjectGrades.slice(-3).map((grade, i) => (
                             <span key={i} className={`px-2 py-1 rounded ${getGradeColor(grade.grade)}`}>
@@ -624,7 +647,7 @@ const AcademicReportPage = () => {
           <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200 print:break-inside-avoid">
             <h4 className="text-xl font-semibold text-dark mb-4 flex items-center">
               <FaClipboardList className="text-primary mr-3" />
-              Grade History
+              {t('parent.academicReport.grades.history')}
             </h4>
             
             {grades.length > 0 ? (
@@ -633,31 +656,31 @@ const AcademicReportPage = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-dark2 uppercase tracking-wider">
-                        Subject
+                        {t('parent.academicReport.grades.table.subject')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-dark2 uppercase tracking-wider">
-                        Date
+                        {t('parent.academicReport.grades.table.date')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-dark2 uppercase tracking-wider">
-                        Grade
+                        {t('parent.academicReport.grades.table.grade')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-dark2 uppercase tracking-wider">
-                        Teacher
+                        {t('parent.academicReport.grades.table.teacher')}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-dark2 uppercase tracking-wider">
-                        Comments
+                        {t('parent.academicReport.grades.table.comments')}
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {grades.map((grade, index) => {
-                      // Find teacher for this subject
+                      // Finde Lehrer für dieses Fach
                       const teacher = teachers.find(t => t.subject === grade.subject);
                       
                       return (
                         <tr key={index}>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="font-medium text-dark">{grade.subject || "N/A"}</div>
+                            <div className="font-medium text-dark">{getTranslatedSubject(grade.subject) || t('common.notAvailable')}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-dark2">
                             {new Date(grade.sessionDate).toLocaleDateString()}
@@ -668,10 +691,10 @@ const AcademicReportPage = () => {
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-dark2">
-                            {teacher?.name || "N/A"}
+                            {teacher?.name || t('common.notAvailable')}
                           </td>
                           <td className="px-6 py-4 text-dark2">
-                            {grade.comment || "No comments"}
+                            {grade.comment || t('parent.academicReport.grades.noComments')}
                           </td>
                         </tr>
                       );
@@ -680,7 +703,7 @@ const AcademicReportPage = () => {
                 </table>
               </div>
             ) : (
-              <p className="text-dark2 italic">No grades found.</p>
+              <p className="text-dark2 italic">{t('parent.academicReport.grades.noGradesFound')}</p>
             )}
           </div>
         );
@@ -699,7 +722,7 @@ const AcademicReportPage = () => {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <p className="text-dark2 font-medium">Loading academic report...</p>
+          <p className="text-dark2 font-medium">{t('parent.academicReport.loading')}</p>
         </div>
       </div>
     );
@@ -711,7 +734,7 @@ const AcademicReportPage = () => {
         <div className="w-full max-w-4xl p-6 bg-light rounded-xl shadow-md border border-gray-200">
           <div className="text-center mb-6">
             <FaExclamationTriangle className="text-red-500 text-4xl mb-3 mx-auto" />
-            <h2 className="text-2xl font-bold text-dark mb-2">Error Loading Report</h2>
+            <h2 className="text-2xl font-bold text-dark mb-2">{t('parent.academicReport.errorTitle')}</h2>
             <p className="text-dark2">{error}</p>
           </div>
           <div className="flex justify-center">
@@ -719,7 +742,7 @@ const AcademicReportPage = () => {
               onClick={handleBackToDashboard}
               className="bg-primary text-dark px-4 py-2 rounded-lg hover:opacity-90 font-medium"
             >
-              <FaArrowLeft className="inline mr-2" /> Back to Dashboard
+              <FaArrowLeft className="inline mr-2" /> {t('parent.academicReport.backToDashboard')}
             </button>
           </div>
         </div>
@@ -746,7 +769,7 @@ const AcademicReportPage = () => {
           >
             <FaArrowLeft className="text-xl" />
           </button>
-          <h2 className="text-2xl font-bold text-dark">Academic Performance Report</h2>
+          <h2 className="text-2xl font-bold text-dark">{t('parent.academicReport.title')}</h2>
           
           <div className="absolute right-0 flex space-x-3 print:hidden">
             <StructuredPDFButton 
@@ -767,7 +790,7 @@ const AcademicReportPage = () => {
             >
               <FaArrowLeft className="text-xl" />
             </button>
-            <h2 className="text-xl font-bold text-dark">Academic Performance Report</h2>
+            <h2 className="text-xl font-bold text-dark">{t('parent.academicReport.title')}</h2>
           </div>
           
           <div className="flex space-x-3 print:hidden">
@@ -792,7 +815,7 @@ const AcademicReportPage = () => {
             }`}
             onClick={() => setActiveTab('overview')}
           >
-            <FaChartLine className="inline mr-2" /> Overview
+            <FaChartLine className="inline mr-2" /> {t('parent.academicReport.tabs.overview')}
           </button>
           <button
             className={`px-4 py-3 text-center flex-1 md:flex-none font-medium ${
@@ -802,7 +825,7 @@ const AcademicReportPage = () => {
             }`}
             onClick={() => setActiveTab('grades')}
           >
-            <FaBook className="inline mr-2" /> Grades
+            <FaBook className="inline mr-2" /> {t('parent.academicReport.tabs.grades')}
           </button>
           <button
             className={`px-4 py-3 text-center flex-1 md:flex-none font-medium ${
@@ -812,27 +835,27 @@ const AcademicReportPage = () => {
             }`}
             onClick={() => setActiveTab('absences')}
           >
-            <FaCalendarTimes className="inline mr-2" /> Absences
+            <FaCalendarTimes className="inline mr-2" /> {t('parent.academicReport.tabs.absences')}
           </button>
         </div>
 
-        {/* Report Content - Afișează conținutul în funcție de tab-ul activ */}
+        {/* Report Content - Zeigt Inhalt basierend auf aktivem Tab */}
         <div className="space-y-6">
-          {/* Titlul paginii - vizibil doar la printare */}
+          {/* Seitentitel - nur beim Drucken sichtbar */}
           <div className="hidden print:block mb-8">
-            <h1 className="text-3xl font-bold text-center">Academic Performance Report</h1>
-            <p className="text-center text-dark2">Generated on {new Date().toLocaleDateString()}</p>
+            <h1 className="text-3xl font-bold text-center">{t('parent.academicReport.printTitle')}</h1>
+            <p className="text-center text-dark2">{t('parent.academicReport.generatedOn')} {new Date().toLocaleDateString()}</p>
           </div>
 
-          {/* Conținutul tab-ului activ */}
+          {/* Inhalt des aktiven Tabs */}
           {renderTabContent()}
           
-          {/* Teacher Contact - Afișat doar când nu suntem în tab-ul absențe */}
+          {/* Teacher Contact - Anzeigen wenn nicht im Abwesenheiten-Tab */}
           {activeTab !== "absences" && (
             <div className="bg-light p-6 rounded-xl shadow-md border border-gray-200 print:break-inside-avoid mt-6">
               <h4 className="text-xl font-semibold text-dark mb-4 flex items-center">
                 <FaChalkboardTeacher className="text-primary mr-3" />
-                Teacher Contact Information
+                {t('parent.academicReport.teacherContact.title')}
               </h4>
               
               {teachers.length > 0 ? (
@@ -844,14 +867,14 @@ const AcademicReportPage = () => {
                       </div>
                       <div>
                         <h5 className="font-semibold">{teacher.name}</h5>
-                        <p className="text-dark2">{teacher.subject}</p>
+                        <p className="text-dark2">{getTranslatedSubject(teacher.subject)}</p>
                         <p className="text-primary">{teacher.email}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-dark2 italic">No teacher information available.</p>
+                <p className="text-dark2 italic">{t('parent.academicReport.teacherContact.noInfo')}</p>
               )}
             </div>
           )}

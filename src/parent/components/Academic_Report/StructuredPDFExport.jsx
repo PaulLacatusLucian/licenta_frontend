@@ -1,103 +1,118 @@
 import React, { useState } from "react";
 import { FaFilePdf, FaSpinner } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 
 const StructuredPDFButton = ({ studentData, grades, absences, teachers }) => {
+  const { t } = useTranslation();
   const [isGenerating, setIsGenerating] = useState(false);
   const [notification, setNotification] = useState(null);
+  
+  // Funktion zur Übersetzung von Fächern
+  const getTranslatedSubject = (subject) => {
+    if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
+      return t(`admin.teachers.subjects.list.${subject}`);
+    }
+    return subject || '';
+  };
   
   const handleSavePDF = async () => {
     setIsGenerating(true);
     
     try {
-      // Load required libraries with script tags if not already loaded
+      // Lade erforderliche Bibliotheken mit Script-Tags falls nicht bereits geladen
       await loadJsPdfLibraries();
       
-      // Create filename
+      // Erstelle Dateinamen
       const today = new Date();
-      const fileName = `${studentData?.name?.replace(/\s+/g, '_') || 'Student'}_Academic_Report_${
+      const fileName = `${studentData?.name?.replace(/\s+/g, '_') || 'Student'}_${t('parent.academicReport.pdf.fileNamePart')}_${
         today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${
         today.getDate().toString().padStart(2, '0')
       }.pdf`;
       
-      // Get jsPDF from the global scope
+      // Hole jsPDF aus dem globalen Scope
       const { jsPDF } = window.jspdf;
       
-      // Create new PDF document
+      // Erstelle neues PDF-Dokument
       const doc = new jsPDF();
       
-      // Check if autotable is properly loaded
+      // Überprüfe ob autotable richtig geladen ist
       if (typeof doc.autoTable !== 'function') {
-        throw new Error("PDF library not properly loaded. Please refresh and try again.");
+        throw new Error(t('parent.academicReport.pdf.libraryError'));
       }
       
-      // Set document properties
+      // Setze Dokumenteigenschaften
       doc.setProperties({
-        title: `Academic Report - ${studentData?.name || 'Student'}`,
-        subject: 'Academic Performance Report',
-        author: 'School Management System',
-        creator: 'School Portal'
+        title: `${t('parent.academicReport.pdf.documentTitle')} - ${studentData?.name || 'Student'}`,
+        subject: t('parent.academicReport.pdf.documentSubject'),
+        author: t('parent.academicReport.pdf.author'),
+        creator: t('parent.academicReport.pdf.creator')
       });
       
-      // Get current date for the report
+      // Hole aktuelles Datum für den Bericht
       const dateString = today.toLocaleDateString();
       
-      // Add header with school info and logo
+      // Füge Header mit Schulinformationen und Logo hinzu
       doc.setFontSize(20);
-      doc.setTextColor(44, 62, 80); // Dark blue
-      doc.text('Academic Performance Report', 105, 20, { align: 'center' });
+      doc.setTextColor(44, 62, 80); // Dunkelblau
+      doc.text(t('parent.academicReport.pdf.title'), 105, 20, { align: 'center' });
       
-      // Student information section
+      // Schülerinformations-Bereich
       doc.setFontSize(12);
-      doc.setTextColor(52, 73, 94); // Slate
-      doc.text(`Student: ${studentData?.name || 'N/A'}`, 15, 40);
-      doc.text(`Class: ${studentData?.className || 'N/A'}`, 15, 48);
-      doc.text(`Date Generated: ${dateString}`, 15, 56);
-      doc.text(`School Year: ${today.getFullYear()}`, 15, 64);
+      doc.setTextColor(52, 73, 94); // Schiefer
+      doc.text(`${t('parent.academicReport.pdf.student')}: ${studentData?.name || t('common.notAvailable')}`, 15, 40);
+      doc.text(`${t('parent.academicReport.pdf.class')}: ${studentData?.className || t('common.notAvailable')}`, 15, 48);
+      doc.text(`${t('parent.academicReport.pdf.dateGenerated')}: ${dateString}`, 15, 56);
+      doc.text(`${t('parent.academicReport.pdf.schoolYear')}: ${today.getFullYear()}`, 15, 64);
       
-      // Performance summary section
-      doc.setFillColor(241, 196, 15); // Yellow background
-      doc.setDrawColor(243, 156, 18); // Orange border
-      doc.setTextColor(41, 128, 185); // Blue text
+      // Leistungszusammenfassungs-Bereich
+      doc.setFillColor(241, 196, 15); // Gelber Hintergrund
+      doc.setDrawColor(243, 156, 18); // Oranger Rand
+      doc.setTextColor(41, 128, 185); // Blauer Text
       doc.roundedRect(15, 75, 180, 30, 3, 3, 'FD');
       
       doc.setFontSize(14);
-      doc.setTextColor(44, 62, 80); // Dark blue
-      doc.text('Performance Summary', 105, 85, { align: 'center' });
+      doc.setTextColor(44, 62, 80); // Dunkelblau
+      doc.text(t('parent.academicReport.pdf.performanceSummary'), 105, 85, { align: 'center' });
       
-      // Calculate GPA
+      // Berechne Notendurchschnitt
       const calculateGPA = (gradesList) => {
         if (!gradesList || !gradesList.length) return 0;
         const sum = gradesList.reduce((acc, curr) => acc + curr.grade, 0);
         return (sum / gradesList.length).toFixed(2);
       };
       
-      // Display summary metrics
+      // Zeige Zusammenfassungsmetriken
       doc.setFontSize(12);
-      doc.text(`Overall GPA: ${calculateGPA(grades)} / 10`, 45, 95);
-      doc.text(`Total Absences: ${absences.total}`, 145, 95); // Positioned inside the box
+      doc.text(`${t('parent.academicReport.pdf.overallGPA')}: ${calculateGPA(grades)} / 10`, 45, 95);
+      doc.text(`${t('parent.academicReport.pdf.totalAbsences')}: ${absences.total}`, 145, 95); // Positioniert innerhalb der Box
       
-      // Add grades table
+      // Füge Notentabelle hinzu
       if (grades && grades.length > 0) {
         doc.setFontSize(14);
-        doc.text('Grade History', 105, 120, { align: 'center' });
+        doc.text(t('parent.academicReport.pdf.gradeHistory'), 105, 120, { align: 'center' });
         
-        // Prepare data for the table
-        const tableHeaders = [['Subject', 'Date', 'Grade', 'Teacher']];
+        // Bereite Daten für die Tabelle vor
+        const tableHeaders = [[
+          t('parent.academicReport.pdf.table.subject'),
+          t('parent.academicReport.pdf.table.date'),
+          t('parent.academicReport.pdf.table.grade'),
+          t('parent.academicReport.pdf.table.teacher')
+        ]];
         
         const tableData = grades.map(grade => {
-          // Find teacher for this subject
+          // Finde Lehrer für dieses Fach
           const teacher = teachers.find(t => t.subject === grade.subject);
           
           return [
-            grade.subject || 'N/A',
+            getTranslatedSubject(grade.subject) || t('common.notAvailable'),
             new Date(grade.sessionDate).toLocaleDateString(),
-            // Ensure we only use the number value, not a string that might duplicate
+            // Stelle sicher, dass wir nur den Zahlenwert verwenden
             parseInt(grade.grade).toString(),
-            teacher?.name || 'N/A'
+            teacher?.name || t('common.notAvailable')
           ];
         });
         
-        // Create the table - simple version without custom formatting
+        // Erstelle die Tabelle - einfache Version ohne benutzerdefinierte Formatierung
         doc.autoTable({
           head: tableHeaders,
           body: tableData,
@@ -115,7 +130,7 @@ const StructuredPDFButton = ({ studentData, grades, absences, teachers }) => {
             fontStyle: 'bold',
           },
           columnStyles: {
-            2: { // Grade column
+            2: { // Notenspalte
               halign: 'center',
               cellWidth: 20,
               fontStyle: 'bold'
@@ -123,17 +138,17 @@ const StructuredPDFButton = ({ studentData, grades, absences, teachers }) => {
           }
         });
         
-        // Get last auto table ended position
+        // Hole letzte Auto-Tabellen-Endposition
         const finalY = doc.lastAutoTable?.finalY || 150;
         
-        // Add footer with page numbers
+        // Füge Fußzeile mit Seitenzahlen hinzu
         const pageCount = doc.internal.getNumberOfPages();
         for (let i = 1; i <= pageCount; i++) {
           doc.setPage(i);
           doc.setFontSize(10);
           doc.setTextColor(128, 128, 128);
           doc.text(
-            `Page ${i} of ${pageCount}`, 
+            t('parent.academicReport.pdf.pageInfo', { current: i, total: pageCount }), 
             doc.internal.pageSize.width / 2, 
             doc.internal.pageSize.height - 10, 
             { align: 'center' }
@@ -141,65 +156,65 @@ const StructuredPDFButton = ({ studentData, grades, absences, teachers }) => {
         }
       }
       
-      // Save the PDF
+      // Speichere das PDF
       doc.save(fileName);
       
       setNotification({
         type: 'success',
-        message: `PDF saved as "${fileName}"`
+        message: t('parent.academicReport.pdf.savedAs', { fileName })
       });
     } catch (error) {
       console.error('Error generating PDF:', error);
       setNotification({
         type: 'error',
-        message: error.message || 'Failed to generate PDF. Please try again.'
+        message: error.message || t('parent.academicReport.pdf.generateError')
       });
     } finally {
       setIsGenerating(false);
       
-      // Clear notification after 5 seconds
+      // Lösche Benachrichtigung nach 5 Sekunden
       setTimeout(() => {
         setNotification(null);
       }, 5000);
     }
   };
 
-  // Helper function to dynamically load jsPDF libraries
+  // Hilfsfunktion zum dynamischen Laden von jsPDF-Bibliotheken
   const loadJsPdfLibraries = () => {
     return new Promise((resolve, reject) => {
-      // Check if already loaded
+      // Überprüfe ob bereits geladen
       if (window.jspdf && window.jspdf.jsPDF) {
         resolve();
         return;
       }
 
-      // Load jsPDF script
+      // Lade jsPDF Script
       const jsPdfScript = document.createElement('script');
       jsPdfScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
       jsPdfScript.async = true;
       
-      // Load autoTable plugin
+      // Lade autoTable Plugin
       const autoTableScript = document.createElement('script');
       autoTableScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js';
       autoTableScript.async = true;
       
-      // Handle loading completion
+      // Behandle Ladeabschluss
       let loadedCount = 0;
       const handleLoad = () => {
         loadedCount++;
         if (loadedCount === 2) {
-          // Both scripts loaded
+          // Beide Scripts geladen
           if (window.jspdf && window.jspdf.jsPDF) {
             resolve();
           } else {
-            reject(new Error("Failed to load PDF libraries properly"));
+            reject(new Error(t('parent.academicReport.pdf.loadError')));
           }
         }
       };
       
-      // Handle errors
+      // Behandle Fehler
       const handleError = () => {
-        reject(new Error("Failed to load PDF generation libraries"));
+        reject(new Error(t('parent.academicReport.pdf.loadLibrariesError')));
       };
       
       jsPdfScript.onload = handleLoad;
@@ -208,7 +223,7 @@ const StructuredPDFButton = ({ studentData, grades, absences, teachers }) => {
       autoTableScript.onload = handleLoad;
       autoTableScript.onerror = handleError;
       
-      // Add scripts to document
+      // Füge Scripts zum Dokument hinzu
       document.head.appendChild(jsPdfScript);
       document.head.appendChild(autoTableScript);
     });
@@ -224,12 +239,12 @@ const StructuredPDFButton = ({ studentData, grades, absences, teachers }) => {
         {isGenerating ? (
           <>
             <FaSpinner className="animate-spin mr-2" />
-            <span>Generating...</span>
+            <span>{t('parent.academicReport.pdf.generating')}</span>
           </>
         ) : (
           <>
             <FaFilePdf className="mr-2" />
-            <span>Save as PDF</span>
+            <span>{t('parent.academicReport.pdf.saveButton')}</span>
           </>
         )}
       </button>

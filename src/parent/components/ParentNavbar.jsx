@@ -11,8 +11,10 @@ import {
   FaSignOutAlt,
   FaBars 
 } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 
 const ParentNavbar = ({ activeView, childName, onToggleSidebar }) => {
+  const { t } = useTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -29,13 +31,13 @@ const ParentNavbar = ({ activeView, childName, onToggleSidebar }) => {
     navigate("/login");
   };
 
-  // Navigation items
+  // Navigationseinträge
   const navItems = [
-    { icon: FaHome, label: "Dashboard", view: "home", path: "/parent" },
-    { icon: FaUserCircle, label: "Profile", view: "profile", path: "/parent/profile" },
-    { icon: FaChartLine, label: "Academic Report", view: "report", path: "/parent/academic-report" },
-    { icon: FaCalendarAlt, label: "Calendar", view: "calendar", path: "/parent/calendar" },
-    { icon: FaUtensils, label: "Meal Services", view: "food", path: "/cafeteria" },
+    { icon: FaHome, label: t('parent.navbar.dashboard'), view: "home", path: "/parent" },
+    { icon: FaUserCircle, label: t('parent.navbar.profile'), view: "profile", path: "/parent/profile" },
+    { icon: FaChartLine, label: t('parent.navbar.academicReport'), view: "report", path: "/parent/academic-report" },
+    { icon: FaCalendarAlt, label: t('parent.navbar.calendar'), view: "calendar", path: "/parent/calendar" },
+    { icon: FaUtensils, label: t('parent.navbar.mealServices'), view: "food", path: "/cafeteria" },
   ];
 
   return (
@@ -49,7 +51,7 @@ const ParentNavbar = ({ activeView, childName, onToggleSidebar }) => {
           <FaBars />
         </button>
         <h2 className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-white">
-          Parent Portal
+          {t('parent.navbar.parentPortal')}
         </h2>
       </div>
 
@@ -64,13 +66,15 @@ const ParentNavbar = ({ activeView, childName, onToggleSidebar }) => {
           <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg">
             <img 
               src={logo}
-              alt="School Logo" 
+              alt={t('parent.navbar.schoolLogoAlt')} 
               className="w-20 h-20 object-contain"
             />
           </div>
           <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-white">Parent Portal</h2>
-            <p className="text-sm text-white text-opacity-80 mt-1">Parent of: {childName || "Loading..."}</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white">{t('parent.navbar.parentPortal')}</h2>
+            <p className="text-sm text-white text-opacity-80 mt-1">
+              {t('parent.navbar.parentOf', { childName: childName || t('parent.navbar.loading') })}
+            </p>
           </div>
         </div>
 
@@ -113,7 +117,7 @@ const ParentNavbar = ({ activeView, childName, onToggleSidebar }) => {
             className="w-full flex items-center p-3 text-white hover:bg-red-500 hover:bg-opacity-20 rounded-lg transition-colors duration-200"
           >
             <FaSignOutAlt className="mr-3 text-xl" />
-            <span className="font-medium">Logout</span>
+            <span className="font-medium">{t('parent.navbar.logout')}</span>
           </button>
         </div>
       </div>

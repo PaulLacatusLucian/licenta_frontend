@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import axios from "../../../axiosConfig";
 import FoodCard from "../../../Cafeteria/FoodCards/FoodCard";
 import { FaUpload, FaArrowLeft, FaSave, FaTimes, FaSpinner } from "react-icons/fa";
 
 const ALLERGENS = [
-    { id: "gluten", name: "Gluten", emoji: "🌾" },
-    { id: "nuts", name: "Nuts", emoji: "🥜" },
-    { id: "dairy", name: "Dairy", emoji: "🧀" },
-    { id: "eggs", name: "Eggs", emoji: "🥚" },
-    { id: "seafood", name: "Seafood", emoji: "🦐" },
-    { id: "soy", name: "Soy", emoji: "🌱" },
+    { id: "gluten", name: "allergens.gluten", emoji: "🌾" },
+    { id: "nuts", name: "allergens.nuts", emoji: "🥜" },
+    { id: "dairy", name: "allergens.dairy", emoji: "🧀" },
+    { id: "eggs", name: "allergens.eggs", emoji: "🥚" },
+    { id: "seafood", name: "allergens.seafood", emoji: "🦐" },
+    { id: "soy", name: "allergens.soy", emoji: "🌱" },
 ];
 
 const AddMenuItem = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -33,7 +35,6 @@ const AddMenuItem = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         
-        // Clear error for this field if it exists
         if (errors[name]) {
             setErrors({ ...errors, [name]: null });
         }
@@ -42,18 +43,17 @@ const AddMenuItem = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         
-        // Validate file type and size
         if (file) {
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
             const maxSize = 5 * 1024 * 1024; // 5MB
             
             if (!validTypes.includes(file.type)) {
-                setErrors({ ...errors, file: "Please upload an image file (JPEG, PNG, GIF)" });
+                setErrors({ ...errors, file: t('chef.addFood.errors.invalidFileType') });
                 return;
             }
             
             if (file.size > maxSize) {
-                setErrors({ ...errors, file: "File size should be less than 5MB" });
+                setErrors({ ...errors, file: t('chef.addFood.errors.fileTooLarge') });
                 return;
             }
             
@@ -87,23 +87,23 @@ const AddMenuItem = () => {
         const newErrors = {};
         
         if (!formData.name.trim()) {
-            newErrors.name = "Name is required";
+            newErrors.name = t('chef.addFood.errors.nameRequired');
         }
         
         if (!formData.description.trim()) {
-            newErrors.description = "Description is required";
+            newErrors.description = t('chef.addFood.errors.descriptionRequired');
         }
         
         if (!formData.price) {
-            newErrors.price = "Price is required";
+            newErrors.price = t('chef.addFood.errors.priceRequired');
         } else if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-            newErrors.price = "Price must be a positive number";
+            newErrors.price = t('chef.addFood.errors.priceInvalid');
         }
         
         if (!formData.quantity) {
-            newErrors.quantity = "Quantity is required";
+            newErrors.quantity = t('chef.addFood.errors.quantityRequired');
         } else if (isNaN(formData.quantity) || parseInt(formData.quantity) < 0) {
-            newErrors.quantity = "Quantity must be a non-negative number";
+            newErrors.quantity = t('chef.addFood.errors.quantityInvalid');
         }
         
         setErrors(newErrors);
@@ -114,7 +114,7 @@ const AddMenuItem = () => {
         e.preventDefault();
         
         if (!validateForm()) {
-            showNotification("Please correct the errors in the form", "error");
+            showNotification(t('chef.addFood.errors.correctErrors'), "error");
             return;
         }
         
@@ -136,16 +136,15 @@ const AddMenuItem = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            showNotification("Menu item added successfully!", "success");
+            showNotification(t('chef.addFood.success'), "success");
             
-            // Wait for notification to show before redirecting
             setTimeout(() => {
                 navigate("/chef");
             }, 1500);
         } catch (error) {
             console.error("Error adding menu item:", error);
             showNotification(
-                error.response?.data || "Failed to add menu item. Please try again.",
+                error.response?.data || t('chef.addFood.errors.addFailed'),
                 "error"
             );
             setLoading(false);
@@ -158,7 +157,7 @@ const AddMenuItem = () => {
     };
 
     const handleCancel = () => {
-        if (window.confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+        if (window.confirm(t('chef.addFood.cancelConfirm'))) {
             navigate("/chef");
         }
     };
@@ -174,17 +173,16 @@ const AddMenuItem = () => {
         
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             const file = e.dataTransfer.files[0];
-            // Use the same validation as in handleFileChange
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
             const maxSize = 5 * 1024 * 1024; // 5MB
             
             if (!validTypes.includes(file.type)) {
-                setErrors({ ...errors, file: "Please upload an image file (JPEG, PNG, GIF)" });
+                setErrors({ ...errors, file: t('chef.addFood.errors.invalidFileType') });
                 return;
             }
             
             if (file.size > maxSize) {
-                setErrors({ ...errors, file: "File size should be less than 5MB" });
+                setErrors({ ...errors, file: t('chef.addFood.errors.fileTooLarge') });
                 return;
             }
             
@@ -197,7 +195,6 @@ const AddMenuItem = () => {
     return (
         <div className="min-h-screen bg-gray-100 py-8">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header with back button */}
                 <div className="flex items-center mb-6">
                     <button 
                         onClick={() => navigate("/chef")}
@@ -205,18 +202,17 @@ const AddMenuItem = () => {
                     >
                         <FaArrowLeft className="text-gray-700" />
                     </button>
-                    <h1 className="text-2xl font-bold text-gray-800">Add New Menu Item</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">{t('chef.addFood.title')}</h1>
                 </div>
                 
                 <div className="bg-white rounded-xl shadow-md overflow-hidden">
                     <div className="p-6 border-b border-gray-200">
                         <p className="text-gray-600">
-                            Fill in the details below to add a new item to the menu. Preview will update as you type.
+                            {t('chef.addFood.subtitle')}
                         </p>
                     </div>
                     
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
-                        {/* Form Section */}
                         <div>
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-4">
@@ -224,7 +220,7 @@ const AddMenuItem = () => {
                                         htmlFor="name"
                                         className="block text-sm font-medium text-gray-700"
                                     >
-                                        Item Name
+                                        {t('chef.addFood.form.itemName')}
                                     </label>
                                     <input
                                         type="text"
@@ -235,7 +231,7 @@ const AddMenuItem = () => {
                                         className={`mt-1 p-2 block w-full border ${
                                             errors.name ? 'border-red-500' : 'border-gray-300'
                                         } rounded-md focus:ring-primary focus:border-primary`}
-                                        placeholder="e.g. Margherita Pizza"
+                                        placeholder={t('chef.addFood.form.itemNamePlaceholder')}
                                     />
                                     {errors.name && (
                                         <p className="mt-1 text-sm text-red-600">{errors.name}</p>
@@ -247,7 +243,7 @@ const AddMenuItem = () => {
                                         htmlFor="description"
                                         className="block text-sm font-medium text-gray-700"
                                     >
-                                        Description
+                                        {t('chef.addFood.form.description')}
                                     </label>
                                     <textarea
                                         id="description"
@@ -258,7 +254,7 @@ const AddMenuItem = () => {
                                         className={`mt-1 p-2 block w-full border ${
                                             errors.description ? 'border-red-500' : 'border-gray-300'
                                         } rounded-md focus:ring-primary focus:border-primary`}
-                                        placeholder="Describe the menu item..."
+                                        placeholder={t('chef.addFood.form.descriptionPlaceholder')}
                                     />
                                     {errors.description && (
                                         <p className="mt-1 text-sm text-red-600">{errors.description}</p>
@@ -271,7 +267,7 @@ const AddMenuItem = () => {
                                             htmlFor="price"
                                             className="block text-sm font-medium text-gray-700"
                                         >
-                                            Price (in $)
+                                            {t('chef.addFood.form.price')}
                                         </label>
                                         <div className="mt-1 relative rounded-md shadow-sm">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -301,7 +297,7 @@ const AddMenuItem = () => {
                                             htmlFor="quantity"
                                             className="block text-sm font-medium text-gray-700"
                                         >
-                                            Quantity
+                                            {t('chef.addFood.form.quantity')}
                                         </label>
                                         <input
                                             type="number"
@@ -312,7 +308,7 @@ const AddMenuItem = () => {
                                             className={`mt-1 p-2 block w-full border ${
                                                 errors.quantity ? 'border-red-500' : 'border-gray-300'
                                             } rounded-md focus:ring-primary focus:border-primary`}
-                                            placeholder="Available quantity"
+                                            placeholder={t('chef.addFood.form.quantityPlaceholder')}
                                             min="0"
                                         />
                                         {errors.quantity && (
@@ -323,7 +319,7 @@ const AddMenuItem = () => {
                                 
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Image
+                                        {t('chef.addFood.form.image')}
                                     </label>
                                     <div 
                                         className={`mt-1 p-4 border-2 border-dashed rounded-md ${
@@ -337,7 +333,7 @@ const AddMenuItem = () => {
                                             <FaUpload className="mx-auto h-10 w-10 text-gray-400" />
                                             <div className="text-sm text-gray-600">
                                                 <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-primary hover:text-secondary">
-                                                    <span>Upload a file</span>
+                                                    <span>{t('chef.addFood.form.uploadFile')}</span>
                                                     <input 
                                                         id="file-upload" 
                                                         name="file" 
@@ -347,16 +343,16 @@ const AddMenuItem = () => {
                                                         accept="image/*"
                                                     />
                                                 </label>
-                                                <p className="pl-1">or drag and drop</p>
+                                                <p className="pl-1">{t('chef.addFood.form.dragDrop')}</p>
                                             </div>
                                             <p className="text-xs text-gray-500">
-                                                PNG, JPG, GIF up to 5MB
+                                                {t('chef.addFood.form.fileTypes')}
                                             </p>
                                         </div>
                                         {previewImage && (
                                             <div className="mt-3 flex justify-center">
                                                 <span className="text-sm text-green-600">
-                                                    Image selected ✓
+                                                    {t('chef.addFood.form.imageSelected')} ✓
                                                 </span>
                                             </div>
                                         )}
@@ -368,7 +364,7 @@ const AddMenuItem = () => {
                                 
                                 <div className="mb-6">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Allergens
+                                        {t('chef.addFood.form.allergens')}
                                     </label>
                                     <div className="flex flex-wrap gap-2">
                                         {ALLERGENS.map((allergen) => (
@@ -383,12 +379,12 @@ const AddMenuItem = () => {
                                                 }`}
                                             >
                                                 <span>{allergen.emoji}</span> 
-                                                <span>{allergen.name}</span>
+                                                <span>{t(allergen.name)}</span>
                                             </button>
                                         ))}
                                     </div>
                                     <p className="mt-2 text-xs text-gray-500">
-                                        Select all allergens present in this menu item
+                                        {t('chef.addFood.form.allergensHint')}
                                     </p>
                                 </div>
                                 
@@ -398,7 +394,7 @@ const AddMenuItem = () => {
                                         onClick={handleCancel}
                                         className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium flex items-center"
                                     >
-                                        <FaTimes className="mr-2" /> Cancel
+                                        <FaTimes className="mr-2" /> {t('chef.addFood.buttons.cancel')}
                                     </button>
                                     <button
                                         type="submit"
@@ -407,11 +403,11 @@ const AddMenuItem = () => {
                                     >
                                         {loading ? (
                                             <>
-                                                <FaSpinner className="animate-spin mr-2" /> Saving...
+                                                <FaSpinner className="animate-spin mr-2" /> {t('chef.addFood.buttons.saving')}
                                             </>
                                         ) : (
                                             <>
-                                                <FaSave className="mr-2" /> Save Item
+                                                <FaSave className="mr-2" /> {t('chef.addFood.buttons.save')}
                                             </>
                                         )}
                                     </button>
@@ -419,23 +415,22 @@ const AddMenuItem = () => {
                             </form>
                         </div>
 
-                        {/* Preview Section */}
                         <div className="hidden lg:block">
                             <div className="sticky top-8">
-                                <h3 className="text-lg font-medium text-gray-700 mb-4">Preview</h3>
+                                <h3 className="text-lg font-medium text-gray-700 mb-4">{t('chef.addFood.preview.title')}</h3>
                                 <div className="max-w-sm mx-auto">
                                     <FoodCard
-                                        name={formData.name || "New Menu Item"}
-                                        description={formData.description || "Item description will appear here"}
+                                        name={formData.name || t('chef.addFood.preview.defaultName')}
+                                        description={formData.description || t('chef.addFood.preview.defaultDescription')}
                                         price={formData.price || "0.00"}
                                         quantity={formData.quantity || "0"}
                                         imageUrl={previewImage}
                                         allergens={formData.allergens}
-                                        onBuy={null} // Ensure "Buy" button does not appear in the preview
+                                        onBuy={null}
                                     />
                                 </div>
                                 <p className="mt-4 text-xs text-center text-gray-500">
-                                    This is how your menu item will appear to customers
+                                    {t('chef.addFood.preview.hint')}
                                 </p>
                             </div>
                         </div>
@@ -443,7 +438,6 @@ const AddMenuItem = () => {
                 </div>
             </div>
             
-            {/* Notification Toast */}
             {notification && (
                 <div className={`fixed bottom-4 right-4 max-w-md z-50 rounded-lg shadow-lg p-4 flex items-start space-x-4 ${
                     notification.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
@@ -477,7 +471,6 @@ const AddMenuItem = () => {
                 </div>
             )}
             
-            {/* Animation styles */}
             <style jsx>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px); }

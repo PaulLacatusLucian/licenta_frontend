@@ -1,16 +1,18 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import { FaTrash, FaEdit, FaExclamationTriangle } from "react-icons/fa";
 
 const ALLERGENS = [
-    { id: "gluten", name: "Gluten", emoji: "🌾" },
-    { id: "nuts", name: "Nuts", emoji: "🥜" },
-    { id: "dairy", name: "Dairy", emoji: "🧀" },
-    { id: "eggs", name: "Eggs", emoji: "🥚" },
-    { id: "seafood", name: "Seafood", emoji: "🦐" },
-    { id: "soy", name: "Soy", emoji: "🌱" },
+    { id: "gluten", name: "allergens.gluten", emoji: "🌾" },
+    { id: "nuts", name: "allergens.nuts", emoji: "🥜" },
+    { id: "dairy", name: "allergens.dairy", emoji: "🧀" },
+    { id: "eggs", name: "allergens.eggs", emoji: "🥚" },
+    { id: "seafood", name: "allergens.seafood", emoji: "🦐" },
+    { id: "soy", name: "allergens.soy", emoji: "🌱" },
 ];
 
 const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens, onDelete, onEdit }) => {
+    const { t } = useTranslation();
     const imageSrc = imageUrl?.startsWith("/images/")
         ? `http://localhost:8080${imageUrl}`
         : imageUrl;
@@ -20,15 +22,15 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
 
     return (
         <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-            {/* Admin Controls - Top Bar */}
+            {/* Admin-Steuerungen - Obere Leiste */}
             <div className="bg-gray-800 text-white px-3 py-2 flex justify-between items-center">
-                <span className="text-xs font-semibold uppercase tracking-wider">Admin View</span>
+                <span className="text-xs font-semibold uppercase tracking-wider">{t('foodCard.admin.adminView')}</span>
                 <div className="flex gap-2">
                     {onEdit && (
                         <button 
                             onClick={onEdit} 
                             className="p-1 hover:bg-gray-700 rounded"
-                            title="Edit item"
+                            title={t('foodCard.admin.editItem')}
                         >
                             <FaEdit size={14} />
                         </button>
@@ -37,7 +39,7 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
                         <button 
                             onClick={onDelete} 
                             className="p-1 hover:bg-red-600 rounded"
-                            title="Delete item"
+                            title={t('foodCard.admin.deleteItem')}
                         >
                             <FaTrash size={14} />
                         </button>
@@ -45,13 +47,13 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
                 </div>
             </div>
 
-            {/* Image Container with Price Badge */}
+            {/* Bildcontainer mit Preisschild */}
             <div className="relative w-full h-48 overflow-hidden">
-                {/* Image */}
+                {/* Bild */}
                 {imageSrc ? (
                     <img
                         src={imageSrc}
-                        alt={name || "Food Item"}
+                        alt={name || t('foodCard.defaultName')}
                         className="w-full h-full object-cover"
                     />
                 ) : (
@@ -60,36 +62,36 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
                     </div>
                 )}
                 
-                {/* Price Badge */}
+                {/* Preisschild */}
                 <div className="absolute bottom-3 right-3 bg-gray-800 text-white px-3 py-1 rounded-full font-bold shadow-md">
                     ${price?.toFixed(2) || "0.00"}
                 </div>
                 
-                {/* Stock Status */}
+                {/* Lagerstatus */}
                 {isLowStock && (
                     <div className="absolute top-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center shadow-md">
-                        <FaExclamationTriangle className="mr-1" /> Low Stock
+                        <FaExclamationTriangle className="mr-1" /> {t('foodCard.stock.low')}
                     </div>
                 )}
                 {isOutOfStock && (
                     <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center shadow-md">
-                        <FaExclamationTriangle className="mr-1" /> Out of Stock
+                        <FaExclamationTriangle className="mr-1" /> {t('foodCard.stock.out')}
                     </div>
                 )}
             </div>
             
-            {/* Content */}
+            {/* Inhalt */}
             <div className="p-4 flex-grow">
-                <h3 className="text-lg font-bold text-gray-800 mb-1">{name || "Item Name"}</h3>
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{description || "No description available"}</p>
+                <h3 className="text-lg font-bold text-gray-800 mb-1">{name || t('foodCard.defaultName')}</h3>
+                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{description || t('foodCard.noDescription')}</p>
                 
-                {/* Details Table */}
+                {/* Details-Tabelle */}
                 <div className="bg-gray-50 rounded-lg p-3 mb-3">
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div className="text-gray-500">Price:</div>
+                        <div className="text-gray-500">{t('foodCard.admin.price')}:</div>
                         <div className="text-gray-800 font-semibold">${price?.toFixed(2) || "0.00"}</div>
                         
-                        <div className="text-gray-500">Quantity:</div>
+                        <div className="text-gray-500">{t('foodCard.admin.quantity')}:</div>
                         <div className={`font-semibold ${
                             isOutOfStock ? 'text-red-600' : isLowStock ? 'text-yellow-600' : 'text-green-600'
                         }`}>
@@ -98,11 +100,11 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
                     </div>
                 </div>
                 
-                {/* Stock Indicator */}
+                {/* Lagerbestandsindikator */}
                 <div className="mb-3">
                     <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-medium text-gray-500">Inventory:</span>
-                        <span className="text-xs font-bold">{quantity} units</span>
+                        <span className="text-xs font-medium text-gray-500">{t('foodCard.admin.inventory')}:</span>
+                        <span className="text-xs font-bold">{quantity} {t('foodCard.admin.units')}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
                         <div 
@@ -114,9 +116,9 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
                     </div>
                 </div>
                 
-                {/* Allergens */}
+                {/* Allergene */}
                 <div>
-                    <h4 className="text-xs font-medium text-gray-500 mb-1">Allergens:</h4>
+                    <h4 className="text-xs font-medium text-gray-500 mb-1">{t('foodCard.allergens')}:</h4>
                     {allergens && allergens.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
                             {allergens.map((allergenId) => {
@@ -125,20 +127,20 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
                                     <span
                                         key={allergen.id}
                                         className="bg-gray-100 text-gray-700 rounded-full px-2 py-0.5 text-xs flex items-center"
-                                        title={allergen.name}
+                                        title={t(allergen.name)}
                                     >
-                                        {allergen.emoji} <span className="ml-1">{allergen.name}</span>
+                                        {allergen.emoji} <span className="ml-1">{t(allergen.name)}</span>
                                     </span>
                                 ) : null;
                             })}
                         </div>
                     ) : (
-                        <p className="text-gray-500 text-xs italic">No allergens specified</p>
+                        <p className="text-gray-500 text-xs italic">{t('foodCard.noAllergens')}</p>
                     )}
                 </div>
             </div>
             
-            {/* Admin Action Buttons */}
+            {/* Admin-Aktionsschaltflächen */}
             {onDelete && (
                 <div className="bg-gray-100 px-4 py-3 flex justify-between">
                     <button 
@@ -149,14 +151,14 @@ const AdminFoodCard = ({ name, description, price, quantity, imageUrl, allergens
                         disabled={!onEdit}
                     >
                         <FaEdit className="inline mr-1" size={14} />
-                        Edit
+                        {t('foodCard.admin.edit')}
                     </button>
                     <button
                         onClick={onDelete}
                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
                     >
                         <FaTrash className="inline mr-1" size={14} />
-                        Delete
+                        {t('foodCard.admin.delete')}
                     </button>
                 </div>
             )}

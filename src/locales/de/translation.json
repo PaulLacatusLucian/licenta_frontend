@@ -2042,5 +2042,244 @@
     "notAvailable": "N.V.",
     "notAssigned": "Nicht zugewiesen",
     "locale": "de-DE"
+  },
+  "chef": {
+     "editFood": {
+      "title": "Menüeintrag bearbeiten",
+      "subtitle": "Aktualisieren Sie die untenstehenden Details, um diesen Menüeintrag zu ändern. Die Vorschau wird während der Bearbeitung aktualisiert.",
+      "loading": "Menüeintrag wird geladen...",
+      "cancelConfirm": "Sind Sie sicher, dass Sie abbrechen möchten? Alle nicht gespeicherten Änderungen gehen verloren.",
+      "success": "Menüeintrag erfolgreich aktualisiert!",
+      "form": {
+        "itemName": "Artikelname",
+        "itemNamePlaceholder": "z.B. Margherita Pizza",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Beschreiben Sie den Menüeintrag...",
+        "price": "Preis (in $)",
+        "quantity": "Menge",
+        "quantityPlaceholder": "Verfügbare Menge",
+        "image": "Bild",
+        "uploadNewImage": "Neues Bild hochladen",
+        "dragDrop": "oder per Drag & Drop",
+        "fileTypes": "PNG, JPG, GIF bis zu 5MB",
+        "imageSelected": "Bild ausgewählt",
+        "allergens": "Allergene",
+        "allergensHint": "Wählen Sie alle in diesem Artikel enthaltenen Allergene aus"
+      },
+      "buttons": {
+        "cancel": "Abbrechen",
+        "save": "Änderungen speichern",
+        "saving": "Wird gespeichert..."
+      },
+      "preview": {
+        "title": "Vorschau",
+        "defaultName": "Menüeintrag",
+        "defaultDescription": "Die Artikelbeschreibung erscheint hier",
+        "hint": "So wird Ihr Menüeintrag für Kunden angezeigt"
+      },
+      "errors": {
+        "loadFailed": "Laden des Menüeintrags fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        "invalidFileType": "Bitte laden Sie eine Bilddatei hoch (JPEG, PNG, GIF)",
+        "fileTooLarge": "Die Dateigröße sollte weniger als 5MB betragen",
+        "nameRequired": "Name ist erforderlich",
+        "descriptionRequired": "Beschreibung ist erforderlich",
+        "priceRequired": "Preis ist erforderlich",
+        "priceInvalid": "Preis muss eine positive Zahl sein",
+        "quantityRequired": "Menge ist erforderlich",
+        "quantityInvalid": "Menge muss eine nicht-negative Zahl sein",
+        "correctErrors": "Bitte korrigieren Sie die Fehler im Formular",
+        "updateFailed": "Aktualisierung des Menüeintrags fehlgeschlagen. Bitte versuchen Sie es erneut."
+      }
+    },
+     "dashboard": {
+      "title": "Admin Menüverwaltung",
+      "loading": "Menüeinträge werden geladen...",
+      "error": "Fehler",
+      "tryAgain": "Erneut versuchen",
+      "addItem": "Artikel hinzufügen",
+      "logout": "Abmelden",
+      "searchPlaceholder": "Nach Name oder Beschreibung suchen...",
+      "deleteConfirm": "Sind Sie sicher, dass Sie diesen Artikel aus dem Menü löschen möchten?",
+      "deleteSuccess": "Artikel erfolgreich gelöscht.",
+      "deleteError": "Fehler beim Löschen des Artikels.",
+      "itemsFound": "{{count}} Artikel gefunden",
+      "itemsFound_plural": "{{count}} Artikel gefunden",
+      "searchResults": "Suchergebnisse für:",
+      "noItems": "Keine Artikel gefunden",
+      "adjustFilters": "Versuchen Sie, Ihre Suche oder Filter anzupassen, um mehr Ergebnisse zu sehen.",
+      "noItemsYet": "Es gibt noch keine Artikel im Menü. Beginnen Sie mit dem Hinzufügen eines neuen Artikels.",
+      "addNewItem": "Neuen Artikel hinzufügen",
+      "sortAsc": "Aufsteigend",
+      "sortDesc": "Absteigend",
+      "filters": {
+        "all": "Alle Artikel",
+        "highStock": "Hoher Lagerbestand",
+        "lowStock": "Niedriger Lagerbestand",
+        "outOfStock": "Nicht vorrätig"
+      },
+      "sortBy": {
+        "name": "Nach Name sortieren",
+        "price": "Nach Preis sortieren",
+        "quantity": "Nach Menge sortieren"
+      },
+      "errors": {
+        "loadFailed": "Laden der Menüeinträge fehlgeschlagen. Bitte versuchen Sie es erneut."
+      }
+    },
+    "addFood": {
+      "title": "Neuen Menüeintrag hinzufügen",
+      "subtitle": "Füllen Sie die untenstehenden Details aus, um einen neuen Eintrag zum Menü hinzuzufügen. Die Vorschau wird während der Eingabe aktualisiert.",
+      "cancelConfirm": "Sind Sie sicher, dass Sie abbrechen möchten? Alle nicht gespeicherten Änderungen gehen verloren.",
+      "success": "Menüeintrag erfolgreich hinzugefügt!",
+      "form": {
+        "itemName": "Artikelname",
+        "itemNamePlaceholder": "z.B. Margherita Pizza",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Beschreiben Sie den Menüeintrag...",
+        "price": "Preis (in $)",
+        "quantity": "Menge",
+        "quantityPlaceholder": "Verfügbare Menge",
+        "image": "Bild",
+        "uploadFile": "Datei hochladen",
+        "dragDrop": "oder per Drag & Drop",
+        "fileTypes": "PNG, JPG, GIF bis zu 5MB",
+        "imageSelected": "Bild ausgewählt",
+        "allergens": "Allergene",
+        "allergensHint": "Wählen Sie alle in diesem Artikel enthaltenen Allergene aus"
+      },
+      "buttons": {
+        "cancel": "Abbrechen",
+        "save": "Artikel speichern",
+        "saving": "Wird gespeichert..."
+      },
+      "preview": {
+        "title": "Vorschau",
+        "defaultName": "Neuer Menüeintrag",
+        "defaultDescription": "Die Artikelbeschreibung erscheint hier",
+        "hint": "So wird Ihr Menüeintrag für Kunden angezeigt"
+      },
+      "errors": {
+        "invalidFileType": "Bitte laden Sie eine Bilddatei hoch (JPEG, PNG, GIF)",
+        "fileTooLarge": "Die Dateigröße sollte weniger als 5MB betragen",
+        "nameRequired": "Name ist erforderlich",
+        "descriptionRequired": "Beschreibung ist erforderlich",
+        "priceRequired": "Preis ist erforderlich",
+        "priceInvalid": "Preis muss eine positive Zahl sein",
+        "quantityRequired": "Menge ist erforderlich",
+        "quantityInvalid": "Menge muss eine nicht-negative Zahl sein",
+        "correctErrors": "Bitte korrigieren Sie die Fehler im Formular",
+        "addFailed": "Hinzufügen des Menüeintrags fehlgeschlagen. Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "allergens": {
+    "gluten": "Gluten",
+    "nuts": "Nüsse",
+    "dairy": "Milchprodukte",
+    "eggs": "Eier",
+    "seafood": "Meeresfrüchte",
+    "soy": "Soja"
+  },
+  "foodCard": {
+    "defaultName": "Lebensmittelartikel",
+    "noDescription": "Keine Beschreibung verfügbar",
+    "availability": "Verfügbarkeit",
+    "remaining": "verbleibend",
+    "allergens": "Allergene",
+    "noAllergens": "Keine Allergene angegeben",
+    "addToCart": "In den Warenkorb",
+    "stock": {
+      "low": "Niedriger Lagerbestand",
+      "out": "Nicht vorrätig"
+    },
+    "admin": {
+      "adminView": "Admin-Ansicht",
+      "editItem": "Artikel bearbeiten",
+      "deleteItem": "Artikel löschen",
+      "price": "Preis",
+      "quantity": "Menge",
+      "inventory": "Lagerbestand",
+      "units": "Einheiten",
+      "edit": "Bearbeiten",
+      "delete": "Löschen"
+    }
+  },
+  "menuList": {
+    "loading": "Menüeinträge werden geladen...",
+    "error": "Fehler",
+    "tryAgain": "Erneut versuchen",
+    "title": "Schulkantine Menü",
+    "searchPlaceholder": "Menüeinträge suchen...",
+    "filters": "Filter",
+    "filtersActive": "Filter ({{count}})",
+    "dietaryRestrictions": "Ernährungseinschränkungen",
+    "searchingFor": "Suche nach:",
+    "itemsAvailable": "{{count}} Artikel verfügbar",
+    "itemsAvailable_plural": "{{count}} Artikel verfügbar",
+    "backToDashboard": "Zurück zum Dashboard",
+    "sortBy": "Sortieren nach",
+    "noItemsTitle": "Keine Menüeinträge verfügbar",
+    "noItemsFiltered": "Keine Artikel entsprechen Ihren aktuellen Suchkriterien. Versuchen Sie, Ihre Filter oder Suchbegriffe anzupassen.",
+    "noItemsAvailable": "Derzeit sind keine Menüeinträge zum Bestellen verfügbar. Bitte schauen Sie später noch einmal vorbei.",
+    "viewAllItems": "Alle Artikel anzeigen",
+    "viewMyOrders": "Meine Bestellungen anzeigen",
+    "nav": {
+      "profile": "Profil",
+      "logout": "Abmelden"
+    },
+    "sortOptions": {
+      "name": "Name",
+      "price": "Preis",
+      "quantity": "Menge"
+    },
+    "purchase": {
+      "success": "Kauf erfolgreich! Ihre Bestellung wurde aufgegeben.",
+      "error": "Fehler beim Kauf des Artikels: {{error}}"
+    },
+    "errors": {
+      "loadFailed": "Laden der Menüeinträge fehlgeschlagen. Bitte versuchen Sie es später erneut."
+    }
+  },
+    "profile": {
+    "title": "Bestellverlauf",
+    "backToMenu": "Zurück zum Menü",
+    "downloading": "Wird heruntergeladen...",
+    "downloadInvoice": "Rechnung herunterladen",
+    "selectPeriod": "Zeitraum auswählen",
+    "previousMonth": "Vorheriger Monat",
+    "nextMonth": "Nächster Monat",
+    "orderHistory": "Bestellverlauf",
+    "orderFood": "Essen bestellen",
+    "noOrdersTitle": "Keine Bestellungen gefunden",
+    "noOrdersDescription": "Im {{month}} {{year}} wurden keine Bestellungen aufgegeben.",
+    "dateLocale": "de-DE",
+    "months": [
+      "Januar", "Februar", "März", "April", "Mai", "Juni",
+      "Juli", "August", "September", "Oktober", "November", "Dezember"
+    ],
+    "stats": {
+      "totalOrders": "Gesamtbestellungen",
+      "totalSpent": "Gesamtausgaben",
+      "avgPrice": "Durchschnittspreis pro Bestellung"
+    },
+    "table": {
+      "item": "Artikel",
+      "quantity": "Menge",
+      "price": "Preis",
+      "date": "Datum"
+    },
+    "errors": {
+      "loadFailed": "Laden des Bestellverlaufs fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "downloadFailed": "Herunterladen der Rechnung fehlgeschlagen. Bitte versuchen Sie es erneut."
+    }
+  },
+  "purchaseModal": {
+    "pricePerItem": "Preis pro Artikel",
+    "allergens": "Allergene",
+    "quantity": "Menge",
+    "available": "{{count}} verfügbar",
+    "totalPrice": "Gesamtpreis",
+    "confirmPurchase": "Kauf bestätigen",
+    "cancel": "Abbrechen"
   }
 }

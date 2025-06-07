@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import axios from "../../../axiosConfig";
 import FoodCard from "../../../Cafeteria/FoodCards/FoodCard";
 import { FaUpload, FaArrowLeft, FaSave, FaTimes, FaSpinner } from "react-icons/fa";
 
 const ALLERGENS = [
-    { id: "gluten", name: "Gluten", emoji: "🌾" },
-    { id: "nuts", name: "Nuts", emoji: "🥜" },
-    { id: "dairy", name: "Dairy", emoji: "🧀" },
-    { id: "eggs", name: "Eggs", emoji: "🥚" },
-    { id: "seafood", name: "Seafood", emoji: "🦐" },
-    { id: "soy", name: "Soy", emoji: "🌱" },
+    { id: "gluten", name: "allergens.gluten", emoji: "🌾" },
+    { id: "nuts", name: "allergens.nuts", emoji: "🥜" },
+    { id: "dairy", name: "allergens.dairy", emoji: "🧀" },
+    { id: "eggs", name: "allergens.eggs", emoji: "🥚" },
+    { id: "seafood", name: "allergens.seafood", emoji: "🦐" },
+    { id: "soy", name: "allergens.soy", emoji: "🌱" },
 ];
 
 const EditMenuItem = () => {
     const navigate = useNavigate();
-    const { id } = useParams(); // Get menu item ID from URL params
+    const { t } = useTranslation();
+    const { id } = useParams(); // Menüartikel-ID aus URL-Parametern abrufen
 
     const [formData, setFormData] = useState({
         name: "",
@@ -33,7 +35,7 @@ const EditMenuItem = () => {
     const [originalItem, setOriginalItem] = useState(null);
 
     useEffect(() => {
-        // Fetch the menu item data when component mounts
+        // Menüartikeldaten beim Laden der Komponente abrufen
         fetchMenuItem();
     }, [id]);
 
@@ -43,7 +45,7 @@ const EditMenuItem = () => {
             const response = await axios.get(`/menu/${id}`);
             const item = response.data;
 
-            // Process allergens - ensure they're in proper format
+            // Allergene verarbeiten - sicherstellen, dass sie im richtigen Format sind
             let processedAllergens = [];
             if (item.allergens && Array.isArray(item.allergens)) {
                 processedAllergens = item.allergens.map(allergen => {
@@ -65,14 +67,14 @@ const EditMenuItem = () => {
 
             setOriginalItem(item);
 
-            // Set the preview image if available
+            // Vorschaubild setzen, falls verfügbar
             if (item.imageUrl) {
                 setPreviewImage(`http://localhost:8080${item.imageUrl}`);
             }
         } catch (error) {
             console.error("Error fetching menu item:", error);
             showNotification(
-                "Failed to load menu item. Please try again.",
+                t('chef.editFood.errors.loadFailed'),
                 "error"
             );
         } finally {
@@ -84,7 +86,7 @@ const EditMenuItem = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         
-        // Clear error for this field if it exists
+        // Fehler für dieses Feld löschen, falls vorhanden
         if (errors[name]) {
             setErrors({ ...errors, [name]: null });
         }
@@ -93,18 +95,18 @@ const EditMenuItem = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         
-        // Validate file type and size
+        // Dateityp und -größe validieren
         if (file) {
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
             const maxSize = 5 * 1024 * 1024; // 5MB
             
             if (!validTypes.includes(file.type)) {
-                setErrors({ ...errors, file: "Please upload an image file (JPEG, PNG, GIF)" });
+                setErrors({ ...errors, file: t('chef.editFood.errors.invalidFileType') });
                 return;
             }
             
             if (file.size > maxSize) {
-                setErrors({ ...errors, file: "File size should be less than 5MB" });
+                setErrors({ ...errors, file: t('chef.editFood.errors.fileTooLarge') });
                 return;
             }
             
@@ -112,8 +114,8 @@ const EditMenuItem = () => {
             setPreviewImage(URL.createObjectURL(file));
             setErrors({ ...errors, file: null });
         } else {
-            // Don't clear the preview if no new file is selected
-            // This ensures we keep the existing image if user cancels the file selection
+            // Vorschau nicht löschen, wenn keine neue Datei ausgewählt wurde
+            // Dies stellt sicher, dass wir das vorhandene Bild behalten
             setFormData({ ...formData, file: null });
         }
     };
@@ -139,23 +141,23 @@ const EditMenuItem = () => {
         const newErrors = {};
         
         if (!formData.name.trim()) {
-            newErrors.name = "Name is required";
+            newErrors.name = t('chef.editFood.errors.nameRequired');
         }
         
         if (!formData.description.trim()) {
-            newErrors.description = "Description is required";
+            newErrors.description = t('chef.editFood.errors.descriptionRequired');
         }
         
         if (!formData.price) {
-            newErrors.price = "Price is required";
+            newErrors.price = t('chef.editFood.errors.priceRequired');
         } else if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-            newErrors.price = "Price must be a positive number";
+            newErrors.price = t('chef.editFood.errors.priceInvalid');
         }
         
         if (!formData.quantity) {
-            newErrors.quantity = "Quantity is required";
+            newErrors.quantity = t('chef.editFood.errors.quantityRequired');
         } else if (isNaN(formData.quantity) || parseInt(formData.quantity) < 0) {
-            newErrors.quantity = "Quantity must be a non-negative number";
+            newErrors.quantity = t('chef.editFood.errors.quantityInvalid');
         }
         
         setErrors(newErrors);
@@ -166,16 +168,16 @@ const EditMenuItem = () => {
         e.preventDefault();
         
         if (!validateForm()) {
-            showNotification("Please correct the errors in the form", "error");
+            showNotification(t('chef.editFood.errors.correctErrors'), "error");
             return;
         }
         
         setSaving(true);
         
         try {
-            // Handle the case with or without a new image
+            // Mit oder ohne neues Bild behandeln
             if (formData.file) {
-                // If we have a new file, upload it first
+                // Wenn wir eine neue Datei haben, zuerst hochladen
                 const fileData = new FormData();
                 fileData.append("file", formData.file);
                 
@@ -186,7 +188,7 @@ const EditMenuItem = () => {
                 });
             }
             
-            // Update other menu item data
+            // Andere Menüartikeldaten aktualisieren
             const updatedData = {
                 name: formData.name,
                 description: formData.description,
@@ -195,21 +197,18 @@ const EditMenuItem = () => {
                 allergens: formData.allergens
             };
             
-            // We don't include imageUrl in the update payload
-            // because it was already updated in the upload-image call if needed
-            
             await axios.put(`/menu/${id}`, updatedData);
             
-            showNotification("Menu item updated successfully!", "success");
+            showNotification(t('chef.editFood.success'), "success");
             
-            // Wait for notification to show before redirecting
+            // Auf Benachrichtigung warten, bevor umgeleitet wird
             setTimeout(() => {
                 navigate("/chef");
             }, 1500);
         } catch (error) {
             console.error("Error updating menu item:", error);
             showNotification(
-                error.response?.data || "Failed to update menu item. Please try again.",
+                error.response?.data || t('chef.editFood.errors.updateFailed'),
                 "error"
             );
         } finally {
@@ -223,7 +222,7 @@ const EditMenuItem = () => {
     };
 
     const handleCancel = () => {
-        if (window.confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+        if (window.confirm(t('chef.editFood.cancelConfirm'))) {
             navigate("/chef");
         }
     };
@@ -239,17 +238,17 @@ const EditMenuItem = () => {
         
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             const file = e.dataTransfer.files[0];
-            // Use the same validation as in handleFileChange
+            // Gleiche Validierung wie in handleFileChange verwenden
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
             const maxSize = 5 * 1024 * 1024; // 5MB
             
             if (!validTypes.includes(file.type)) {
-                setErrors({ ...errors, file: "Please upload an image file (JPEG, PNG, GIF)" });
+                setErrors({ ...errors, file: t('chef.editFood.errors.invalidFileType') });
                 return;
             }
             
             if (file.size > maxSize) {
-                setErrors({ ...errors, file: "File size should be less than 5MB" });
+                setErrors({ ...errors, file: t('chef.editFood.errors.fileTooLarge') });
                 return;
             }
             
@@ -259,13 +258,13 @@ const EditMenuItem = () => {
         }
     };
 
-    // Show loading state
+    // Ladezustand anzeigen
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
                 <div className="flex flex-col items-center">
                     <FaSpinner className="animate-spin text-primary text-4xl mb-4" />
-                    <p className="text-gray-700 text-lg">Loading menu item...</p>
+                    <p className="text-gray-700 text-lg">{t('chef.editFood.loading')}</p>
                 </div>
             </div>
         );
@@ -274,7 +273,7 @@ const EditMenuItem = () => {
     return (
         <div className="min-h-screen bg-gray-100 py-8">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header with back button */}
+                {/* Header mit Zurück-Button */}
                 <div className="relative flex justify-center items-center mb-6">
                     <button 
                         onClick={() => navigate("/chef")}
@@ -282,18 +281,18 @@ const EditMenuItem = () => {
                     >
                         <FaArrowLeft className="text-gray-700" />
                     </button>
-                    <h1 className="text-2xl font-bold text-gray-800">Edit Menu Item</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">{t('chef.editFood.title')}</h1>
                 </div>
                 
                 <div className="bg-white rounded-xl shadow-md overflow-hidden">
                     <div className="p-6 border-b border-gray-200">
                         <p className="text-gray-600">
-                            Update the details below to modify this menu item. Preview will update as you make changes.
+                            {t('chef.editFood.subtitle')}
                         </p>
                     </div>
                     
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
-                        {/* Form Section */}
+                        {/* Formular-Bereich */}
                         <div>
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-4">
@@ -301,7 +300,7 @@ const EditMenuItem = () => {
                                         htmlFor="name"
                                         className="block text-sm font-medium text-gray-700"
                                     >
-                                        Item Name
+                                        {t('chef.editFood.form.itemName')}
                                     </label>
                                     <input
                                         type="text"
@@ -312,7 +311,7 @@ const EditMenuItem = () => {
                                         className={`mt-1 p-2 block w-full border ${
                                             errors.name ? 'border-red-500' : 'border-gray-300'
                                         } rounded-md focus:ring-primary focus:border-primary`}
-                                        placeholder="e.g. Margherita Pizza"
+                                        placeholder={t('chef.editFood.form.itemNamePlaceholder')}
                                     />
                                     {errors.name && (
                                         <p className="mt-1 text-sm text-red-600">{errors.name}</p>
@@ -324,7 +323,7 @@ const EditMenuItem = () => {
                                         htmlFor="description"
                                         className="block text-sm font-medium text-gray-700"
                                     >
-                                        Description
+                                        {t('chef.editFood.form.description')}
                                     </label>
                                     <textarea
                                         id="description"
@@ -335,7 +334,7 @@ const EditMenuItem = () => {
                                         className={`mt-1 p-2 block w-full border ${
                                             errors.description ? 'border-red-500' : 'border-gray-300'
                                         } rounded-md focus:ring-primary focus:border-primary`}
-                                        placeholder="Describe the menu item..."
+                                        placeholder={t('chef.editFood.form.descriptionPlaceholder')}
                                     />
                                     {errors.description && (
                                         <p className="mt-1 text-sm text-red-600">{errors.description}</p>
@@ -348,7 +347,7 @@ const EditMenuItem = () => {
                                             htmlFor="price"
                                             className="block text-sm font-medium text-gray-700"
                                         >
-                                            Price (in $)
+                                            {t('chef.editFood.form.price')}
                                         </label>
                                         <div className="mt-1 relative rounded-md shadow-sm">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -378,7 +377,7 @@ const EditMenuItem = () => {
                                             htmlFor="quantity"
                                             className="block text-sm font-medium text-gray-700"
                                         >
-                                            Quantity
+                                            {t('chef.editFood.form.quantity')}
                                         </label>
                                         <input
                                             type="number"
@@ -389,7 +388,7 @@ const EditMenuItem = () => {
                                             className={`mt-1 p-2 block w-full border ${
                                                 errors.quantity ? 'border-red-500' : 'border-gray-300'
                                             } rounded-md focus:ring-primary focus:border-primary`}
-                                            placeholder="Available quantity"
+                                            placeholder={t('chef.editFood.form.quantityPlaceholder')}
                                             min="0"
                                         />
                                         {errors.quantity && (
@@ -400,7 +399,7 @@ const EditMenuItem = () => {
                                 
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Image
+                                        {t('chef.editFood.form.image')}
                                     </label>
                                     <div 
                                         className={`mt-1 p-4 border-2 border-dashed rounded-md ${
@@ -414,7 +413,7 @@ const EditMenuItem = () => {
                                             <FaUpload className="mx-auto h-10 w-10 text-gray-400" />
                                             <div className="text-sm text-gray-600">
                                                 <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-primary hover:text-secondary">
-                                                    <span>Upload a new image</span>
+                                                    <span>{t('chef.editFood.form.uploadNewImage')}</span>
                                                     <input 
                                                         id="file-upload" 
                                                         name="file" 
@@ -424,16 +423,16 @@ const EditMenuItem = () => {
                                                         accept="image/*"
                                                     />
                                                 </label>
-                                                <p className="pl-1">or drag and drop</p>
+                                                <p className="pl-1">{t('chef.editFood.form.dragDrop')}</p>
                                             </div>
                                             <p className="text-xs text-gray-500">
-                                                PNG, JPG, GIF up to 5MB
+                                                {t('chef.editFood.form.fileTypes')}
                                             </p>
                                         </div>
                                         {previewImage && (
                                             <div className="mt-3 flex justify-center">
                                                 <span className="text-sm text-green-600">
-                                                    Image selected ✓
+                                                    {t('chef.editFood.form.imageSelected')} ✓
                                                 </span>
                                             </div>
                                         )}
@@ -445,7 +444,7 @@ const EditMenuItem = () => {
                                 
                                 <div className="mb-6">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Allergens
+                                        {t('chef.editFood.form.allergens')}
                                     </label>
                                     <div className="flex flex-wrap gap-2">
                                         {ALLERGENS.map((allergen) => (
@@ -460,12 +459,12 @@ const EditMenuItem = () => {
                                                 }`}
                                             >
                                                 <span>{allergen.emoji}</span> 
-                                                <span>{allergen.name}</span>
+                                                <span>{t(allergen.name)}</span>
                                             </button>
                                         ))}
                                     </div>
                                     <p className="mt-2 text-xs text-gray-500">
-                                        Select all allergens present in this menu item
+                                        {t('chef.editFood.form.allergensHint')}
                                     </p>
                                 </div>
                                 
@@ -475,7 +474,7 @@ const EditMenuItem = () => {
                                         onClick={handleCancel}
                                         className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium flex items-center"
                                     >
-                                        <FaTimes className="mr-2" /> Cancel
+                                        <FaTimes className="mr-2" /> {t('chef.editFood.buttons.cancel')}
                                     </button>
                                     <button
                                         type="submit"
@@ -484,11 +483,11 @@ const EditMenuItem = () => {
                                     >
                                         {saving ? (
                                             <>
-                                                <FaSpinner className="animate-spin mr-2" /> Saving...
+                                                <FaSpinner className="animate-spin mr-2" /> {t('chef.editFood.buttons.saving')}
                                             </>
                                         ) : (
                                             <>
-                                                <FaSave className="mr-2" /> Save Changes
+                                                <FaSave className="mr-2" /> {t('chef.editFood.buttons.save')}
                                             </>
                                         )}
                                     </button>
@@ -496,23 +495,23 @@ const EditMenuItem = () => {
                             </form>
                         </div>
 
-                        {/* Preview Section */}
+                        {/* Vorschau-Bereich */}
                         <div className="hidden lg:block">
                             <div className="sticky top-8">
-                                <h3 className="text-lg font-medium text-gray-700 mb-4">Preview</h3>
+                                <h3 className="text-lg font-medium text-gray-700 mb-4">{t('chef.editFood.preview.title')}</h3>
                                 <div className="max-w-sm mx-auto">
                                     <FoodCard
-                                        name={formData.name || "Menu Item"}
-                                        description={formData.description || "Item description will appear here"}
+                                        name={formData.name || t('chef.editFood.preview.defaultName')}
+                                        description={formData.description || t('chef.editFood.preview.defaultDescription')}
                                         price={formData.price || "0.00"}
                                         quantity={formData.quantity || "0"}
                                         imageUrl={previewImage}
                                         allergens={formData.allergens}
-                                        onBuy={null} // Ensure "Buy" button does not appear in the preview
+                                        onBuy={null} // Sicherstellen, dass "Kaufen"-Button in der Vorschau nicht angezeigt wird
                                     />
                                 </div>
                                 <p className="mt-4 text-xs text-center text-gray-500">
-                                    This is how your menu item will appear to customers
+                                    {t('chef.editFood.preview.hint')}
                                 </p>
                             </div>
                         </div>
@@ -520,7 +519,7 @@ const EditMenuItem = () => {
                 </div>
             </div>
             
-            {/* Notification Toast */}
+            {/* Benachrichtigungs-Toast */}
             {notification && (
                 <div className={`fixed bottom-4 right-4 max-w-md z-50 rounded-lg shadow-lg p-4 flex items-start space-x-4 ${
                     notification.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
@@ -554,7 +553,7 @@ const EditMenuItem = () => {
                 </div>
             )}
             
-            {/* Animation styles */}
+            {/* Animationsstile */}
             <style jsx>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px); }

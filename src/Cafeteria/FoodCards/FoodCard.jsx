@@ -1,21 +1,23 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import { FaShoppingCart, FaExclamationTriangle } from "react-icons/fa";
 
 const ALLERGENS = [
-    { id: "gluten", name: "Gluten", emoji: "🌾" },
-    { id: "nuts", name: "Nuts", emoji: "🥜" },
-    { id: "dairy", name: "Dairy", emoji: "🧀" },
-    { id: "eggs", name: "Eggs", emoji: "🥚" },
-    { id: "seafood", name: "Seafood", emoji: "🦐" },
-    { id: "soy", name: "Soy", emoji: "🌱" },
+    { id: "gluten", name: "allergens.gluten", emoji: "🌾" },
+    { id: "nuts", name: "allergens.nuts", emoji: "🥜" },
+    { id: "dairy", name: "allergens.dairy", emoji: "🧀" },
+    { id: "eggs", name: "allergens.eggs", emoji: "🥚" },
+    { id: "seafood", name: "allergens.seafood", emoji: "🦐" },
+    { id: "soy", name: "allergens.soy", emoji: "🌱" },
 ];
 
 const FoodCard = ({ name, description, price, quantity, imageUrl, allergens, onBuy }) => {
+    const { t } = useTranslation();
     const imageSrc = imageUrl?.startsWith("/images/")
         ? `http://localhost:8080${imageUrl}`
         : imageUrl;
 
-    // Convert price and quantity to numbers and provide defaults
+    // Preis und Menge in Zahlen konvertieren und Standardwerte bereitstellen
     const numericPrice = typeof price === 'string' ? parseFloat(price) || 0 : (price || 0);
     const numericQuantity = typeof quantity === 'string' ? parseInt(quantity) || 0 : (quantity || 0);
     
@@ -23,13 +25,13 @@ const FoodCard = ({ name, description, price, quantity, imageUrl, allergens, onB
 
     return (
         <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
-            {/* Image Container with Price Badge */}
+            {/* Bildcontainer mit Preisschild */}
             <div className="relative w-full h-48 overflow-hidden">
-                {/* Image */}
+                {/* Bild */}
                 {imageSrc ? (
                     <img
                         src={imageSrc}
-                        alt={name || "Food Item"}
+                        alt={name || t('foodCard.defaultName')}
                         className="w-full h-full object-cover"
                     />
                 ) : (
@@ -38,41 +40,41 @@ const FoodCard = ({ name, description, price, quantity, imageUrl, allergens, onB
                     </div>
                 )}
                 
-                {/* Price Badge */}
+                {/* Preisschild */}
                 <div className="absolute top-3 right-3 bg-primary text-white px-3 py-1 rounded-full font-bold shadow-md">
                     ${numericPrice.toFixed(2)}
                 </div>
                 
-                {/* Stock Status */}
+                {/* Lagerstatus */}
                 {isLowStock && (
                     <div className="absolute top-3 left-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center shadow-md">
-                        <FaExclamationTriangle className="mr-1" /> Low Stock
+                        <FaExclamationTriangle className="mr-1" /> {t('foodCard.stock.low')}
                     </div>
                 )}
                 
-                {/* Out of Stock Overlay */}
+                {/* Nicht verfügbar Überlagerung */}
                 {numericQuantity <= 0 && (
                     <div className="absolute inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center">
                         <span className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold transform rotate-12 shadow-lg">
-                            Out of Stock
+                            {t('foodCard.stock.out')}
                         </span>
                     </div>
                 )}
             </div>
             
-            {/* Content */}
+            {/* Inhalt */}
             <div className="p-4 flex-grow flex flex-col">
-                {/* Title and Description */}
+                {/* Titel und Beschreibung */}
                 <div className="mb-3 flex-grow">
-                    <h3 className="text-lg font-bold text-gray-800 mb-1">{name || "Item Name"}</h3>
-                    <p className="text-gray-600 text-sm line-clamp-2">{description || "No description available"}</p>
+                    <h3 className="text-lg font-bold text-gray-800 mb-1">{name || t('foodCard.defaultName')}</h3>
+                    <p className="text-gray-600 text-sm line-clamp-2">{description || t('foodCard.noDescription')}</p>
                 </div>
                 
-                {/* Stock Indicator */}
+                {/* Lagerbestandsindikator */}
                 <div className="mb-3">
                     <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-medium text-gray-500">Availability:</span>
-                        <span className="text-xs font-bold">{numericQuantity} remaining</span>
+                        <span className="text-xs font-medium text-gray-500">{t('foodCard.availability')}:</span>
+                        <span className="text-xs font-bold">{numericQuantity} {t('foodCard.remaining')}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
                         <div 
@@ -85,10 +87,10 @@ const FoodCard = ({ name, description, price, quantity, imageUrl, allergens, onB
                     </div>
                 </div>
                 
-                {/* Allergens */}
+                {/* Allergene */}
                 {allergens && allergens.length > 0 && (
                     <div className="mb-4">
-                        <h4 className="text-xs text-gray-500 mb-1">Allergens:</h4>
+                        <h4 className="text-xs text-gray-500 mb-1">{t('foodCard.allergens')}:</h4>
                         <div className="flex flex-wrap gap-1">
                             {allergens.map((allergenId) => {
                                 const allergen = ALLERGENS.find((a) => a.id === allergenId);
@@ -96,9 +98,9 @@ const FoodCard = ({ name, description, price, quantity, imageUrl, allergens, onB
                                     <span
                                         key={allergen.id}
                                         className="bg-gray-100 text-gray-700 rounded-full px-2 py-0.5 text-xs flex items-center"
-                                        title={allergen.name}
+                                        title={t(allergen.name)}
                                     >
-                                        {allergen.emoji} <span className="ml-1 hidden sm:inline">{allergen.name}</span>
+                                        {allergen.emoji} <span className="ml-1 hidden sm:inline">{t(allergen.name)}</span>
                                     </span>
                                 ) : null;
                             })}
@@ -106,7 +108,7 @@ const FoodCard = ({ name, description, price, quantity, imageUrl, allergens, onB
                     </div>
                 )}
                 
-                {/* Buy Button */}
+                {/* Kaufen-Schaltfläche */}
                 {onBuy && (
                     <button
                         onClick={onBuy}
@@ -118,7 +120,7 @@ const FoodCard = ({ name, description, price, quantity, imageUrl, allergens, onB
                         }`}
                     >
                         <FaShoppingCart className="mr-2" />
-                        {numericQuantity > 0 ? "Add to Cart" : "Out of Stock"}
+                        {numericQuantity > 0 ? t('foodCard.addToCart') : t('foodCard.stock.out')}
                     </button>
                 )}
             </div>

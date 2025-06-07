@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "../../../axiosConfig.js";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import AdminFoodCard from "../../../Cafeteria/FoodCards/AdminFoodCard";
 import { 
   FaPlus, 
@@ -10,10 +11,59 @@ import {
   FaSortAmountDown, 
   FaFilter, 
   FaSpinner,
-  FaExclamationCircle 
+  FaExclamationCircle,
+  FaGlobe 
 } from "react-icons/fa";
 
+const LanguageSwitcher = () => {
+  const { i18n } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const languages = [
+    { code: 'ro', name: 'Română', flag: '🇷🇴' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+  ];
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setIsOpen(false);
+  };
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+      >
+        <FaGlobe className="w-4 h-4 text-gray-600" />
+        <span className="text-sm font-medium text-gray-700">{currentLanguage.flag} {currentLanguage.name}</span>
+      </button>
+      
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+          {languages.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => changeLanguage(lang.code)}
+              className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2 ${
+                lang.code === i18n.language ? 'bg-gray-50' : ''
+              }`}
+            >
+              <span className="text-lg">{lang.flag}</span>
+              <span className="text-sm text-gray-700">{lang.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AdminMenuList = () => {
+    const { t } = useTranslation();
     const [menuItems, setMenuItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +71,7 @@ const AdminMenuList = () => {
     const [sortDirection, setSortDirection] = useState("asc");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filterType, setFilterType] = useState("all"); // all, inStock, lowStock, outOfStock
+    const [filterType, setFilterType] = useState("all");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -39,7 +89,7 @@ const AdminMenuList = () => {
             const response = await axios.get("/menu/all");
             const processedItems = response.data.map((item) => ({
                 ...item,
-                // Process allergens
+                // Allergene verarbeiten
                 allergens: item.allergens.map((a) => {
                     try {
                         return typeof a === 'string' ? 
@@ -54,19 +104,19 @@ const AdminMenuList = () => {
             setLoading(false);
         } catch (error) {
             console.error("Error fetching menu items:", error);
-            setError("Failed to load menu items. Please try again.");
+            setError(t('chef.dashboard.errors.loadFailed'));
             setLoading(false);
         }
     };
 
     const filterAndSortItems = () => {
-        // First filter the items
+        // Erst filtern
         let filtered = menuItems.filter((item) => {
-            // Search term filter
+            // Suchbegriff Filter
             const matchesSearch = item.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
                                   item.description?.toLowerCase().includes(searchTerm.toLowerCase());
             
-            // Stock status filter
+            // Lagerbestand Filter
             let matchesStockFilter = true;
             if (filterType === "inStock") matchesStockFilter = item.quantity > 5;
             else if (filterType === "lowStock") matchesStockFilter = item.quantity > 0 && item.quantity <= 5;
@@ -75,7 +125,7 @@ const AdminMenuList = () => {
             return matchesSearch && matchesStockFilter;
         });
         
-        // Then sort the filtered items
+        // Dann sortieren
         filtered.sort((a, b) => {
             let comparison = 0;
             
@@ -98,7 +148,7 @@ const AdminMenuList = () => {
     };
 
     const handleDelete = async (menuItemId) => {
-        if (!window.confirm("Are you sure you want to delete this item from the menu?")) {
+        if (!window.confirm(t('chef.dashboard.deleteConfirm'))) {
             return;
         }
 
@@ -106,10 +156,10 @@ const AdminMenuList = () => {
             await axios.delete(`/menu/${menuItemId}`);
             setMenuItems(menuItems.filter((item) => item.id !== menuItemId));
             
-            // Show success notification
+            // Erfolgsbenachrichtigung anzeigen
             const notification = document.createElement('div');
             notification.className = 'fixed top-4 right-4 bg-green-100 text-green-800 p-4 rounded-lg shadow-lg z-50';
-            notification.innerHTML = '<div class="flex items-center"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Item deleted successfully.</div>';
+            notification.innerHTML = `<div class="flex items-center"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>${t('chef.dashboard.deleteSuccess')}</div>`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -118,10 +168,10 @@ const AdminMenuList = () => {
         } catch (error) {
             console.error("Error deleting item:", error);
             
-            // Show error notification
+            // Fehlerbenachrichtigung anzeigen
             const notification = document.createElement('div');
             notification.className = 'fixed top-4 right-4 bg-red-100 text-red-800 p-4 rounded-lg shadow-lg z-50';
-            notification.innerHTML = '<div class="flex items-center"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>Error deleting item.</div>';
+            notification.innerHTML = `<div class="flex items-center"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>${t('chef.dashboard.deleteError')}</div>`;
             document.body.appendChild(notification);
             
             setTimeout(() => {
@@ -131,7 +181,7 @@ const AdminMenuList = () => {
     };
     
     const handleEdit = (menuItemId) => {
-        // Navigate to edit page with item ID
+        // Zur Bearbeitungsseite navigieren
         navigate(`/edit-food/${menuItemId}`);
     };
 
@@ -159,31 +209,31 @@ const AdminMenuList = () => {
         }
     };
 
-    // Show loading state
+    // Ladezustand anzeigen
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
                 <div className="flex flex-col items-center">
                     <FaSpinner className="animate-spin text-primary text-4xl mb-4" />
-                    <p className="text-gray-700 text-lg">Loading menu items...</p>
+                    <p className="text-gray-700 text-lg">{t('chef.dashboard.loading')}</p>
                 </div>
             </div>
         );
     }
 
-    // Show error state
+    // Fehlerzustand anzeigen
     if (error) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
                 <div className="bg-white p-8 rounded-lg shadow-md max-w-md text-center">
                     <FaExclamationCircle className="text-red-500 text-5xl mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Error</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('chef.dashboard.error')}</h2>
                     <p className="text-gray-600 mb-6">{error}</p>
                     <button 
                         onClick={fetchMenuItems}
                         className="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-md shadow-md"
                     >
-                        Try Again
+                        {t('chef.dashboard.tryAgain')}
                     </button>
                 </div>
             </div>
@@ -192,75 +242,76 @@ const AdminMenuList = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
-            {/* Header with controls */}
+            {/* Header mit Steuerungen */}
             <div className="bg-white shadow-sm py-6 sticky top-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center">
                         <div className="flex items-center mb-4 md:mb-0">
-                            <h1 className="text-2xl font-bold text-gray-800">Admin Menu Management</h1>
+                            <h1 className="text-2xl font-bold text-gray-800">{t('chef.dashboard.title')}</h1>
                         </div>
                         
                         <div className="flex items-center space-x-4">
+                            <LanguageSwitcher />
                             <button
                                 onClick={goToAddFood}
                                 className="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-md shadow-md flex items-center"
                             >
-                                <FaPlus className="mr-2" /> Add Item
+                                <FaPlus className="mr-2" /> {t('chef.dashboard.addItem')}
                             </button>
                             <button
                                 onClick={handleLogout}
                                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md shadow-md flex items-center"
                             >
-                                <FaSignOutAlt className="mr-2" /> Logout
+                                <FaSignOutAlt className="mr-2" /> {t('chef.dashboard.logout')}
                             </button>
                         </div>
                     </div>
                     
-                    {/* Search and filters */}
+                    {/* Suche und Filter */}
                     <div className="mt-4 grid grid-cols-1 sm:grid-cols-12 gap-4">
-                        {/* Search box */}
+                        {/* Suchfeld */}
                         <div className="sm:col-span-5 relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <FaSearch className="text-gray-400" />
                             </div>
                             <input
                                 type="text"
-                                placeholder="Search by name or description..."
+                                placeholder={t('chef.dashboard.searchPlaceholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                             />
                         </div>
                         
-                        {/* Stock filter */}
+                        {/* Lagerbestand Filter */}
                         <div className="sm:col-span-3">
                             <select
                                 value={filterType}
                                 onChange={(e) => setFilterType(e.target.value)}
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-primary focus:border-primary"
                             >
-                                <option value="all">All Items</option>
-                                <option value="inStock">Hight Stock</option>
-                                <option value="lowStock">Low Stock</option>
-                                <option value="outOfStock">Out of Stock</option>
+                                <option value="all">{t('chef.dashboard.filters.all')}</option>
+                                <option value="inStock">{t('chef.dashboard.filters.highStock')}</option>
+                                <option value="lowStock">{t('chef.dashboard.filters.lowStock')}</option>
+                                <option value="outOfStock">{t('chef.dashboard.filters.outOfStock')}</option>
                             </select>
                         </div>
                         
-                        {/* Sort options */}
+                        {/* Sortierungsoptionen */}
                         <div className="sm:col-span-4 flex space-x-2">
                             <select
                                 value={sortBy}
                                 onChange={(e) => handleSortChange(e.target.value)}
                                 className="flex-grow border border-gray-300 rounded-md px-3 py-2 focus:ring-primary focus:border-primary"
                             >
-                                <option value="name">Sort by Name</option>
-                                <option value="price">Sort by Price</option>
-                                <option value="quantity">Sort by Quantity</option>
+                                <option value="name">{t('chef.dashboard.sortBy.name')}</option>
+                                <option value="price">{t('chef.dashboard.sortBy.price')}</option>
+                                <option value="quantity">{t('chef.dashboard.sortBy.quantity')}</option>
                             </select>
                             <button
                                 onClick={toggleSortDirection}
                                 className="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
-                                title={sortDirection === "asc" ? "Ascending" : "Descending"}
+                                title={sortDirection === "asc" ? t('chef.dashboard.sortAsc') : t('chef.dashboard.sortDesc')}
                             >
                                 <FaSortAmountDown className={`transform ${sortDirection === "asc" ? "rotate-180" : ""}`} />
                             </button>
@@ -269,22 +320,22 @@ const AdminMenuList = () => {
                 </div>
             </div>
             
-            {/* Results summary */}
+            {/* Ergebniszusammenfassung */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold text-gray-700">
-                        {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'} found
+                        {t('chef.dashboard.itemsFound', { count: filteredItems.length })}
                     </h2>
                     
                     {searchTerm && (
                         <div className="text-sm text-gray-500">
-                            Search results for: <span className="font-medium">{searchTerm}</span>
+                            {t('chef.dashboard.searchResults')} <span className="font-medium">{searchTerm}</span>
                         </div>
                     )}
                 </div>
             </div>
             
-            {/* Menu items grid */}
+            {/* Menüartikel Raster */}
             <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
                 {filteredItems.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -307,17 +358,17 @@ const AdminMenuList = () => {
                         <div className="text-gray-400 text-6xl mb-4">
                             <FaExclamationCircle className="mx-auto" />
                         </div>
-                        <h3 className="text-xl font-medium text-gray-800 mb-2">No items found</h3>
+                        <h3 className="text-xl font-medium text-gray-800 mb-2">{t('chef.dashboard.noItems')}</h3>
                         <p className="text-gray-600 mb-6">
                             {searchTerm || filterType !== "all" ? 
-                                "Try adjusting your search or filters to see more results." : 
-                                "There are no items in the menu yet. Start by adding a new item."}
+                                t('chef.dashboard.adjustFilters') : 
+                                t('chef.dashboard.noItemsYet')}
                         </p>
                         <button
                             onClick={goToAddFood}
                             className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-md inline-flex items-center"
                         >
-                            <FaPlus className="mr-2" /> Add New Item
+                            <FaPlus className="mr-2" /> {t('chef.dashboard.addNewItem')}
                         </button>
                     </div>
                 )}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import Cookies from "js-cookie";
 import axios from "../axiosConfig";
 import FoodCard from "../Cafeteria/FoodCards/FoodCard";
@@ -16,19 +17,68 @@ import {
     FaCheck,
     FaSignOutAlt,
     FaUser,
-    FaArrowLeft
+    FaArrowLeft,
+    FaGlobe
 } from "react-icons/fa";
 
 const ALLERGENS = [
-    { id: "gluten", name: "Gluten", emoji: "🌾" },
-    { id: "nuts", name: "Nuts", emoji: "🥜" },
-    { id: "dairy", name: "Dairy", emoji: "🧀" },
-    { id: "eggs", name: "Eggs", emoji: "🥚" },
-    { id: "seafood", name: "Seafood", emoji: "🦐" },
-    { id: "soy", name: "Soy", emoji: "🌱" },
+    { id: "gluten", name: "allergens.gluten", emoji: "🌾" },
+    { id: "nuts", name: "allergens.nuts", emoji: "🥜" },
+    { id: "dairy", name: "allergens.dairy", emoji: "🧀" },
+    { id: "eggs", name: "allergens.eggs", emoji: "🥚" },
+    { id: "seafood", name: "allergens.seafood", emoji: "🦐" },
+    { id: "soy", name: "allergens.soy", emoji: "🌱" },
 ];
 
+const LanguageSwitcher = () => {
+    const { i18n } = useTranslation();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const languages = [
+        { code: 'ro', name: 'Română', flag: '🇷🇴' },
+        { code: 'en', name: 'English', flag: '🇬🇧' },
+        { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+    ];
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+        setIsOpen(false);
+    };
+
+    const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+    return (
+        <div className="relative">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2 text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 transition-all duration-200"
+                title="Change Language"
+            >
+                <FaGlobe className="text-xl" />
+            </button>
+            
+            {isOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    {languages.map((lang) => (
+                        <button
+                            key={lang.code}
+                            onClick={() => changeLanguage(lang.code)}
+                            className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center space-x-2 ${
+                                lang.code === i18n.language ? 'bg-gray-50' : ''
+                            }`}
+                        >
+                            <span className="text-lg">{lang.flag}</span>
+                            <span className="text-sm text-gray-700">{lang.name}</span>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const MenuList = () => {
+    const { t } = useTranslation();
     const [menuItems, setMenuItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -84,10 +134,10 @@ const MenuList = () => {
             })
             .catch((error) => {
                 console.error("Error fetching menu items:", error);
-                setError("Failed to load menu items. Please try again later.");
+                setError(t('menuList.errors.loadFailed'));
                 setLoading(false);
             });
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         filterAndSortItems();
@@ -154,12 +204,12 @@ const MenuList = () => {
             
             setMenuItems(updatedItems);
             
-            showNotification("Purchase successful! Your order has been placed.", "success");
+            showNotification(t('menuList.purchase.success'), "success");
             closeModal();
         } catch (error) {
             console.error("Error purchasing item:", error);
             showNotification(
-                `Error purchasing item: ${error.response?.data || error.message}`, 
+                t('menuList.purchase.error', { error: error.response?.data || error.message }), 
                 "error"
             );
         }
@@ -228,7 +278,7 @@ const MenuList = () => {
                 <div className="flex-1 flex justify-center items-center">
                     <div className="flex flex-col items-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                        <p className="mt-4 text-lg text-gray-600">Loading menu items...</p>
+                        <p className="mt-4 text-lg text-gray-600">{t('menuList.loading')}</p>
                     </div>
                 </div>
             </div>
@@ -248,17 +298,18 @@ const MenuList = () => {
                         </div>
                         
                         <div className="flex items-center gap-4">
+                            <LanguageSwitcher />
                             <button
                                 onClick={goToProfile}
                                 className="p-2 text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 transition-all duration-200"
-                                title="Profile"
+                                title={t('menuList.nav.profile')}
                             >
                                 <FaUser className="text-xl" />
                             </button>
                             <button
                                 onClick={handleLogout}
                                 className="p-2 text-gray-600 hover:text-red-500 rounded-full hover:bg-gray-100 transition-all duration-200"
-                                title="Logout"
+                                title={t('menuList.nav.logout')}
                             >
                                 <FaSignOutAlt className="text-xl" />
                             </button>
@@ -268,13 +319,13 @@ const MenuList = () => {
                 
                 <div className="flex-1 flex justify-center items-center">
                     <div className="bg-red-50 text-red-600 p-6 rounded-lg shadow-md max-w-lg">
-                        <h3 className="text-xl font-semibold mb-2">Error</h3>
+                        <h3 className="text-xl font-semibold mb-2">{t('menuList.error')}</h3>
                         <p>{error}</p>
                         <button
                             className="mt-4 bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-dark transition-colors"
                             onClick={() => window.location.reload()}
                         >
-                            Try Again
+                            {t('menuList.tryAgain')}
                         </button>
                     </div>
                 </div>
@@ -284,32 +335,32 @@ const MenuList = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
-            {/* Integrated Navigation */}
+            {/* Integrierte Navigation */}
             <nav className="bg-white border-b border-gray-200 px-4 py-3 shadow-sm">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    {/* Logo/Brand */}
+                    {/* Logo/Marke */}
                     <div className="flex items-center">
                         <h1 className="text-xl font-bold text-primary tracking-wide">
                             SchoolMenu
                         </h1>
                     </div>
 
-                    {/* Search and Filters */}
+                    {/* Suche und Filter */}
                     <div className="flex-1 max-w-2xl mx-8">
                         <div className="flex items-center gap-4">
-                            {/* Search Bar */}
+                            {/* Suchleiste */}
                             <div className="relative flex-1">
                                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 <input
                                     type="text"
-                                    placeholder="Search menu items..."
+                                    placeholder={t('menuList.searchPlaceholder')}
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                                 />
                             </div>
 
-                            {/* Filter Dropdown */}
+                            {/* Filter-Dropdown */}
                             <div className="relative" ref={dropdownRef}>
                                 <button
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -321,14 +372,14 @@ const MenuList = () => {
                                 >
                                     <FaFilter className={`${selectedAllergens.length > 0 ? 'text-white' : 'text-gray-400'}`} />
                                     <span className="font-medium">
-                                        {selectedAllergens.length ? `Filters (${selectedAllergens.length})` : 'Filters'}
+                                        {selectedAllergens.length ? t('menuList.filtersActive', { count: selectedAllergens.length }) : t('menuList.filters')}
                                     </span>
                                 </button>
 
                                 {dropdownOpen && (
                                     <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-100 z-50">
                                         <div className="p-3 border-b border-gray-100">
-                                            <h3 className="font-semibold text-gray-700">Dietary Restrictions</h3>
+                                            <h3 className="font-semibold text-gray-700">{t('menuList.dietaryRestrictions')}</h3>
                                         </div>
                                         <ul className="py-2">
                                             {ALLERGENS.map((allergen) => (
@@ -345,7 +396,7 @@ const MenuList = () => {
                                                         />
                                                         <span className="flex items-center gap-2">
                                                             <span className="text-xl">{allergen.emoji}</span>
-                                                            <span className="text-gray-700">{allergen.name}</span>
+                                                            <span className="text-gray-700">{t(allergen.name)}</span>
                                                         </span>
                                                     </label>
                                                 </li>
@@ -357,19 +408,20 @@ const MenuList = () => {
                         </div>
                     </div>
 
-                    {/* Profile and Logout */}
-                    <div className="flex items-center gap-4">
+                    {/* Profil und Abmelden */}
+                    <div className="flex items-center gap-2">
+                        <LanguageSwitcher />
                         <button
                             onClick={goToProfile}
                             className="p-2 text-gray-600 hover:text-primary rounded-full hover:bg-gray-100 transition-all duration-200"
-                            title="Profile"
+                            title={t('menuList.nav.profile')}
                         >
                             <FaUser className="text-xl" />
                         </button>
                         <button
                             onClick={handleLogout}
                             className="p-2 text-gray-600 hover:text-red-500 rounded-full hover:bg-gray-100 transition-all duration-200"
-                            title="Logout"
+                            title={t('menuList.nav.logout')}
                         >
                             <FaSignOutAlt className="text-xl" />
                         </button>
@@ -377,36 +429,36 @@ const MenuList = () => {
                 </div>
             </nav>
             
-            {/* Header section with title and search summary */}
+            {/* Header-Bereich mit Titel und Suchzusammenfassung */}
             <div className="bg-white py-6 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center">
                         <div className="mb-4 md:mb-0">
                             <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-center">
-                                <FaUtensils className="mr-3 text-primary" /> School Meal Menu
+                                <FaUtensils className="mr-3 text-primary" /> {t('menuList.title')}
                             </h1>
                             <p className="text-gray-600">
-                                {searchTerm && <span>Searching for: <span className="font-medium">"{searchTerm}"</span> • </span>}
-                                {getAvailableItemsCount()} {getAvailableItemsCount() === 1 ? 'item' : 'items'} available
+                                {searchTerm && <span>{t('menuList.searchingFor')} <span className="font-medium">"{searchTerm}"</span> • </span>}
+                                {t('menuList.itemsAvailable', { count: getAvailableItemsCount() })}
                             </p>
                         </div>
                         
                         <div className="flex items-center gap-4">
-                            {/* Back to Dashboard Button */}
+                            {/* Zurück zum Dashboard Button */}
                             <button 
                                 onClick={goToDashboard}
                                 className="flex items-center text-white bg-primary hover:bg-primary-dark transition-colors text-sm px-4 py-2 rounded-lg shadow-sm"
                             >
-                                <FaArrowLeft className="mr-2" /> Back to Dashboard
+                                <FaArrowLeft className="mr-2" /> {t('menuList.backToDashboard')}
                             </button>
                             
-                            {/* Sort Options */}
+                            {/* Sortierungsoptionen */}
                             <div className="relative" ref={sortDropdownRef}>
                                 <button
                                     onClick={() => setShowSortOptions(!showSortOptions)}
                                     className="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
                                 >
-                                    <span>Sort by: {sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}</span>
+                                    <span>{t('menuList.sortBy')}: {t(`menuList.sortOptions.${sortBy}`)}</span>
                                     {sortDirection === "asc" ? <FaSortAmountUp /> : <FaSortAmountDown />}
                                 </button>
                                 
@@ -421,7 +473,7 @@ const MenuList = () => {
                                                             sortBy === option ? "font-semibold text-primary" : ""
                                                         }`}
                                                     >
-                                                        Sort by {option.charAt(0).toUpperCase() + option.slice(1)}
+                                                        {t(`menuList.sortOptions.${option}`)}
                                                     </button>
                                                 </li>
                                             ))}
@@ -434,7 +486,7 @@ const MenuList = () => {
                 </div>
             </div>
             
-            {/* Menu grid */}
+            {/* Menü-Raster */}
             <div className="flex-1 py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {filteredItems.length > 0 ? (
@@ -455,11 +507,11 @@ const MenuList = () => {
                     ) : (
                         <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
                             <FaSadTear className="text-6xl text-gray-300 mb-4" />
-                            <h3 className="text-xl font-semibold text-gray-700 mb-2">No menu items available</h3>
+                            <h3 className="text-xl font-semibold text-gray-700 mb-2">{t('menuList.noItemsTitle')}</h3>
                             <p className="text-gray-500 max-w-md">
                                 {searchTerm || selectedAllergens.length > 0 ? 
-                                    "No items match your current search criteria. Try adjusting your filters or search term." : 
-                                    "There are currently no menu items available to order. Please check back later."
+                                    t('menuList.noItemsFiltered') : 
+                                    t('menuList.noItemsAvailable')
                                 }
                             </p>
                             {(searchTerm || selectedAllergens.length > 0) && (
@@ -470,7 +522,7 @@ const MenuList = () => {
                                         setSelectedAllergens([]);
                                     }}
                                 >
-                                    <FaSearch className="mr-2" /> View All Items
+                                    <FaSearch className="mr-2" /> {t('menuList.viewAllItems')}
                                 </button>
                             )}
                         </div>
@@ -478,7 +530,7 @@ const MenuList = () => {
                 </div>
             </div>
             
-            {/* Purchase modal */}
+            {/* Kaufmodal */}
             <PurchaseModal
                 isOpen={isModalOpen}
                 onClose={closeModal}
@@ -486,7 +538,7 @@ const MenuList = () => {
                 onPurchase={handlePurchase}
             />
             
-            {/* Notification */}
+            {/* Benachrichtigung */}
             {notification && (
                 <div className={`fixed top-4 right-4 max-w-md z-50 rounded-lg shadow-lg p-4 flex items-start space-x-4 ${
                     notification.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
@@ -508,7 +560,7 @@ const MenuList = () => {
                 </div>
             )}
             
-            {/* Footer */}
+            {/* Fußzeile */}
             <footer className="bg-white shadow-inner py-6 mt-auto">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row justify-between items-center">
@@ -517,7 +569,7 @@ const MenuList = () => {
                                 onClick={goToProfile}
                                 className="flex items-center text-primary hover:text-secondary transition-colors text-sm"
                             >
-                                <FaShoppingCart className="mr-2" /> View My Orders
+                                <FaShoppingCart className="mr-2" /> {t('menuList.viewMyOrders')}
                             </button>
                         </div>
                     </div>

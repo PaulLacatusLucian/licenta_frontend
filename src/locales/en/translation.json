@@ -2039,7 +2039,279 @@
     "loadLibrariesError": "Failed to load PDF generation libraries",
     "generating": "Generating...",
     "saveButton": "Save as PDF"
+    }
   }
-}
+  },
+  "chef": {
+     "editFood": {
+      "title": "Edit Menu Item",
+      "subtitle": "Update the details below to modify this menu item. Preview will update as you make changes.",
+      "loading": "Loading menu item...",
+      "cancelConfirm": "Are you sure you want to cancel? Any unsaved changes will be lost.",
+      "success": "Menu item updated successfully!",
+      "form": {
+        "itemName": "Item Name",
+        "itemNamePlaceholder": "e.g. Margherita Pizza",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the menu item...",
+        "price": "Price (in $)",
+        "quantity": "Quantity",
+        "quantityPlaceholder": "Available quantity",
+        "image": "Image",
+        "uploadNewImage": "Upload a new image",
+        "dragDrop": "or drag and drop",
+        "fileTypes": "PNG, JPG, GIF up to 5MB",
+        "imageSelected": "Image selected",
+        "allergens": "Allergens",
+        "allergensHint": "Select all allergens present in this menu item"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save Changes",
+        "saving": "Saving..."
+      },
+      "preview": {
+        "title": "Preview",
+        "defaultName": "Menu Item",
+        "defaultDescription": "Item description will appear here",
+        "hint": "This is how your menu item will appear to customers"
+      },
+      "errors": {
+        "loadFailed": "Failed to load menu item. Please try again.",
+        "invalidFileType": "Please upload an image file (JPEG, PNG, GIF)",
+        "fileTooLarge": "File size should be less than 5MB",
+        "nameRequired": "Name is required",
+        "descriptionRequired": "Description is required",
+        "priceRequired": "Price is required",
+        "priceInvalid": "Price must be a positive number",
+        "quantityRequired": "Quantity is required",
+        "quantityInvalid": "Quantity must be a non-negative number",
+        "correctErrors": "Please correct the errors in the form",
+        "updateFailed": "Failed to update menu item. Please try again."
+      }
+    },
+     "dashboard": {
+      "title": "Admin Menu Management",
+      "loading": "Loading menu items...",
+      "error": "Error",
+      "tryAgain": "Try Again",
+      "addItem": "Add Item",
+      "logout": "Logout",
+      "searchPlaceholder": "Search by name or description...",
+      "deleteConfirm": "Are you sure you want to delete this item from the menu?",
+      "deleteSuccess": "Item deleted successfully.",
+      "deleteError": "Error deleting item.",
+      "itemsFound": "{{count}} item found",
+      "itemsFound_plural": "{{count}} items found",
+      "searchResults": "Search results for:",
+      "noItems": "No items found",
+      "adjustFilters": "Try adjusting your search or filters to see more results.",
+      "noItemsYet": "There are no items in the menu yet. Start by adding a new item.",
+      "addNewItem": "Add New Item",
+      "sortAsc": "Ascending",
+      "sortDesc": "Descending",
+      "filters": {
+        "all": "All Items",
+        "highStock": "High Stock",
+        "lowStock": "Low Stock",
+        "outOfStock": "Out of Stock"
+      },
+      "sortBy": {
+        "name": "Sort by Name",
+        "price": "Sort by Price",
+        "quantity": "Sort by Quantity"
+      },
+      "errors": {
+        "loadFailed": "Failed to load menu items. Please try again."
+      }
+    },
+    "addFood": {
+      "title": "Add New Menu Item",
+      "subtitle": "Fill in the details below to add a new item to the menu. Preview will update as you type.",
+      "cancelConfirm": "Are you sure you want to cancel? Any unsaved changes will be lost.",
+      "success": "Menu item added successfully!",
+      "form": {
+        "itemName": "Item Name",
+        "itemNamePlaceholder": "e.g. Margherita Pizza",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the menu item...",
+        "price": "Price (in $)",
+        "quantity": "Quantity",
+        "quantityPlaceholder": "Available quantity",
+        "image": "Image",
+        "uploadFile": "Upload a file",
+        "dragDrop": "or drag and drop",
+        "fileTypes": "PNG, JPG, GIF up to 5MB",
+        "imageSelected": "Image selected",
+        "allergens": "Allergens",
+        "allergensHint": "Select all allergens present in this menu item"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save Item",
+        "saving": "Saving..."
+      },
+      "preview": {
+        "title": "Preview",
+        "defaultName": "New Menu Item",
+        "defaultDescription": "Item description will appear here",
+        "hint": "This is how your menu item will appear to customers"
+      },
+      "errors": {
+        "invalidFileType": "Please upload an image file (JPEG, PNG, GIF)",
+        "fileTooLarge": "File size should be less than 5MB",
+        "nameRequired": "Name is required",
+        "descriptionRequired": "Description is required",
+        "priceRequired": "Price is required",
+        "priceInvalid": "Price must be a positive number",
+        "quantityRequired": "Quantity is required",
+        "quantityInvalid": "Quantity must be a non-negative number",
+        "correctErrors": "Please correct the errors in the form",
+        "addFailed": "Failed to add menu item. Please try again."
+      }
+    }
+  },
+  "allergens": {
+    "gluten": "Gluten",
+    "nuts": "Nuts",
+    "dairy": "Dairy",
+    "eggs": "Eggs",
+    "seafood": "Seafood",
+    "soy": "Soy"
+  },
+  "foodCard": {
+    "defaultName": "Food Item",
+    "noDescription": "No description available",
+    "availability": "Availability",
+    "remaining": "remaining",
+    "allergens": "Allergens",
+    "noAllergens": "No allergens specified",
+    "addToCart": "Add to Cart",
+    "stock": {
+      "low": "Low Stock",
+      "out": "Out of Stock"
+    },
+    "admin": {
+      "adminView": "Admin View",
+      "editItem": "Edit item",
+      "deleteItem": "Delete item",
+      "price": "Price",
+      "quantity": "Quantity",
+      "inventory": "Inventory",
+      "units": "units",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+   "menuList": {
+    "loading": "Loading menu items...",
+    "error": "Error",
+    "tryAgain": "Try Again",
+    "title": "School Meal Menu",
+    "searchPlaceholder": "Search menu items...",
+    "filters": "Filters",
+    "filtersActive": "Filters ({{count}})",
+    "dietaryRestrictions": "Dietary Restrictions",
+    "searchingFor": "Searching for:",
+    "itemsAvailable": "{{count}} item available",
+    "itemsAvailable_plural": "{{count}} items available",
+    "backToDashboard": "Back to Dashboard",
+    "sortBy": "Sort by",
+    "noItemsTitle": "No menu items available",
+    "noItemsFiltered": "No items match your current search criteria. Try adjusting your filters or search term.",
+    "noItemsAvailable": "There are currently no menu items available to order. Please check back later.",
+    "viewAllItems": "View All Items",
+    "viewMyOrders": "View My Orders",
+    "nav": {
+      "profile": "Profile",
+      "logout": "Logout"
+    },
+    "sortOptions": {
+      "name": "Name",
+      "price": "Price",
+      "quantity": "Quantity"
+    },
+    "purchase": {
+      "success": "Purchase successful! Your order has been placed.",
+      "error": "Error purchasing item: {{error}}"
+    },
+    "errors": {
+      "loadFailed": "Failed to load menu items. Please try again later."
+    }
+  },
+  "profile": {
+    "title": "Order History",
+    "backToMenu": "Back to menu",
+    "downloading": "Downloading...",
+    "downloadInvoice": "Download Invoice",
+    "selectPeriod": "Select Period",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "orderHistory": "Order History",
+    "orderFood": "Order Food",
+    "noOrdersTitle": "No orders found",
+    "noOrdersDescription": "No orders were placed during {{month}} {{year}}.",
+    "dateLocale": "en-US",
+    "months": [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
+    "stats": {
+      "totalOrders": "Total Orders",
+      "totalSpent": "Total Spent",
+      "avgPrice": "Avg. Price Per Order"
+    },
+    "table": {
+      "item": "Item",
+      "quantity": "Quantity",
+      "price": "Price",
+      "date": "Date"
+    },
+    "errors": {
+      "loadFailed": "Failed to load order history. Please try again.",
+      "downloadFailed": "Failed to download invoice. Please try again."
+    }
+  },
+  "profile": {
+    "title": "Order History",
+    "backToMenu": "Back to menu",
+    "downloading": "Downloading...",
+    "downloadInvoice": "Download Invoice",
+    "selectPeriod": "Select Period",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "orderHistory": "Order History",
+    "orderFood": "Order Food",
+    "noOrdersTitle": "No orders found",
+    "noOrdersDescription": "No orders were placed during {{month}} {{year}}.",
+    "dateLocale": "en-US",
+    "months": [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
+    "stats": {
+      "totalOrders": "Total Orders",
+      "totalSpent": "Total Spent",
+      "avgPrice": "Avg. Price Per Order"
+    },
+    "table": {
+      "item": "Item",
+      "quantity": "Quantity",
+      "price": "Price",
+      "date": "Date"
+    },
+    "errors": {
+      "loadFailed": "Failed to load order history. Please try again.",
+      "downloadFailed": "Failed to download invoice. Please try again."
+    }
+  },
+  "purchaseModal": {
+    "pricePerItem": "Price per item",
+    "allergens": "Allergens",
+    "quantity": "Quantity",
+    "available": "{{count}} available",
+    "totalPrice": "Total Price",
+    "confirmPurchase": "Confirm Purchase",
+    "cancel": "Cancel"
   }
 }

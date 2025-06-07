@@ -50,7 +50,6 @@ import ChefDashboard from "./chef/components/Dashboard/ChefDashboard";
 import AddFood from "./chef/components/AddFood/AddFood";
 import MenuList from "./Cafeteria/MenuList";
 import ParentProfileCafeteria from "./Cafeteria/Profile/ParentProfile";
-import CafeteriaStats from "./Cafeteria/Statistics.jsx";
 import ParentCalendar from "./parent/components/Calendar/ParentTimetable.jsx";
 import StudentFoodOrders from "./stud/components/Food/StudentFoodOrders.jsx";
 import EditMenuItem from "./chef/components/EditFood/EditMenuItem.jsx";
@@ -150,8 +149,6 @@ const App = () => {
         
         {/* Cafeteria Routes */}
         <Route path="/cafeteria" element={<ProtectedRoute><MenuList /></ProtectedRoute>} />
-        <Route path="/cafeteria/stats" element={<CafeteriaStats />} />
-
       </Routes>
     </Router>
   );

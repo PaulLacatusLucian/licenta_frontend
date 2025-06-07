@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -13,6 +14,7 @@ import {
 } from "react-icons/fa";
 
 function MyProfile() {
+    const { t } = useTranslation();
     const [orderHistory, setOrderHistory] = useState([]);
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [year, setYear] = useState(new Date().getFullYear());
@@ -25,13 +27,10 @@ function MyProfile() {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
     
-    // Check if we're viewing the current month
+    // Überprüfen, ob wir den aktuellen Monat anzeigen
     const isCurrentMonth = month === currentMonth && year === currentYear;
     
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+    const months = t('profile.months', { returnObjects: true });
 
     useEffect(() => {
         fetchOrderHistory();
@@ -42,21 +41,21 @@ function MyProfile() {
             setLoading(true);
             setError(null);
             
-            // Use the new /me endpoint - token will be sent automatically via axios
+            // Verwenden Sie den neuen /me-Endpunkt - Token wird automatisch über axios gesendet
             const response = await axios.get(`/menu/me/child/orders`, {
                 params: { month, year }
             });
             
             setOrderHistory(response.data || []);
             
-            // Calculate total spent
+            // Gesamtausgaben berechnen
             const total = response.data.reduce((sum, order) => sum + (order.price || 0), 0);
             setTotalSpent(total);
             
             setLoading(false);
         } catch (error) {
             console.error("Error fetching order history:", error.response ? error.response.data : error);
-            setError("Failed to load order history. Please try again.");
+            setError(t('profile.errors.loadFailed'));
             setLoading(false);
         }
     };
@@ -65,13 +64,13 @@ function MyProfile() {
         try {
             setDownloading(true);
             
-            // Use the new /me/invoice endpoint
+            // Verwenden Sie den neuen /me/invoice-Endpunkt
             const response = await axios.get(`/menu/me/invoice`, {
                 params: { month, year },
                 responseType: 'blob'
             });
     
-            // Create download link
+            // Download-Link erstellen
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -83,7 +82,7 @@ function MyProfile() {
             setDownloading(false);
         } catch (error) {
             console.error("Error downloading invoice:", error);
-            setError("Failed to download invoice. Please try again.");
+            setError(t('profile.errors.downloadFailed'));
             setDownloading(false);
         }
     };
@@ -95,7 +94,7 @@ function MyProfile() {
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
+        return date.toLocaleDateString(t('profile.dateLocale'), { 
             year: 'numeric', 
             month: 'short', 
             day: 'numeric',
@@ -119,7 +118,7 @@ function MyProfile() {
         const currentYear = now.getFullYear();
         
         if (year === currentYear && month === currentMonth) {
-            return; // Don't allow going beyond current month
+            return; // Nicht über den aktuellen Monat hinausgehen
         }
         
         if (month === 12) {
@@ -140,12 +139,12 @@ function MyProfile() {
                             <button
                                 onClick={goToMenu}
                                 className="mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-                                aria-label="Back to menu"
+                                aria-label={t('profile.backToMenu')}
                             >
                                 <FaArrowLeft className="text-gray-700" />
                             </button>
                             <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-                                <FaReceipt className="mr-3 text-primary" /> Order History
+                                <FaReceipt className="mr-3 text-primary" /> {t('profile.title')}
                             </h1>
                         </div>
                         
@@ -161,12 +160,12 @@ function MyProfile() {
                             {downloading ? (
                                 <>
                                     <FaSpinner className="animate-spin mr-2" /> 
-                                    Downloading...
+                                    {t('profile.downloading')}
                                 </>
                             ) : (
                                 <>
                                     <FaFileInvoiceDollar className="mr-2" /> 
-                                    Download Invoice
+                                    {t('profile.downloadInvoice')}
                                 </>
                             )}
                         </button>
@@ -181,11 +180,11 @@ function MyProfile() {
                     </div>
                 )}
                 
-                {/* Month Selector */}
+                {/* Monatsauswahl */}
                 <div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
                     <div className="p-6 border-b border-gray-200">
                         <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                            <FaCalendarAlt className="mr-2 text-primary" /> Select Period
+                            <FaCalendarAlt className="mr-2 text-primary" /> {t('profile.selectPeriod')}
                         </h2>
                     </div>
                     
@@ -194,7 +193,7 @@ function MyProfile() {
                             <button 
                                 onClick={handlePreviousMonth}
                                 className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                                aria-label="Previous month"
+                                aria-label={t('profile.previousMonth')}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -215,7 +214,7 @@ function MyProfile() {
                                         : "hover:bg-gray-100 text-gray-600"
                                 } transition-colors`}
                                 disabled={month === new Date().getMonth() + 1 && year === new Date().getFullYear()}
-                                aria-label="Next month"
+                                aria-label={t('profile.nextMonth')}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -225,7 +224,7 @@ function MyProfile() {
                     </div>
                 </div>
                 
-                {/* Order Statistics */}
+                {/* Bestellstatistiken */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div className="bg-white rounded-lg shadow-sm p-6">
                         <div className="flex items-center">
@@ -233,7 +232,7 @@ function MyProfile() {
                                 <FaShoppingCart className="text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Total Orders</p>
+                                <p className="text-sm text-gray-500">{t('profile.stats.totalOrders')}</p>
                                 <p className="text-2xl font-bold">{orderHistory.length}</p>
                             </div>
                         </div>
@@ -245,7 +244,7 @@ function MyProfile() {
                                 <FaFileInvoiceDollar className="text-green-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Total Spent</p>
+                                <p className="text-sm text-gray-500">{t('profile.stats.totalSpent')}</p>
                                 <p className="text-2xl font-bold">${totalSpent.toFixed(2)}</p>
                             </div>
                         </div>
@@ -257,7 +256,7 @@ function MyProfile() {
                                 <FaUtensils className="text-purple-600" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Avg. Price Per Order</p>
+                                <p className="text-sm text-gray-500">{t('profile.stats.avgPrice')}</p>
                                 <p className="text-2xl font-bold">
                                     ${orderHistory.length > 0 
                                         ? (totalSpent / orderHistory.length).toFixed(2) 
@@ -269,11 +268,11 @@ function MyProfile() {
                     </div>
                 </div>
                 
-                {/* Order History List */}
+                {/* Bestellverlaufsliste */}
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div className="p-6 border-b border-gray-200">
                         <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                            <FaReceipt className="mr-2 text-primary" /> Order History
+                            <FaReceipt className="mr-2 text-primary" /> {t('profile.orderHistory')}
                         </h2>
                     </div>
                     
@@ -287,16 +286,16 @@ function MyProfile() {
                                 <thead className="bg-gray-50">
                                     <tr>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Item
+                                            {t('profile.table.item')}
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Quantity
+                                            {t('profile.table.quantity')}
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Price
+                                            {t('profile.table.price')}
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Date
+                                            {t('profile.table.date')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -336,18 +335,18 @@ function MyProfile() {
                                     d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
                                 />
                             </svg>
-                            <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+                            <h3 className="mt-2 text-sm font-medium text-gray-900">{t('profile.noOrdersTitle')}</h3>
                             <p className="mt-1 text-sm text-gray-500">
-                                No orders were placed during {months[month - 1]} {year}.
+                                {t('profile.noOrdersDescription', { month: months[month - 1], year })}
                             </p>
-                            {/* Only show Order Food button for current month */}
+                            {/* Zeigen Sie die Schaltfläche "Essen bestellen" nur für den aktuellen Monat an */}
                             {isCurrentMonth && (
                                 <div className="mt-6">
                                     <button
                                         onClick={goToMenu}
                                         className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                                     >
-                                        <FaUtensils className="mr-2" /> Order Food
+                                        <FaUtensils className="mr-2" /> {t('profile.orderFood')}
                                     </button>
                                 </div>
                             )}

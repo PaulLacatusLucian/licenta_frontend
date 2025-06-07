@@ -2041,5 +2041,244 @@
     "saveButton": "Salvează ca PDF"
   }
 }
+  },
+  "chef": {
+     "editFood": {
+      "title": "Editează articol din meniu",
+      "subtitle": "Actualizează detaliile de mai jos pentru a modifica acest articol din meniu. Previzualizarea se va actualiza pe măsură ce faci modificări.",
+      "loading": "Se încarcă articolul din meniu...",
+      "cancelConfirm": "Ești sigur că vrei să anulezi? Toate modificările nesalvate vor fi pierdute.",
+      "success": "Articol actualizat cu succes!",
+      "form": {
+        "itemName": "Numele articolului",
+        "itemNamePlaceholder": "ex. Pizza Margherita",
+        "description": "Descriere",
+        "descriptionPlaceholder": "Descrie articolul din meniu...",
+        "price": "Preț (în $)",
+        "quantity": "Cantitate",
+        "quantityPlaceholder": "Cantitate disponibilă",
+        "image": "Imagine",
+        "uploadNewImage": "Încarcă o imagine nouă",
+        "dragDrop": "sau trage și plasează",
+        "fileTypes": "PNG, JPG, GIF până la 5MB",
+        "imageSelected": "Imagine selectată",
+        "allergens": "Alergeni",
+        "allergensHint": "Selectează toți alergenii prezenți în acest articol"
+      },
+      "buttons": {
+        "cancel": "Anulare",
+        "save": "Salvează modificările",
+        "saving": "Se salvează..."
+      },
+      "preview": {
+        "title": "Previzualizare",
+        "defaultName": "Articol din meniu",
+        "defaultDescription": "Descrierea articolului va apărea aici",
+        "hint": "Așa va apărea articolul tău pentru clienți"
+      },
+      "errors": {
+        "loadFailed": "Încărcarea articolului a eșuat. Te rugăm să încerci din nou.",
+        "invalidFileType": "Te rugăm să încarci un fișier imagine (JPEG, PNG, GIF)",
+        "fileTooLarge": "Dimensiunea fișierului trebuie să fie mai mică de 5MB",
+        "nameRequired": "Numele este obligatoriu",
+        "descriptionRequired": "Descrierea este obligatorie",
+        "priceRequired": "Prețul este obligatoriu",
+        "priceInvalid": "Prețul trebuie să fie un număr pozitiv",
+        "quantityRequired": "Cantitatea este obligatorie",
+        "quantityInvalid": "Cantitatea trebuie să fie un număr pozitiv",
+        "correctErrors": "Te rugăm să corectezi erorile din formular",
+        "updateFailed": "Actualizarea articolului a eșuat. Te rugăm să încerci din nou."
+      }
+    },
+     "dashboard": {
+      "title": "Administrare Meniu",
+      "loading": "Se încarcă articolele din meniu...",
+      "error": "Eroare",
+      "tryAgain": "Încearcă din nou",
+      "addItem": "Adaugă articol",
+      "logout": "Deconectare",
+      "searchPlaceholder": "Caută după nume sau descriere...",
+      "deleteConfirm": "Ești sigur că vrei să ștergi acest articol din meniu?",
+      "deleteSuccess": "Articol șters cu succes.",
+      "deleteError": "Eroare la ștergerea articolului.",
+      "itemsFound": "{{count}} articol găsit",
+      "itemsFound_plural": "{{count}} articole găsite",
+      "searchResults": "Rezultate căutare pentru:",
+      "noItems": "Nu s-au găsit articole",
+      "adjustFilters": "Încearcă să ajustezi căutarea sau filtrele pentru a vedea mai multe rezultate.",
+      "noItemsYet": "Nu există încă articole în meniu. Începe prin a adăuga un articol nou.",
+      "addNewItem": "Adaugă articol nou",
+      "sortAsc": "Crescător",
+      "sortDesc": "Descrescător",
+      "filters": {
+        "all": "Toate articolele",
+        "highStock": "Stoc mare",
+        "lowStock": "Stoc redus",
+        "outOfStock": "Fără stoc"
+      },
+      "sortBy": {
+        "name": "Sortează după nume",
+        "price": "Sortează după preț",
+        "quantity": "Sortează după cantitate"
+      },
+      "errors": {
+        "loadFailed": "Încărcarea articolelor a eșuat. Te rugăm să încerci din nou."
+      }
+    },
+    "addFood": {
+      "title": "Adaugă articol nou în meniu",
+      "subtitle": "Completează detaliile de mai jos pentru a adăuga un articol nou în meniu. Previzualizarea se va actualiza pe măsură ce tastezi.",
+      "cancelConfirm": "Ești sigur că vrei să anulezi? Toate modificările nesalvate vor fi pierdute.",
+      "success": "Articol adăugat cu succes în meniu!",
+      "form": {
+        "itemName": "Numele articolului",
+        "itemNamePlaceholder": "ex. Pizza Margherita",
+        "description": "Descriere",
+        "descriptionPlaceholder": "Descrie articolul din meniu...",
+        "price": "Preț (în $)",
+        "quantity": "Cantitate",
+        "quantityPlaceholder": "Cantitate disponibilă",
+        "image": "Imagine",
+        "uploadFile": "Încarcă un fișier",
+        "dragDrop": "sau trage și plasează",
+        "fileTypes": "PNG, JPG, GIF până la 5MB",
+        "imageSelected": "Imagine selectată",
+        "allergens": "Alergeni",
+        "allergensHint": "Selectează toți alergenii prezenți în acest articol"
+      },
+      "buttons": {
+        "cancel": "Anulare",
+        "save": "Salvează articol",
+        "saving": "Se salvează..."
+      },
+      "preview": {
+        "title": "Previzualizare",
+        "defaultName": "Articol nou în meniu",
+        "defaultDescription": "Descrierea articolului va apărea aici",
+        "hint": "Așa va apărea articolul tău pentru clienți"
+      },
+      "errors": {
+        "invalidFileType": "Te rugăm să încarci un fișier imagine (JPEG, PNG, GIF)",
+        "fileTooLarge": "Dimensiunea fișierului trebuie să fie mai mică de 5MB",
+        "nameRequired": "Numele este obligatoriu",
+        "descriptionRequired": "Descrierea este obligatorie",
+        "priceRequired": "Prețul este obligatoriu",
+        "priceInvalid": "Prețul trebuie să fie un număr pozitiv",
+        "quantityRequired": "Cantitatea este obligatorie",
+        "quantityInvalid": "Cantitatea trebuie să fie un număr pozitiv",
+        "correctErrors": "Te rugăm să corectezi erorile din formular",
+        "addFailed": "Adăugarea articolului a eșuat. Te rugăm să încerci din nou."
+      }
+    }
+  },
+  "allergens": {
+    "gluten": "Gluten",
+    "nuts": "Nuci",
+    "dairy": "Lactate",
+    "eggs": "Ouă",
+    "seafood": "Fructe de mare",
+    "soy": "Soia"
+  },
+  "foodCard": {
+    "defaultName": "Articol alimentar",
+    "noDescription": "Nicio descriere disponibilă",
+    "availability": "Disponibilitate",
+    "remaining": "rămase",
+    "allergens": "Alergeni",
+    "noAllergens": "Nu sunt specificați alergeni",
+    "addToCart": "Adaugă în coș",
+    "stock": {
+      "low": "Stoc redus",
+      "out": "Stoc epuizat"
+    },
+    "admin": {
+      "adminView": "Vizualizare Admin",
+      "editItem": "Editează articol",
+      "deleteItem": "Șterge articol",
+      "price": "Preț",
+      "quantity": "Cantitate",
+      "inventory": "Inventar",
+      "units": "unități",
+      "edit": "Editează",
+      "delete": "Șterge"
+    }
+  },
+  "profile": {
+    "title": "Istoric comenzi",
+    "backToMenu": "Înapoi la meniu",
+    "downloading": "Se descarcă...",
+    "downloadInvoice": "Descarcă factura",
+    "selectPeriod": "Selectează perioada",
+    "previousMonth": "Luna anterioară",
+    "nextMonth": "Luna următoare",
+    "orderHistory": "Istoric comenzi",
+    "orderFood": "Comandă mâncare",
+    "noOrdersTitle": "Nu s-au găsit comenzi",
+    "noOrdersDescription": "Nu au fost plasate comenzi în {{month}} {{year}}.",
+    "dateLocale": "ro-RO",
+    "months": [
+      "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie",
+      "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
+    ],
+    "stats": {
+      "totalOrders": "Total comenzi",
+      "totalSpent": "Total cheltuit",
+      "avgPrice": "Preț mediu per comandă"
+    },
+    "table": {
+      "item": "Articol",
+      "quantity": "Cantitate",
+      "price": "Preț",
+      "date": "Data"
+    },
+    "errors": {
+      "loadFailed": "Încărcarea istoricului a eșuat. Te rugăm să încerci din nou.",
+      "downloadFailed": "Descărcarea facturii a eșuat. Te rugăm să încerci din nou."
+    }
+  },
+  "purchaseModal": {
+    "pricePerItem": "Preț per articol",
+    "allergens": "Alergeni",
+    "quantity": "Cantitate",
+    "available": "{{count}} disponibile",
+    "totalPrice": "Preț total",
+    "confirmPurchase": "Confirmă achiziția",
+    "cancel": "Anulare"
+  },
+  "menuList": {
+    "loading": "Se încarcă meniul...",
+    "error": "Eroare",
+    "tryAgain": "Încearcă din nou",
+    "title": "Meniul cantinei școlare",
+    "searchPlaceholder": "Caută în meniu...",
+    "filters": "Filtre",
+    "filtersActive": "Filtre ({{count}})",
+    "dietaryRestrictions": "Restricții alimentare",
+    "searchingFor": "Căutare pentru:",
+    "itemsAvailable": "{{count}} articol disponibil",
+    "itemsAvailable_plural": "{{count}} articole disponibile",
+    "backToDashboard": "Înapoi la panou",
+    "sortBy": "Sortează după",
+    "noItemsTitle": "Nu sunt articole disponibile",
+    "noItemsFiltered": "Niciun articol nu corespunde criteriilor tale de căutare. Încearcă să ajustezi filtrele sau termenul de căutare.",
+    "noItemsAvailable": "Momentan nu sunt articole disponibile pentru comandă. Te rugăm să revii mai târziu.",
+    "viewAllItems": "Vezi toate articolele",
+    "viewMyOrders": "Vezi comenzile mele",
+    "nav": {
+      "profile": "Profil",
+      "logout": "Deconectare"
+    },
+    "sortOptions": {
+      "name": "Nume",
+      "price": "Preț",
+      "quantity": "Cantitate"
+    },
+    "purchase": {
+      "success": "Achiziție reușită! Comanda ta a fost plasată.",
+      "error": "Eroare la achiziționarea articolului: {{error}}"
+    },
+    "errors": {
+      "loadFailed": "Încărcarea meniului a eșuat. Te rugăm să încerci din nou mai târziu."
+    }
   }
 }

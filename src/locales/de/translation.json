@@ -365,6 +365,62 @@
     "no": "Nein"
   },
   "admin": {
+    "dashboard": {
+    "title": "Verwaltungsbereich",
+    "subtitle": "Verwalten Sie Schüler, Lehrer, Klassen, Noten und Abwesenheiten",
+    "selectOperation": "Wählen Sie eine Operation, um fortzufahren",
+    "yearAdvancedSuccess": "Das Schuljahr wurde erfolgreich fortgesetzt!",
+    "yearAdvancedError": "Fehler beim Fortsetzen des Schuljahres. Überprüfen Sie die Serverprotokolle.",
+    "logout": "Abmelden",
+    "sections": {
+      "studentParent": {
+        "title": "Schüler/Eltern",
+        "createStudent": "Schüler/Eltern erstellen",
+        "viewStudents": "Schüler anzeigen",
+        "viewParents": "Eltern anzeigen"
+      },
+      "professor": {
+        "title": "Lehrer",
+        "createProfessor": "Lehrer erstellen",
+        "viewProfessors": "Lehrer anzeigen"
+      },
+      "class": {
+        "title": "Klasse",
+        "createClass": "Klasse erstellen",
+        "viewClasses": "Klassen anzeigen",
+        "goToNextYear": "Zum nächsten Jahr"
+      },
+      "timetable": {
+        "title": "Stundenplan",
+        "createTimetable": "Stundenplan erstellen",
+        "viewTimetables": "Stundenpläne anzeigen"
+      },
+      "grades": {
+        "title": "Noten",
+        "createGrade": "Note erstellen",
+        "manageGrades": "Noten verwalten"
+      },
+      "absences": {
+        "title": "Abwesenheiten",
+        "createAbsence": "Abwesenheit erstellen",
+        "manageAbsences": "Abwesenheiten verwalten",
+        "justifyAbsences": "Abwesenheiten entschuldigen"
+      },
+      "catalog": {
+        "title": "Katalog",
+        "viewCatalog": "Katalog anzeigen"
+      },
+      "pastStudents": {
+        "title": "Ehemalige Schüler",
+        "viewPastStudents": "Ehemalige Schüler anzeigen"
+      },
+      "chefs": {
+        "title": "Köche",
+        "registerChef": "Koch registrieren",
+        "viewChefs": "Köche anzeigen"
+      }
+    }
+  },
     "classes": {
       "title": "Klassen",
       "list": {
@@ -449,7 +505,7 @@
     "create": {
       "title": "Lehrer erstellen",
       "submitButton": "Lehrer erstellen",
-      "successMessage": "Lehrer erfolgreich erstellt! Benutzername: {{username}}, Passwort: {{password}}",
+      "successMessage": "Lehrer erfolgreich erstellt!",
       "errors": {
         "createTeacher": "Fehler beim Erstellen des Lehrers. Bitte versuchen Sie es erneut."
       }
@@ -680,6 +736,14 @@
       }
     },
  "grades": {
+   "delete": {
+          "title": "Note löschen",
+          "confirmMessage": "Sind Sie sicher, dass Sie diese Note löschen möchten?",
+          "confirmButton": "Löschen",
+          "successMessage": "Note erfolgreich gelöscht!",
+          "errorMessage": "Fehler beim Löschen der Note. Bitte versuchen Sie es erneut.",
+          "errorFetching": "Fehler beim Laden der Notendetails."
+        },
       "title": "Notenverwaltung",
       "list": {
         "title": "Notenverwaltung",
@@ -2041,7 +2105,9 @@
   "common": {
     "notAvailable": "N.V.",
     "notAssigned": "Nicht zugewiesen",
-    "locale": "de-DE"
+    "locale": "de-DE",
+    "add": "Hinzufügen"
+
   },
   "chef": {
      "editFood": {

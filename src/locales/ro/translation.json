@@ -449,7 +449,7 @@
     "create": {
       "title": "Creează Profesor",
       "submitButton": "Creează Profesor",
-      "successMessage": "Profesorul a fost creat cu succes! Username: {{username}}, Parola: {{password}}",
+      "successMessage": "Profesorul a fost creat cu succes!",
       "errors": {
         "createTeacher": "Eroare la crearea profesorului. Te rog încearcă din nou."
       }
@@ -684,6 +684,14 @@
       }
     },
      "grades": {
+        "delete": {
+          "title": "Șterge Notă",
+          "confirmMessage": "Ești sigur că vrei să ștergi această notă?",
+          "confirmButton": "Șterge",
+          "successMessage": "Nota a fost ștearsă cu succes!",
+          "errorMessage": "Eroare la ștergerea notei. Vă rugăm să încercați din nou.",
+          "errorFetching": "Eroare la încărcarea detaliilor notei."
+        },
       "title": "Gestiune Note",
       "list": {
         "title": "Gestiune Note",
@@ -961,6 +969,7 @@
       "selectOperation": "Selectează o operațiune pentru a continua",
       "yearAdvancedSuccess": "Anul școlar a fost avansat cu succes!",
       "yearAdvancedError": "Eroare la avansarea anului școlar. Verificați logurile serverului.",
+      "logout": "Deconectare",
       "sections": {
         "studentParent": {
           "title": "Elev/Părinte",
@@ -1695,6 +1704,7 @@
     "notAvailable": "N/D",
     "unknown": "Necunoscut",
     "unknownError": "Eroare necunoscută",
+    "add": "Adaugă",
     "days": {
       "monday": "Luni",
       "tuesday": "Marți",

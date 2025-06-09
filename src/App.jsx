@@ -57,6 +57,7 @@ import JustifyAbsences from "./teacher/components/Absence/JustifyAbsences.jsx";
 import AdminGradeView from "./admin/components/Grade/AdminGradeView";
 import AdminGradeCreate from "./admin/components/Grade/AdminGradeCreate";
 import AdminGradeEdit from "./admin/components/Grade/AdminGradeEdit";
+import AdminGradeDelete from "./admin/components/Grade/AdminGradeDelete.jsx";
 import AdminAbsenceView from "./admin/components/Absence/AdminAbsenceView";
 import AdminAbsenceCreate from "./admin/components/Absence/AdminAbsenceCreate";
 import AdminAbsenceEdit from "./admin/components/Absence/AdminAbsenceEdit";
@@ -129,6 +130,8 @@ const App = () => {
         <Route path="admin/grades" element={<AdminGradeView />} />
         <Route path="admin/grades/create" element={<AdminGradeCreate />} />
         <Route path="admin/grades/edit/:id" element={<AdminGradeEdit />} />
+        <Route path="/admin/grades/delete/:id" element={<ProtectedRoute><AdminGradeDelete /></ProtectedRoute>} />
+
       
        {/* Absence routes */}
         <Route path="admin/absences" element={<AdminAbsenceView />} />

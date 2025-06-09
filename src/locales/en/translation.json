@@ -449,7 +449,7 @@
     "create": {
       "title": "Create Teacher",
       "submitButton": "Create Teacher",
-      "successMessage": "Teacher created successfully! Username: {{username}}, Password: {{password}}",
+      "successMessage": "Teacher created successfully!",
       "errors": {
         "createTeacher": "Error creating teacher. Please try again."
       }
@@ -684,6 +684,14 @@
       }
     },
       "grades": {
+         "delete": {
+          "title": "Delete Grade",
+          "confirmMessage": "Are you sure you want to delete this grade?",
+          "confirmButton": "Delete",
+          "successMessage": "Grade deleted successfully!",
+          "errorMessage": "Error deleting grade. Please try again.",
+          "errorFetching": "Error loading grade details."
+         },
       "title": "Grades Management",
       "list": {
         "title": "Grades Management",
@@ -961,6 +969,7 @@
       "selectOperation": "Select an operation to continue",
       "yearAdvancedSuccess": "School year has been successfully advanced!",
       "yearAdvancedError": "Error advancing school year. Check server logs.",
+      "logout": "Logout",
       "sections": {
         "studentParent": {
           "title": "Student/Parent",
@@ -1695,6 +1704,7 @@
     "notAvailable": "N/A",
     "unknown": "Unknown",
     "unknownError": "Unknown error",
+    "add": "Add",
     "days": {
       "monday": "Monday",
       "tuesday": "Tuesday",

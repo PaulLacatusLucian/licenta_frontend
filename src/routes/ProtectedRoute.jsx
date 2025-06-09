@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children }) => {
   }, []);
 
   if (isValid === null) {
-    return null; // sau un loader
+    return null;
   }
 
   return isValid ? children : <Navigate to="/login" replace />;

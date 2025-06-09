@@ -85,21 +85,16 @@ const ViewGrades = () => {
     return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
   };
 
-  const handleDeleteGrade = async (gradeId) => {
+  const handleDeleteGrade = (gradeId, gradeData) => {
     if (!gradeId) {
       setError("Nu se poate șterge o notă fără ID valid.");
       return;
     }
     
-    if (window.confirm(t('admin.grades.list.confirmDelete'))) {
-      try {
-        await axios.delete(`/grades/${gradeId}`);
-        setGrades(grades.filter(grade => grade.id !== gradeId));
-      } catch (err) {
-        console.error("Error deleting grade:", err);
-        setError(t('admin.grades.list.deleteError'));
-      }
-    }
+    // Navigăm către pagina de ștergere cu datele notei
+    navigate(`/admin/grades/delete/${gradeId}`, {
+      state: { gradeData: gradeData }
+    });
   };
 
   const handleRefresh = () => {
@@ -240,7 +235,7 @@ const ViewGrades = () => {
                             <span className="hidden sm:inline">{t('common.edit')}</span>
                           </button>
                           <button
-                            onClick={() => handleDeleteGrade(grade.id)}
+                            onClick={() => handleDeleteGrade(grade.id, grade)}
                             className="text-red-600 hover:text-red-900 inline-flex items-center"
                           >
                             <FaTrash className="h-4 w-4 mr-1" />
@@ -308,7 +303,7 @@ const ViewGrades = () => {
                           {t('common.edit')}
                         </button>
                         <button
-                          onClick={() => handleDeleteGrade(grade.id)}
+                          onClick={() => handleDeleteGrade(grade.id, grade)}
                           className="bg-white text-red-600 border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded text-sm inline-flex items-center"
                         >
                           <FaTrash className="h-4 w-4 mr-1" />

@@ -11,7 +11,7 @@ const DeleteChef = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/users/chefs/${id}`);
+      await axios.delete(`/chefs/${id}`);
       setMessage(t('admin.chefs.delete.successMessage'));
       setTimeout(() => navigate("/admin/chefs"), 1500);
     } catch (err) {

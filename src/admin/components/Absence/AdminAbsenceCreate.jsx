@@ -135,59 +135,84 @@ const CreateAbsence = () => {
     fetchDataForClass();
   }, [selectedClass, t]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!formData.studentId || !formData.sessionId) {
-      setMessage({
-        type: "error", 
-        text: t('admin.absences.create.errors.requiredFields')
-      });
-      return;
-    }
+  if (!formData.studentId || !formData.sessionId) {
+    setMessage({
+      type: "error", 
+      text: t('admin.absences.create.errors.requiredFields')
+    });
+    return;
+  }
 
-    try {
-      const requestData = {
-        studentId: formData.studentId,
-        classSessionId: formData.sessionId
-      };
-      
-      const response = await axios.post(`/absences/session/${formData.sessionId}`, requestData);
-      
-      if (formData.justified) {
-        await axios.put(`/absences/${response.data.id}/justify`);
+  try {
+    // Folosește același endpoint ca profesorul pentru a crea și intrarea în catalog
+    const response = await axios.post(
+      `/class-sessions/session/${formData.sessionId}/absences`, 
+      null,
+      {
+        params: {
+          studentId: formData.studentId
+        }
       }
+    );
+    
+    // Dacă absența trebuie motivată, actualizează-o
+    if (formData.justified && response.data && response.data.id) {
+      await axios.put(`/absences/${response.data.id}/justify`);
+    }
+    
+    setMessage({
+      type: "success",
+      text: t('admin.absences.create.success')
+    });
+    
+    setFormData({
+      studentId: "",
+      sessionId: "",
+      justified: false
+    });
+    
+    setTimeout(() => {
+      navigate("/admin/absences");
+    }, 1500);
+  } catch (error) {
+    console.error("Error creating absence:", error);
+    
+    if (error.response && error.response.status === 409) {
+      const errorMessage = error.response?.data || "";
       
-      setMessage({
-        type: "success",
-        text: t('admin.absences.create.success')
-      });
-      
-      setFormData({
-        studentId: "",
-        sessionId: "",
-        justified: false
-      });
-      
-      setTimeout(() => {
-        navigate("/admin/absences");
-      }, 1500);
-    } catch (error) {
-      console.error("Error creating absence:", error);
-      
-      if (error.response && error.response.status === 409) {
+      // Verifică pentru diferite tipuri de conflicte
+      if (errorMessage.includes("notă") || 
+          errorMessage.includes("grade") || 
+          errorMessage.includes("Note")) {
         setMessage({
           type: "error",
-          text: error.response.data || t('admin.absences.create.errors.conflict')
+          text: t('admin.absences.create.errors.hasGrade')
+        });
+      } else if (errorMessage.includes("absență") || 
+                 errorMessage.includes("absence") || 
+                 errorMessage.includes("Abwesenheit") ||
+                 errorMessage.includes("Der Schüler hat bereits eine registrierte Abwesenheit")) {
+        setMessage({
+          type: "error",
+          text: t('admin.absences.create.errors.alreadyAbsent')
         });
       } else {
         setMessage({
           type: "error",
-          text: t('admin.absences.create.errors.createError')
+          text: t('admin.absences.create.errors.conflict')
         });
       }
+    } else {
+      setMessage({
+        type: "error",
+        text: t('admin.absences.create.errors.createError')
+      });
     }
-  };
+  }
+};
 
   const formatSessionLabel = (session) => {
     if (!session) return "";

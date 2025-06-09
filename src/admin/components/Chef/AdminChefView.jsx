@@ -17,7 +17,7 @@ const ViewChefs = () => {
     const fetchChefs = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("/chefs/all");
+        const response = await axios.get("/chefs");
         setChefs(response.data);
         setError(null);
       } catch (err) {

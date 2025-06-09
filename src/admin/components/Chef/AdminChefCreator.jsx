@@ -7,20 +7,33 @@ import { useTranslation } from 'react-i18next';
 const RegisterChef = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({ name: "" });
+  const [formData, setFormData] = useState({ 
+    name: "",
+    email: "" // Adăugăm și email-ul
+  });
   const [message, setMessage] = useState(null);
 
   const handleInputChange = (e) => {
-    setFormData({ name: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/users/register-chef", formData);
-      setMessage({ type: "success", text: response.data.message });
-      setFormData({ name: "" });
+      // Folosim endpoint-ul corect: /auth/register-chef
+      const response = await axios.post("/auth/register-chef", formData);
+      setMessage({ 
+        type: "success", 
+        text: response.data.message || t('admin.chefs.create.successMessage') 
+      });
+      // Resetăm formularul
+      setFormData({ name: "", email: "" });
     } catch (error) {
+      console.error("Error registering chef:", error);
       setMessage({
         type: "error",
         text: error.response?.data?.message || t('admin.chefs.create.errorRegistering')
@@ -40,14 +53,20 @@ const RegisterChef = () => {
         <h2 className="text-lg font-semibold mb-4">{t('admin.chefs.create.title')}</h2>
 
         {message && (
-          <div className={`mb-4 p-3 rounded text-sm ${message.type === "success" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}>
+          <div className={`mb-4 p-3 rounded text-sm ${
+            message.type === "success" 
+              ? "bg-green-100 text-green-600" 
+              : "bg-red-100 text-red-600"
+          }`}>
             {message.text}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-gray-900">{t('admin.chefs.create.chefName')}</label>
+            <label className="text-sm font-medium text-gray-900">
+              {t('admin.chefs.create.chefName')}
+            </label>
             <div className="relative">
               <Users className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
@@ -61,6 +80,24 @@ const RegisterChef = () => {
               />
             </div>
           </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-900">
+              {t('admin.chefs.create.chefEmail') || 'Email'}
+            </label>
+            <div className="relative">
+              <input
+                type="email"
+                name="email"
+                placeholder={t('admin.chefs.create.emailPlaceholder') || 'chef@school.com'}
+                className="w-full h-9 rounded-md border bg-transparent px-3 text-sm shadow-sm focus:ring-2 focus:ring-gray-950"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-gray-900 text-white rounded-md py-2 text-sm font-medium hover:bg-gray-800"

@@ -174,13 +174,17 @@ const CreateGrade = () => {
     }
 
     try {
-      await axios.post(`/grades/session/${formData.sessionId}`, null, {
-        params: {
-          studentId: formData.studentId,
-          gradeValue: formData.gradeValue,
-          description: formData.description || ""
+      // Folosim același endpoint ca profesorii pentru a crea note
+      await axios.post(
+        `/class-sessions/session/${formData.sessionId}/grades`, 
+        null,
+        {
+          params: {
+            studentId: formData.studentId,
+            gradeValue: parseFloat(formData.gradeValue)
+          }
         }
-      });
+      );
       
       setMessage({
         type: "success",
@@ -204,7 +208,12 @@ const CreateGrade = () => {
         if (error.response.status === 409) {
           setMessage({
             type: "error",
-            text: error.response.data || t('admin.grades.create.errors.conflict')
+            text: t('admin.grades.create.errors.studentAbsent') || error.response.data
+          });
+        } else if (error.response.status === 400) {
+          setMessage({
+            type: "error",
+            text: t('admin.grades.create.errors.invalidGrade')
           });
         } else {
           setMessage({
@@ -432,7 +441,7 @@ const CreateGrade = () => {
                           ? 'bg-gray-900 text-white border-gray-900' 
                           : 'hover:bg-gray-100'
                       }`}
-                      onClick={() => setFormData({...formData, gradeValue: num})}
+                      onClick={() => setFormData({...formData, gradeValue: num.toString()})}
                     >
                       {num}
                     </button>

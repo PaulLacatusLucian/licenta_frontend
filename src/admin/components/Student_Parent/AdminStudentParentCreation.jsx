@@ -180,7 +180,7 @@ const AdminUserCreator = () => {
                     <option value="">{t('admin.userCreator.placeholders.selectClass')}</option>
                     {classes.map((cls) => (
                       <option key={cls.id} value={cls.id}>
-                        {cls.name} (ID: {cls.id})
+                        {cls.name}
                       </option>
                     ))}
                   </select>

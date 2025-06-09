@@ -54,10 +54,7 @@ const CreateTeacher = () => {
       const response = await axios.post("/auth/register-teacher", formData);
       setMessage({
         type: "success",
-        text: t('admin.teachers.create.successMessage', { 
-          username: response.data.username, 
-          password: response.data.password 
-        }),
+        text: t('admin.teachers.create.successMessage')
       });
   
       setFormData({

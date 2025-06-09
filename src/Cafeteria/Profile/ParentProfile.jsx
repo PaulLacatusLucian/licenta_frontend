@@ -10,7 +10,9 @@ import {
     FaDownload,
     FaShoppingCart,
     FaReceipt,
-    FaSpinner
+    FaSpinner,
+    FaChevronLeft,
+    FaChevronRight
 } from "react-icons/fa";
 
 function MyProfile() {
@@ -27,7 +29,6 @@ function MyProfile() {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
     
-    // Überprüfen, ob wir den aktuellen Monat anzeigen
     const isCurrentMonth = month === currentMonth && year === currentYear;
     
     const months = t('profile.months', { returnObjects: true });
@@ -41,14 +42,12 @@ function MyProfile() {
             setLoading(true);
             setError(null);
             
-            // Verwenden Sie den neuen /me-Endpunkt - Token wird automatisch über axios gesendet
             const response = await axios.get(`/menu/me/child/orders`, {
                 params: { month, year }
             });
             
             setOrderHistory(response.data || []);
             
-            // Gesamtausgaben berechnen
             const total = response.data.reduce((sum, order) => sum + (order.price || 0), 0);
             setTotalSpent(total);
             
@@ -64,13 +63,11 @@ function MyProfile() {
         try {
             setDownloading(true);
             
-            // Verwenden Sie den neuen /me/invoice-Endpunkt
             const response = await axios.get(`/menu/me/invoice`, {
                 params: { month, year },
                 responseType: 'blob'
             });
     
-            // Download-Link erstellen
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -94,13 +91,25 @@ function MyProfile() {
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toLocaleDateString(t('profile.dateLocale'), { 
+        const options = { 
             year: 'numeric', 
             month: 'short', 
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
-        });
+        };
+        
+        // For mobile, use a shorter format
+        if (window.innerWidth < 640) {
+            return date.toLocaleDateString(t('profile.dateLocale'), { 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        return date.toLocaleDateString(t('profile.dateLocale'), options);
     };
     
     const handlePreviousMonth = () => {
@@ -118,7 +127,7 @@ function MyProfile() {
         const currentYear = now.getFullYear();
         
         if (year === currentYear && month === currentMonth) {
-            return; // Nicht über den aktuellen Monat hinausgehen
+            return;
         }
         
         if (month === 12) {
@@ -133,25 +142,27 @@ function MyProfile() {
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
             <div className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div className="flex items-center mb-4 md:mb-0">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-center">
                             <button
                                 onClick={goToMenu}
-                                className="mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                                className="mr-3 sm:mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
                                 aria-label={t('profile.backToMenu')}
                             >
-                                <FaArrowLeft className="text-gray-700" />
+                                <FaArrowLeft className="text-gray-700 text-sm sm:text-base" />
                             </button>
-                            <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-                                <FaReceipt className="mr-3 text-primary" /> {t('profile.title')}
+                            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 flex items-center">
+                                <FaReceipt className="mr-2 sm:mr-3 text-primary text-lg sm:text-xl" /> 
+                                <span className="hidden sm:inline">{t('profile.title')}</span>
+                                <span className="sm:hidden">{t('profile.title')}</span>
                             </h1>
                         </div>
                         
                         <button
                             onClick={downloadInvoice}
                             disabled={downloading || orderHistory.length === 0}
-                            className={`flex items-center justify-center px-4 py-2 rounded-lg ${
+                            className={`flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base ${
                                 downloading || orderHistory.length === 0
                                     ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                                     : "bg-primary text-white hover:bg-secondary"
@@ -159,13 +170,15 @@ function MyProfile() {
                         >
                             {downloading ? (
                                 <>
-                                    <FaSpinner className="animate-spin mr-2" /> 
-                                    {t('profile.downloading')}
+                                    <FaSpinner className="animate-spin mr-2 text-sm sm:text-base" /> 
+                                    <span className="hidden sm:inline">{t('profile.downloading')}</span>
+                                    <span className="sm:hidden">{t('profile.downloadingShort') || '...'}</span>
                                 </>
                             ) : (
                                 <>
-                                    <FaFileInvoiceDollar className="mr-2" /> 
-                                    {t('profile.downloadInvoice')}
+                                    <FaFileInvoiceDollar className="mr-2 text-sm sm:text-base" /> 
+                                    <span className="hidden sm:inline">{t('profile.downloadInvoice')}</span>
+                                    <span className="sm:hidden">{t('profile.invoice') || 'Invoice'}</span>
                                 </>
                             )}
                         </button>
@@ -173,35 +186,33 @@ function MyProfile() {
                 </div>
             </div>
             
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
                 {error && (
-                    <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                    <div className="mb-4 sm:mb-6 bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-sm sm:text-base">
                         {error}
                     </div>
                 )}
                 
-                {/* Monatsauswahl */}
-                <div className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
-                    <div className="p-6 border-b border-gray-200">
-                        <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                            <FaCalendarAlt className="mr-2 text-primary" /> {t('profile.selectPeriod')}
+                {/* Month selector */}
+                <div className="bg-white rounded-lg shadow-sm mb-4 sm:mb-6 overflow-hidden">
+                    <div className="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center">
+                            <FaCalendarAlt className="mr-2 text-primary text-sm sm:text-base" /> {t('profile.selectPeriod')}
                         </h2>
                     </div>
                     
-                    <div className="p-6">
-                        <div className="flex items-center justify-between">
+                    <div className="p-4 sm:p-6">
+                        <div className="flex items-center justify-between max-w-sm mx-auto">
                             <button 
                                 onClick={handlePreviousMonth}
                                 className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                                 aria-label={t('profile.previousMonth')}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
+                                <FaChevronLeft className="text-gray-600 text-sm sm:text-base" />
                             </button>
                             
-                            <div className="text-center">
-                                <h3 className="text-xl font-bold text-gray-800">
+                            <div className="text-center px-4">
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                                     {months[month - 1]} {year}
                                 </h3>
                             </div>
@@ -216,48 +227,46 @@ function MyProfile() {
                                 disabled={month === new Date().getMonth() + 1 && year === new Date().getFullYear()}
                                 aria-label={t('profile.nextMonth')}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                </svg>
+                                <FaChevronRight className="text-sm sm:text-base" />
                             </button>
                         </div>
                     </div>
                 </div>
                 
-                {/* Bestellstatistiken */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="bg-white rounded-lg shadow-sm p-6">
+                {/* Order statistics - Mobile optimized */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 mb-4 sm:mb-6">
+                    <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
                         <div className="flex items-center">
-                            <div className="rounded-full p-3 bg-blue-100 mr-4">
-                                <FaShoppingCart className="text-blue-600" />
+                            <div className="rounded-full p-2 sm:p-3 bg-blue-100 mr-3 sm:mr-4">
+                                <FaShoppingCart className="text-blue-600 text-sm sm:text-base" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">{t('profile.stats.totalOrders')}</p>
-                                <p className="text-2xl font-bold">{orderHistory.length}</p>
+                                <p className="text-xs sm:text-sm text-gray-500">{t('profile.stats.totalOrders')}</p>
+                                <p className="text-xl sm:text-2xl font-bold">{orderHistory.length}</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
                         <div className="flex items-center">
-                            <div className="rounded-full p-3 bg-green-100 mr-4">
-                                <FaFileInvoiceDollar className="text-green-600" />
+                            <div className="rounded-full p-2 sm:p-3 bg-green-100 mr-3 sm:mr-4">
+                                <FaFileInvoiceDollar className="text-green-600 text-sm sm:text-base" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">{t('profile.stats.totalSpent')}</p>
-                                <p className="text-2xl font-bold">${totalSpent.toFixed(2)}</p>
+                                <p className="text-xs sm:text-sm text-gray-500">{t('profile.stats.totalSpent')}</p>
+                                <p className="text-xl sm:text-2xl font-bold">${totalSpent.toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div className="bg-white rounded-lg shadow-sm p-6">
+                    <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
                         <div className="flex items-center">
-                            <div className="rounded-full p-3 bg-purple-100 mr-4">
-                                <FaUtensils className="text-purple-600" />
+                            <div className="rounded-full p-2 sm:p-3 bg-purple-100 mr-3 sm:mr-4">
+                                <FaUtensils className="text-purple-600 text-sm sm:text-base" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">{t('profile.stats.avgPrice')}</p>
-                                <p className="text-2xl font-bold">
+                                <p className="text-xs sm:text-sm text-gray-500">{t('profile.stats.avgPrice')}</p>
+                                <p className="text-xl sm:text-2xl font-bold">
                                     ${orderHistory.length > 0 
                                         ? (totalSpent / orderHistory.length).toFixed(2) 
                                         : '0.00'
@@ -268,61 +277,82 @@ function MyProfile() {
                     </div>
                 </div>
                 
-                {/* Bestellverlaufsliste */}
+                {/* Order history list - Mobile optimized */}
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div className="p-6 border-b border-gray-200">
-                        <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                            <FaReceipt className="mr-2 text-primary" /> {t('profile.orderHistory')}
+                    <div className="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center">
+                            <FaReceipt className="mr-2 text-primary text-sm sm:text-base" /> {t('profile.orderHistory')}
                         </h2>
                     </div>
                     
                     {loading ? (
-                        <div className="flex justify-center items-center p-12">
-                            <FaSpinner className="animate-spin text-primary text-3xl" />
+                        <div className="flex justify-center items-center p-8 sm:p-12">
+                            <FaSpinner className="animate-spin text-primary text-2xl sm:text-3xl" />
                         </div>
                     ) : orderHistory.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {t('profile.table.item')}
-                                        </th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {t('profile.table.quantity')}
-                                        </th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {t('profile.table.price')}
-                                        </th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {t('profile.table.date')}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {orderHistory.map((order) => (
-                                        <tr key={order.id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium text-gray-900">{order.menuItemName}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-500">{order.quantity}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium text-gray-900">${order.price?.toFixed(2)}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {formatDate(order.orderTime)}
-                                            </td>
+                        <>
+                            {/* Mobile view - Cards */}
+                            <div className="sm:hidden">
+                                {orderHistory.map((order) => (
+                                    <div key={order.id} className="border-b border-gray-200 p-4 hover:bg-gray-50">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex-1">
+                                                <h3 className="font-medium text-gray-900 text-sm">{order.menuItemName}</h3>
+                                                <p className="text-xs text-gray-500 mt-1">{formatDate(order.orderTime)}</p>
+                                            </div>
+                                            <div className="text-right ml-3">
+                                                <p className="font-semibold text-gray-900">${order.price?.toFixed(2)}</p>
+                                                <p className="text-xs text-gray-500">Qty: {order.quantity}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Desktop view - Table */}
+                            <div className="hidden sm:block overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                {t('profile.table.item')}
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                {t('profile.table.quantity')}
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                {t('profile.table.price')}
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                {t('profile.table.date')}
+                                            </th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {orderHistory.map((order) => (
+                                            <tr key={order.id} className="hover:bg-gray-50">
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm font-medium text-gray-900">{order.menuItemName}</div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm text-gray-500">{order.quantity}</div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm font-medium text-gray-900">${order.price?.toFixed(2)}</div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {formatDate(order.orderTime)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
                     ) : (
-                        <div className="text-center py-12 px-6">
+                        <div className="text-center py-8 sm:py-12 px-4 sm:px-6">
                             <svg
-                                className="mx-auto h-12 w-12 text-gray-400"
+                                className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -336,17 +366,16 @@ function MyProfile() {
                                 />
                             </svg>
                             <h3 className="mt-2 text-sm font-medium text-gray-900">{t('profile.noOrdersTitle')}</h3>
-                            <p className="mt-1 text-sm text-gray-500">
+                            <p className="mt-1 text-xs sm:text-sm text-gray-500">
                                 {t('profile.noOrdersDescription', { month: months[month - 1], year })}
                             </p>
-                            {/* Zeigen Sie die Schaltfläche "Essen bestellen" nur für den aktuellen Monat an */}
                             {isCurrentMonth && (
-                                <div className="mt-6">
+                                <div className="mt-4 sm:mt-6">
                                     <button
                                         onClick={goToMenu}
-                                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                        className="inline-flex items-center px-3 sm:px-4 py-2 border border-transparent shadow-sm text-xs sm:text-sm font-medium rounded-md text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                                     >
-                                        <FaUtensils className="mr-2" /> {t('profile.orderFood')}
+                                        <FaUtensils className="mr-2 text-xs sm:text-sm" /> {t('profile.orderFood')}
                                     </button>
                                 </div>
                             )}

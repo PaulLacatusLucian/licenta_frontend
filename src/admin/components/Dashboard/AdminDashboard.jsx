@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { 
   FaUsers, FaGraduationCap, FaSchool, FaCalendar, FaPlus, FaEye, 
   FaEdit, FaTrash, FaTimes, FaUserPlus, FaUtensils,
-  FaStar, FaFileAlt, FaCheckSquare, FaGlobe
+  FaStar, FaFileAlt, FaCheckSquare, FaGlobe, FaSignOutAlt
 } from 'react-icons/fa';
 import axios from "../../../axiosConfig";
 import { useTranslation } from 'react-i18next';
+import Cookies from 'js-cookie';
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -92,6 +93,12 @@ const AdminDashboard = () => {
       console.error("Error advancing school year:", err);
       alert(t('admin.dashboard.yearAdvancedError'));
     }
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("jwt-token");
+    Cookies.remove("username");
+    navigate("/login");
   };
 
   const sections = [
@@ -299,7 +306,16 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('admin.dashboard.title')}</h1>
             <p className="text-gray-500">{t('admin.dashboard.subtitle')}</p>
           </div>
-          <LanguageSwitcher />
+          <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 shadow-sm"
+            >
+              <FaSignOutAlt className="w-4 h-4" />
+              <span className="text-sm font-medium">{t('admin.dashboard.logout')}</span>
+            </button>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

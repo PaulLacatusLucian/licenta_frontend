@@ -739,7 +739,8 @@
           "requiredFields": "Vă rugăm să selectați un elev, o sesiune și să introduceți o notă.",
           "createGrade": "Eroare la adăugarea notei. Vă rugăm să încercați din nou.",
           "conflict": "Conflict: Elevul este absent sau are deja o notă.",
-          "networkError": "Eroare la adăugarea notei. Verificați conexiunea."
+          "networkError": "Eroare la adăugarea notei. Verificați conexiunea.",
+          "studentAbsent": "Acest elev este absent și nu poate primi o notă."
         }
       },
       "edit": {
@@ -937,7 +938,9 @@
         "chefName": "Nume Bucătar",
         "namePlaceholder": "Ex: Maria Popescu",
         "submitButton": "Înregistrează Bucătar",
-        "errorRegistering": "Eroare la înregistrare."
+        "errorRegistering": "Eroare la înregistrare.",
+          "chefEmail": "Email Bucătar",
+        "emailPlaceholder": "bucatar@exemplu.com"
       },
       "edit": {
         "title": "Editează Bucătar",

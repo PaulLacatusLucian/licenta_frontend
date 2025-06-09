@@ -734,6 +734,7 @@
         "success": "Grade added successfully!",
         "errors": {
           "loadingClasses": "Error loading classes. Please try again.",
+          "studentAbsent": "This student is absent and cannot receive a grade.",
           "loadingStudents": "Could not get students for this class.",
           "loadingSessions": "Students retrieved, but could not load sessions.",
           "requiredFields": "Please select a student, session, and enter a grade.",
@@ -937,7 +938,9 @@
         "chefName": "Chef Name",
         "namePlaceholder": "e.g. John Smith",
         "submitButton": "Register Chef",
-        "errorRegistering": "Error registering chef."
+        "errorRegistering": "Error registering chef.",
+        "chefEmail": "Chef Email",
+        "emailPlaceholder": "chef@example.com"
       },
       "edit": {
         "title": "Edit Chef",

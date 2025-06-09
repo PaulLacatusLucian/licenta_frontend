@@ -365,6 +365,40 @@
     "no": "Nein"
   },
   "admin": {
+   "chefs": {
+  "create": {
+    "title": "Koch registrieren",
+    "chefName": "Name des Kochs",
+    "namePlaceholder": "z.B. Max Müller",
+    "chefEmail": "Koch E-Mail",
+    "emailPlaceholder": "koch@beispiel.com",
+    "submitButton": "Koch registrieren",
+    "errorRegistering": "Fehler bei der Registrierung."
+  },
+  "edit": {
+    "title": "Koch bearbeiten",
+    "submitButton": "Änderungen speichern",
+    "successMessage": "Koch erfolgreich aktualisiert!",
+    "errorLoading": "Fehler beim Laden der Kochdaten. Bitte versuchen Sie es erneut.",
+    "errorUpdating": "Fehler beim Aktualisieren des Kochs. Bitte versuchen Sie es erneut."
+  },
+  "delete": {
+    "title": "Koch löschen",
+    "confirmMessage": "Sind Sie sicher, dass Sie diesen Koch löschen möchten?",
+    "confirmButton": "Ja, löschen",
+    "successMessage": "Koch erfolgreich gelöscht.",
+    "errorMessage": "Fehler beim Löschen des Kochs. Bitte versuchen Sie es erneut."
+  },
+  "list": {
+    "title": "Kochliste",
+    "searchPlaceholder": "Nach Name suchen...",
+    "chefNameHeader": "Name des Kochs",
+    "actionsHeader": "Aktionen",
+    "errorLoading": "Fehler beim Laden der Köche. Bitte versuchen Sie es erneut.",
+    "noChefFound": "Kein Koch gefunden.",
+    "noChefsRegistered": "Keine Köche registriert."
+  }
+},
     "dashboard": {
     "title": "Verwaltungsbereich",
     "subtitle": "Verwalten Sie Schüler, Lehrer, Klassen, Noten und Abwesenheiten",

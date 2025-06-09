@@ -45,7 +45,6 @@ import OurServices from "./homepage/OurServices/OurServices";
 import GradeEntry from "./teacher/components/Grade/GradeEntry";
 import AbsenceEntry from "./teacher/components/Absence/AbsenceEntry";
 import StudentAbsences from "./stud/components/Absences/StudentAbsences ";
-import ViewPastStudents from "./admin/components/PastStudents/ViewPastStudents";
 import ChefDashboard from "./chef/components/Dashboard/ChefDashboard";
 import AddFood from "./chef/components/AddFood/AddFood";
 import MenuList from "./Cafeteria/MenuList";
@@ -121,7 +120,6 @@ const App = () => {
         <Route path="/admin/parents/" element={<ProtectedRoute><AdminParentView /></ProtectedRoute>} />
         <Route path="/admin/parents/edit/:id" element={<ProtectedRoute><AdminParentEdit /></ProtectedRoute>} />
         <Route path="/admin/students/edit/:id" element={<ProtectedRoute><AdmintStudentEdit /></ProtectedRoute>} />
-        <Route path="/admin/past-students" element={<ProtectedRoute><ViewPastStudents /></ProtectedRoute>} />
         <Route path="/admin/create-chef" element={<ProtectedRoute><AdminChefCreator /></ProtectedRoute>} />
         <Route path="/admin/edit-chef/:id" element={<ProtectedRoute><AdminChefEdit /></ProtectedRoute>} />
         <Route path="/admin/chefs/" element={<ProtectedRoute><AdminChefView /></ProtectedRoute>} />

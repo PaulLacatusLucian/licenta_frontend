@@ -438,8 +438,11 @@ const ParentDashboard = () => {
             </div>
             <div className="border-l pl-6">
               <p className="font-semibold mb-3">{t('parent.dashboard.mealServices.recentOrders')}</p>
-              {studentOrders.length > 0 ? (
-                studentOrders.slice(0, 3).map((order, index) => (
+             {studentOrders.length > 0 ? (
+              studentOrders
+                .sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime))
+                .slice(0, 3)
+                .map((order, index) => (
                   <div key={index} className="border-b pb-3 mb-3 last:border-b-0">
                     <div className="flex justify-between items-center">
                       <div>
@@ -450,9 +453,9 @@ const ParentDashboard = () => {
                     </div>
                   </div>
                 ))
-              ) : (
-                <p className="text-dark2 italic">{t('parent.dashboard.mealServices.noRecentOrders')}</p>
-              )}
+            ) : (
+              <p className="text-dark2 italic">{t('parent.dashboard.mealServices.noRecentOrders')}</p>
+            )}
             </div>
           </div>
         </div>

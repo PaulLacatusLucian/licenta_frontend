@@ -85,16 +85,6 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const handleGoToNextYear = async () => {
-    try {
-      const response = await axios.post("/api/year/start-new-year");
-      alert(t('admin.dashboard.yearAdvancedSuccess'));
-    } catch (err) {
-      console.error("Error advancing school year:", err);
-      alert(t('admin.dashboard.yearAdvancedError'));
-    }
-  };
-
   const handleLogout = () => {
     Cookies.remove("jwt-token");
     Cookies.remove("username");
@@ -164,11 +154,6 @@ const AdminDashboard = () => {
           name: t('admin.dashboard.sections.class.viewClasses'),
           icon: FaEye,
           path: '/admin/classes'
-        },
-        { 
-          name: t('admin.dashboard.sections.class.goToNextYear'),
-          icon: FaCalendar,
-          action: () => handleGoToNextYear()
         }
       ]
     },
@@ -249,21 +234,6 @@ const AdminDashboard = () => {
           name: t('admin.dashboard.sections.catalog.viewCatalog'),
           icon: FaEye,
           path: '/admin/catalog'
-        }
-      ]
-    },
-    {
-      id: 'pastStudents',
-      title: t('admin.dashboard.sections.pastStudents.title'),
-      icon: FaGraduationCap,
-      color: 'bg-blue-500',
-      hoverColor: 'hover:bg-blue-600',
-      lightColor: 'bg-blue-50',
-      operations: [
-        { 
-          name: t('admin.dashboard.sections.pastStudents.viewPastStudents'),
-          icon: FaEye,
-          path: '/admin/past-students'
         }
       ]
     },

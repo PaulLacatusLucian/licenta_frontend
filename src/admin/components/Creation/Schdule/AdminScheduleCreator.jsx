@@ -47,7 +47,6 @@ const CreateSchedule = ({
     [t('admin.teachers.subjects.categories.others')]: ["religie", "psihologie", "economie", "filosofie"],
   };
 
-  // Funcție pentru a traduce subiectele profesorilor
   const getTranslatedSubject = (subject) => {
     if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
       return t(`admin.teachers.subjects.list.${subject}`);
@@ -55,7 +54,6 @@ const CreateSchedule = ({
     return subject || '';
   };
 
-  // Funcție pentru a traduce zilele săptămânii
   const getTranslatedDay = (day) => {
     const dayMap = {
       'Luni': t('admin.schedule.days.monday'),

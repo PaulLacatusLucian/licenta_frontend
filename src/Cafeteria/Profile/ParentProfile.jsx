@@ -99,7 +99,6 @@ function MyProfile() {
             minute: '2-digit'
         };
         
-        // For mobile, use a shorter format
         if (window.innerWidth < 640) {
             return date.toLocaleDateString(t('profile.dateLocale'), { 
                 month: 'short', 

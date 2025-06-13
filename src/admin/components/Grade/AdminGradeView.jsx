@@ -19,7 +19,6 @@ const ViewGrades = () => {
   
   const navigate = useNavigate();
 
-  // Funcție pentru a traduce subiectele
   const getTranslatedSubject = (subject) => {
     if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
       return t(`admin.teachers.subjects.list.${subject}`);
@@ -91,7 +90,6 @@ const ViewGrades = () => {
       return;
     }
     
-    // Navigăm către pagina de ștergere cu datele notei
     navigate(`/admin/grades/delete/${gradeId}`, {
       state: { gradeData: gradeData }
     });

@@ -28,13 +28,10 @@ const ViewTeachers = () => {
     fetchTeachers();
   }, [t]);
   
-  // Funcție pentru a traduce subiectele (care sunt deja salvate ca chei în DB)
   const getTranslatedSubject = (subject) => {
-    // Dacă subject este deja o cheie (ex: "informatica"), traducem direct
     if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
       return t(`admin.teachers.subjects.list.${subject}`);
     }
-    // Dacă nu găsim traducerea, returnăm valoarea originală
     return subject || '';
   };
 

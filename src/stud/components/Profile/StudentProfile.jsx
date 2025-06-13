@@ -25,7 +25,6 @@ import { useNavigate } from "react-router-dom";
 import StudentNavbar from "../StudentNavbar";
 import { useTranslation } from 'react-i18next';
 
-// Language Switcher Component
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);

@@ -22,7 +22,6 @@ const ClassScheduleCalendar = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Mapare pentru zile în engleză (pentru backend)
   const dayMapping = {
     [t('admin.schedule.days.monday')]: 'Luni',
     [t('admin.schedule.days.tuesday')]: 'Marți',
@@ -31,7 +30,6 @@ const ClassScheduleCalendar = () => {
     [t('admin.schedule.days.friday')]: 'Vineri'
   };
 
-  // Mapare inversă pentru afișare
   const reverseDayMapping = {
     'Luni': t('admin.schedule.days.monday'),
     'Marți': t('admin.schedule.days.tuesday'),
@@ -40,7 +38,6 @@ const ClassScheduleCalendar = () => {
     'Vineri': t('admin.schedule.days.friday')
   };
 
-  // Funcție pentru a traduce subiectele
   const getTranslatedSubject = (subject) => {
     if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
       return t(`admin.teachers.subjects.list.${subject}`);
@@ -97,7 +94,6 @@ const ClassScheduleCalendar = () => {
   };
 
   const handleSlotClick = (day, time, existingSchedule = null) => {
-    // Convertim ziua înapoi la română pentru backend
     const romanianDay = dayMapping[day] || day;
     
     if (existingSchedule) {

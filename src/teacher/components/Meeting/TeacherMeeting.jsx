@@ -115,7 +115,6 @@ const TeacherMeeting = () => {
       
       const response = await axios.post('/meetings/start', requestBody);
       
-      // Serverul returnează direct link-ul ca string
       if (response.data) {
         setMeetingLink(response.data);
         setSuccess(meetingType === "immediate" ? 

@@ -147,7 +147,6 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    // Folosește același endpoint ca profesorul pentru a crea și intrarea în catalog
     const response = await axios.post(
       `/class-sessions/session/${formData.sessionId}/absences`, 
       null,
@@ -158,7 +157,6 @@ const handleSubmit = async (e) => {
       }
     );
     
-    // Dacă absența trebuie motivată, actualizează-o
     if (formData.justified && response.data && response.data.id) {
       await axios.put(`/absences/${response.data.id}/justify`);
     }
@@ -183,7 +181,6 @@ const handleSubmit = async (e) => {
     if (error.response && error.response.status === 409) {
       const errorMessage = error.response?.data || "";
       
-      // Verifică pentru diferite tipuri de conflicte
       if (errorMessage.includes("notă") || 
           errorMessage.includes("grade") || 
           errorMessage.includes("Note")) {

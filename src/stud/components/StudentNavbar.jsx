@@ -26,7 +26,6 @@ const StudentNavbar = ({ activeView, studentData }) => {
     navigate("/login");
   };
 
-  // Navigation items
   const navItems = [
     { icon: FaHome, label: t('student.navbar.dashboard'), view: "home", path: "/stud" },
     { icon: FaUserCircle, label: t('student.navbar.myProfile'), view: "profile", path: "/stud/profile" },

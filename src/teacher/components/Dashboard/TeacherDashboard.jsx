@@ -55,7 +55,6 @@ const TeacherDashboard = () => {
         setStudents(studentsResponse.data);
         setSchedule(scheduleResponse.data);
         
-        // Filter today's sessions for quick display
         const today = new Date().toLocaleString("en-US", { weekday: "long" });
         const todayFormatted = today.charAt(0).toUpperCase() + today.slice(1);
         const todayClasses = scheduleResponse.data.filter(item => item.scheduleDay === todayFormatted);

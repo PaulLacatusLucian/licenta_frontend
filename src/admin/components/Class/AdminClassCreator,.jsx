@@ -26,7 +26,6 @@ const CreateClass = () => {
     "bio-chimie",
   ];
 
-  // Funcție pentru a traduce subiectele profesorilor
   const getTranslatedSubject = (subject) => {
     if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
       return t(`admin.teachers.subjects.list.${subject}`);

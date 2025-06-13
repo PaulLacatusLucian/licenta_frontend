@@ -83,7 +83,6 @@ const ParentCalendar = () => {
     return subject || '';
   };
 
-  // Map Romanian weekday to index for translation
   const mapWeekdayToTranslated = (romanianDay) => {
     const dayMap = {
       'Luni': 0,
@@ -168,7 +167,6 @@ const ParentCalendar = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             {weekdays.map((day, dayIndex) => {
-              // Map translated day back to Romanian for filtering
               const romanianDays = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri'];
               const romanianDay = romanianDays[dayIndex];
               

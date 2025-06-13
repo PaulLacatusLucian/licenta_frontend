@@ -50,7 +50,6 @@ const StudentAbsences = () => {
         setStudentData(studentResponse.data);
         
         console.log("Absences data received:", absencesResponse.data);
-// Verifică specific justified field
 absencesResponse.data.forEach(absence => {
   console.log(`Absence ID: ${absence.id}, Justified: ${absence.justified}, Type: ${typeof absence.justified}`);
 });

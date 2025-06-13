@@ -40,7 +40,6 @@ const Navbar = () => {
     },
   ];
 
-  // Handle scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {

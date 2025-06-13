@@ -104,7 +104,6 @@ const WeeklySchedule = () => {
         'Vineri': 'Friday'
       };
       
-      // Găsește cheia engleză pentru ziua din schedule
       const englishDay = Object.entries(scheduleToEnglishMap).find(
         ([ro, en]) => classItem.scheduleDay === ro || classItem.scheduleDay === en
       )?.[1];
@@ -122,7 +121,6 @@ const WeeklySchedule = () => {
   // Heutiges Programm holen
   const today = new Date().toLocaleString('en-US', { weekday: 'long' });
   const todayClasses = schedule.filter(classItem => {
-    // Mapare pentru a verifica dacă ziua din schedule corespunde cu today
     const scheduleToEnglishMap = {
       'Luni': 'Monday',
       'Marți': 'Tuesday',
@@ -279,7 +277,6 @@ const WeeklySchedule = () => {
                 <div className="space-y-4">
                   {schedule
                     .filter(classItem => {
-                      // Mapare pentru filtrare corectă
                       const scheduleToEnglishMap = {
                         'Luni': 'Monday',
                         'Marți': 'Tuesday',

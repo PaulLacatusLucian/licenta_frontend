@@ -12,7 +12,6 @@ const ViewStudents = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const navigate = useNavigate();
 
-  // Funcție pentru a traduce specializările
   const getTranslatedSpecialization = (specialization) => {
     if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
       return t(`admin.classes.specializations.${specialization}`);

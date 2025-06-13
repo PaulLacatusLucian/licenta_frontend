@@ -30,7 +30,6 @@ const CreateGrade = () => {
   const [sessionLoading, setSessionLoading] = useState(false);
   const [studentsLoading, setStudentsLoading] = useState(false);
 
-  // Funcție pentru a traduce specializările
   const getTranslatedSpecialization = (specialization) => {
     if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
       return t(`admin.classes.specializations.${specialization}`);
@@ -38,7 +37,6 @@ const CreateGrade = () => {
     return specialization || '';
   };
 
-  // Funcție pentru a traduce subiectele
   const getTranslatedSubject = (subject) => {
     if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
       return t(`admin.teachers.subjects.list.${subject}`);
@@ -174,7 +172,6 @@ const CreateGrade = () => {
     }
 
     try {
-      // Folosim același endpoint ca profesorii pentru a crea note
       await axios.post(
         `/class-sessions/session/${formData.sessionId}/grades`, 
         null,

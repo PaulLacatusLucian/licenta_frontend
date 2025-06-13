@@ -28,7 +28,6 @@ const PurchaseModal = ({ isOpen, onClose, item, onPurchase }) => {
         }
     }, [isOpen, item]);
 
-    // Prevent body scroll when modal is open
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';

@@ -45,7 +45,7 @@ const AddMenuItem = () => {
         
         if (file) {
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-            const maxSize = 5 * 1024 * 1024; // 5MB
+            const maxSize = 5 * 1024 * 1024;
             
             if (!validTypes.includes(file.type)) {
                 setErrors({ ...errors, file: t('chef.addFood.errors.invalidFileType') });
@@ -174,7 +174,7 @@ const AddMenuItem = () => {
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             const file = e.dataTransfer.files[0];
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-            const maxSize = 5 * 1024 * 1024; // 5MB
+            const maxSize = 5 * 1024 * 1024;
             
             if (!validTypes.includes(file.type)) {
                 setErrors({ ...errors, file: t('chef.addFood.errors.invalidFileType') });

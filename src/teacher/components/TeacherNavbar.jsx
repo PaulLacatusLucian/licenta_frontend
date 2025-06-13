@@ -26,17 +26,14 @@ const TeacherNavbar = ({
   const navigate = useNavigate();
   const { t } = useTranslation();
   
-  // Check if teacher is homeroom teacher
   const isHomeroom = teacherData?.hasClassAssigned || teacherData?.classAsTeacher;
   
-  // Logout function
   const handleLogout = () => {
     Cookies.remove("jwt-token");
     Cookies.remove("username");
     navigate("/login");
   };
   
-  // Base navigation items
   const baseNavItems = [
     { icon: FaHome, label: t('teacher.navbar.dashboard'), view: "home", path: "/teacher" },
     { icon: FaUserGraduate, label: t('teacher.navbar.students'), view: "students", path: "/teacher/students" },
@@ -46,22 +43,17 @@ const TeacherNavbar = ({
     { icon: FaBook, label: t('teacher.navbar.catalog'), view: "catalog", path: "/teacher/catalog" }
   ];
   
-  // Homeroom teacher specific items
   const homeroomItems = [
     { icon: FaVideo, label: t('teacher.navbar.startMeeting'), view: "meetings", path: "/teacher/meetings/new" },
     { icon: FaCheckCircle, label: t('teacher.navbar.justifyAbsences'), view: "justify", path: "/teacher/justify" }
   ];
   
-  // Combine navigation items based on teacher role
   let navItems = [...baseNavItems];
   
-  // Add homeroom options
   if (isHomeroom) {
-    // Insert homeroom options before "Catalog"
     navItems.splice(5, 0, ...homeroomItems);
   }
   
-  // Get title based on active view
   const getViewTitle = () => {
     switch(activeView) {
       case "home": return t('teacher.navbar.teacherPortal');

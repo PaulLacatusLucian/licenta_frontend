@@ -9,7 +9,7 @@ const RegisterChef = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({ 
     name: "",
-    email: "" // Adăugăm și email-ul
+    email: ""
   });
   const [message, setMessage] = useState(null);
 
@@ -24,13 +24,12 @@ const RegisterChef = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Folosim endpoint-ul corect: /auth/register-chef
       const response = await axios.post("/auth/register-chef", formData);
       setMessage({ 
         type: "success", 
         text: response.data.message || t('admin.chefs.create.successMessage') 
       });
-      // Resetăm formularul
+
       setFormData({ name: "", email: "" });
     } catch (error) {
       console.error("Error registering chef:", error);

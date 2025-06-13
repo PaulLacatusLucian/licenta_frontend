@@ -34,14 +34,13 @@ const AcademicReportPage = () => {
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState("report");
-  const [activeTab, setActiveTab] = useState("overview"); // "overview", "grades", "absences"
+  const [activeTab, setActiveTab] = useState("overview");
   const [parentData, setParentData] = useState(null);
   
   // State für Abwesenheiten
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  const [filter, setFilter] = useState("all"); // "all", "justified", "unjustified"
+  const [filter, setFilter] = useState("all");
   
-  // Notification system
   const [notification, setNotification] = useState(null);
   
   const navigate = useNavigate();

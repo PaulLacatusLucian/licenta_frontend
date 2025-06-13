@@ -409,33 +409,26 @@ const AbsenceEntry = () => {
         error.message || 
         t('common.unknownError');
       
-      // Verifică pentru diferite scenarii de eroare
       if (error.response?.status === 409) {
         const errorMessage = error.response?.data || "";
         
-        // Verifică pentru conflict de notă în mai multe limbi
         if (errorMessage.includes("notă") || 
             errorMessage.includes("grade") || 
             errorMessage.includes("Note")) {
-          // Este un conflict de notă
           setMessageType("error");
           setMessage(t('teacher.absence.hasGradeError'));
         } 
-        // Verifică pentru conflict de absență în mai multe limbi
         else if (errorMessage.includes("absență") || 
                  errorMessage.includes("absence") || 
                  errorMessage.includes("Abwesenheit")) {
-          // Este un conflict de absență
           setMessageType("warning");
           setMessage(t('teacher.absence.alreadyRecorded'));
         }
         else {
-          // Pentru alte conflicte, folosește doar mesajul tradus fără cel de la server
           setMessageType("error");
           setMessage(t('teacher.absence.genericConflictError'));
         }
       } else {
-        // Pentru alte erori
         setMessageType("error");
         setMessage(t('teacher.absence.genericError'));
       }

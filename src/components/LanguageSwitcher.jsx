@@ -1,4 +1,3 @@
-// src/components/LanguageSwitcher.jsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Globe } from 'lucide-react';

@@ -93,7 +93,6 @@ const WeeklySchedule = () => {
     );
   }
 
-  // Map weekday names for schedule filtering
   const getDayName = (day) => {
     const dayMap = {
       'Luni': 'monday',

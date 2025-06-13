@@ -1,4 +1,3 @@
-// src/hooks/useTranslations.js
 import { useTranslation } from 'react-i18next';
 
 export const useTranslations = () => {

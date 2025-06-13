@@ -20,7 +20,6 @@ const EditStudent = () => {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Funcție pentru a traduce specializările
   const getTranslatedSpecialization = (specialization) => {
     if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
       return t(`admin.classes.specializations.${specialization}`);

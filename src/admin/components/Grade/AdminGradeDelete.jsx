@@ -13,7 +13,6 @@ const DeleteGrade = () => {
   const [gradeDetails, setGradeDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Funcție pentru a traduce subiectele
   const getTranslatedSubject = (subject) => {
     if (subject && t(`admin.teachers.subjects.list.${subject}`) !== `admin.teachers.subjects.list.${subject}`) {
       return t(`admin.teachers.subjects.list.${subject}`);
@@ -22,7 +21,6 @@ const DeleteGrade = () => {
   };
 
   useEffect(() => {
-    // Încercăm să obținem datele notei din state sau facem un request
     if (location.state?.gradeData) {
       setGradeDetails(location.state.gradeData);
       setLoading(false);

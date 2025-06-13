@@ -27,7 +27,6 @@ const ViewClasses = () => {
     fetchClasses();
   }, [t]);
 
-  // Funcție pentru a traduce nivelurile de educație
   const getTranslatedEducationLevel = (level) => {
     const levelMap = {
       'PRIMARY': t('admin.classes.levels.primary'),
@@ -37,7 +36,6 @@ const ViewClasses = () => {
     return levelMap[level] || level;
   };
 
-  // Funcție pentru a traduce specializările
   const getTranslatedSpecialization = (specialization) => {
     if (specialization && t(`admin.classes.specializations.${specialization}`) !== `admin.classes.specializations.${specialization}`) {
       return t(`admin.classes.specializations.${specialization}`);

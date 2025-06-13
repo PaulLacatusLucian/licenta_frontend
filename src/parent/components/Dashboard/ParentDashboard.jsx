@@ -20,7 +20,6 @@ import {
 } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 
-// Import the ParentNavbar component
 import ParentNavbar from "../ParentNavbar";
 
 const ParentDashboard = () => {
@@ -265,7 +264,6 @@ const ParentDashboard = () => {
               </div>
               <div>
                 <h4 className="text-xl font-bold">{studentData.name}</h4>
-                <p className="text-indigo-100">{t('parent.dashboard.childInfo.class')}: {studentData.studentClass?.name || t('common.notAssigned')}</p>
               </div>
             </div>
             <div className="flex space-x-6">

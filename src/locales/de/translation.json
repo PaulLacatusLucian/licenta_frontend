@@ -1600,7 +1600,13 @@
         "meetingType": "Besprechungstyp",
         "parents": "Eltern",
         "selected": "Ausgewählt"
-      }
+      },
+      "meetingCreatedSuccess": "Besprechung erfolgreich erstellt!",
+      "meetingLinkLabel": "Besprechungslink:",
+      "copyLink": "Kopieren",
+      "linkCopied": "Kopiert!",
+      "joinMeeting": "An Besprechung teilnehmen",
+      "parentsNotified": "* Eltern haben Einladungen per E-Mail mit diesem Link erhalten"
     },
     "grades": {
       "title": "Noten eingeben",

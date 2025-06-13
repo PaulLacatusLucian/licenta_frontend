@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaVideo, FaCalendarAlt, FaClock, FaEnvelope, FaCheckSquare, 
-  FaRegSquare, FaArrowLeft } from 'react-icons/fa';
+  FaRegSquare, FaArrowLeft, FaCopy, FaExternalLinkAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../../axiosConfig';
 import DatePicker from 'react-datepicker';
@@ -25,6 +25,8 @@ const TeacherMeeting = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState("meetings");
   const [dataLoading, setDataLoading] = useState(true);
+  const [meetingLink, setMeetingLink] = useState(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
     const token = Cookies.get("jwt-token");
@@ -86,6 +88,12 @@ const TeacherMeeting = () => {
     setSelectedEmails([]);
   };
 
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(meetingLink);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
+
   const handleStartMeeting = async () => {
     if (selectedEmails.length === 0) {
       setError(t('teacher.meeting.selectEmailError'));
@@ -104,15 +112,16 @@ const TeacherMeeting = () => {
         requestBody.startDateTime = formatWithOffset(startDateTime);
         requestBody.endDateTime = formatWithOffset(endDateTime);
       }
-            
-      await axios.post('/meetings/start', requestBody);
-      setSuccess(meetingType === "immediate" ? 
-        t('teacher.meeting.immediateSuccess') : 
-        t('teacher.meeting.scheduledSuccess'));
       
-      setTimeout(() => {
-        navigate('/teacher');
-      }, 3000);
+      const response = await axios.post('/meetings/start', requestBody);
+      
+      // Serverul returnează direct link-ul ca string
+      if (response.data) {
+        setMeetingLink(response.data);
+        setSuccess(meetingType === "immediate" ? 
+          t('teacher.meeting.immediateSuccess') : 
+          t('teacher.meeting.scheduledSuccess'));
+      }
       
     } catch (error) {
       console.error("Error starting meeting:", error);
@@ -215,137 +224,184 @@ const TeacherMeeting = () => {
               </div>
             )}
 
-            <div className="mb-6">
-              <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.meetingTypeLabel')}</label>
-              <div className="flex space-x-4">
-                <button 
-                  onClick={() => setMeetingType("immediate")}
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    meetingType === "immediate" ? "bg-secondary text-white" : "bg-primary text-dark"
-                  }`}
-                >
-                  <FaClock className="inline mr-2" />
-                  {t('teacher.meeting.startIn5Minutes')}
-                </button>
-                <button 
-                  onClick={() => setMeetingType("scheduled")}
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    meetingType === "scheduled" ? "bg-secondary text-white" : "bg-primary text-dark"
-                  }`}
-                >
-                  <FaCalendarAlt className="inline mr-2" />
-                  {t('teacher.meeting.scheduleForLater')}
-                </button>
-              </div>
-            </div>
-
-            {meetingType === "scheduled" && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.startDateTime')}</label>
-                  <DatePicker
-                    selected={startDateTime}
-                    onChange={(date) => setStartDateTime(date)}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={15}
-                    dateFormat="MMMM d, yyyy h:mm aa"
-                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
-                  />
-                </div>
-                <div>
-                  <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.endDateTime')}</label>
-                  <DatePicker
-                    selected={endDateTime}
-                    onChange={(date) => setEndDateTime(date)}
-                    showTimeSelect
-                    timeFormat="HH:mm"
-                    timeIntervals={15}
-                    dateFormat="MMMM d, yyyy h:mm aa"
-                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
-                  />
+            {meetingLink && (
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
+                <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                  <FaVideo className="mr-2" />
+                  {t('teacher.meeting.meetingCreatedSuccess')}
+                </h3>
+                <div className="bg-white rounded-lg p-4 border border-blue-100">
+                  <p className="text-sm text-gray-600 mb-2">{t('teacher.meeting.meetingLinkLabel')}</p>
+                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                    <a 
+                      href={meetingLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 font-medium break-all mr-4"
+                    >
+                      {meetingLink}
+                    </a>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={handleCopyLink}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors flex items-center whitespace-nowrap"
+                      >
+                        <FaCopy className="mr-2" />
+                        {copySuccess ? t('teacher.meeting.linkCopied') : t('teacher.meeting.copyLink')}
+                      </button>
+                      <a
+                        href={meetingLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors flex items-center whitespace-nowrap"
+                      >
+                        <FaExternalLinkAlt className="mr-2" />
+                        {t('teacher.meeting.joinMeeting')}
+                      </a>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-3">
+                    {t('teacher.meeting.parentsNotified')}
+                  </p>
                 </div>
               </div>
             )}
 
-            <div className="mb-6 bg-light p-6 rounded-xl shadow-sm border border-gray-200">
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-dark font-semibold">{t('teacher.meeting.inviteParents')}</label>
-                <div className="space-x-2">
-                  <button 
-                    onClick={selectAllEmails}
-                    className="text-secondary hover:underline text-sm"
-                  >
-                    {t('teacher.meeting.selectAll')}
-                  </button>
-                  <button 
-                    onClick={deselectAllEmails}
-                    className="text-secondary hover:underline text-sm"
-                  >
-                    {t('teacher.meeting.deselectAll')}
-                  </button>
-                </div>
-              </div>
-              
-              <div className="max-h-60 overflow-y-auto border rounded-lg p-3 bg-white">
-                {parentEmails.length === 0 ? (
-                  <p className="text-dark2 text-center py-4">{t('teacher.meeting.noParentEmails')}</p>
-                ) : (
-                  parentEmails.map((email, index) => (
-                    <div 
-                      key={index} 
-                      className="flex items-center p-2 hover:bg-primary hover:bg-opacity-5 border-b last:border-b-0 transition-colors"
+            {!meetingLink && (
+              <>
+                <div className="mb-6">
+                  <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.meetingTypeLabel')}</label>
+                  <div className="flex space-x-4">
+                    <button 
+                      onClick={() => setMeetingType("immediate")}
+                      className={`px-4 py-2 rounded-lg font-medium ${
+                        meetingType === "immediate" ? "bg-secondary text-white" : "bg-primary text-dark"
+                      }`}
                     >
+                      <FaClock className="inline mr-2" />
+                      {t('teacher.meeting.startIn5Minutes')}
+                    </button>
+                    <button 
+                      onClick={() => setMeetingType("scheduled")}
+                      className={`px-4 py-2 rounded-lg font-medium ${
+                        meetingType === "scheduled" ? "bg-secondary text-white" : "bg-primary text-dark"
+                      }`}
+                    >
+                      <FaCalendarAlt className="inline mr-2" />
+                      {t('teacher.meeting.scheduleForLater')}
+                    </button>
+                  </div>
+                </div>
+
+                {meetingType === "scheduled" && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.startDateTime')}</label>
+                      <DatePicker
+                        selected={startDateTime}
+                        onChange={(date) => setStartDateTime(date)}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="MMMM d, yyyy h:mm aa"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-dark font-semibold mb-2">{t('teacher.meeting.endDateTime')}</label>
+                      <DatePicker
+                        selected={endDateTime}
+                        onChange={(date) => setEndDateTime(date)}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="MMMM d, yyyy h:mm aa"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-light"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-6 bg-light p-6 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="block text-dark font-semibold">{t('teacher.meeting.inviteParents')}</label>
+                    <div className="space-x-2">
                       <button 
-                        onClick={() => toggleEmailSelection(email)}
-                        className="flex items-center w-full text-left"
+                        onClick={selectAllEmails}
+                        className="text-secondary hover:underline text-sm"
                       >
-                        {selectedEmails.includes(email) ? 
-                          <FaCheckSquare className="text-secondary mr-3" /> : 
-                          <FaRegSquare className="text-dark2 mr-3" />
-                        }
-                        <FaEnvelope className="text-dark2 mr-2" />
-                        <span className={selectedEmails.includes(email) ? "text-dark" : "text-dark2"}>
-                          {email}
-                        </span>
+                        {t('teacher.meeting.selectAll')}
+                      </button>
+                      <button 
+                        onClick={deselectAllEmails}
+                        className="text-secondary hover:underline text-sm"
+                      >
+                        {t('teacher.meeting.deselectAll')}
                       </button>
                     </div>
-                  ))
-                )}
-              </div>
-              <p className="text-sm text-dark2 mt-2">
-                {t('teacher.meeting.selectedCount', { 
-                  selected: selectedEmails.length, 
-                  total: parentEmails.length 
-                })}
-              </p>
-            </div>
+                  </div>
+                  
+                  <div className="max-h-60 overflow-y-auto border rounded-lg p-3 bg-white">
+                    {parentEmails.length === 0 ? (
+                      <p className="text-dark2 text-center py-4">{t('teacher.meeting.noParentEmails')}</p>
+                    ) : (
+                      parentEmails.map((email, index) => (
+                        <div 
+                          key={index} 
+                          className="flex items-center p-2 hover:bg-primary hover:bg-opacity-5 border-b last:border-b-0 transition-colors"
+                        >
+                          <button 
+                            onClick={() => toggleEmailSelection(email)}
+                            className="flex items-center w-full text-left"
+                          >
+                            {selectedEmails.includes(email) ? 
+                              <FaCheckSquare className="text-secondary mr-3" /> : 
+                              <FaRegSquare className="text-dark2 mr-3" />
+                            }
+                            <FaEnvelope className="text-dark2 mr-2" />
+                            <span className={selectedEmails.includes(email) ? "text-dark" : "text-dark2"}>
+                              {email}
+                            </span>
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  <p className="text-sm text-dark2 mt-2">
+                    {t('teacher.meeting.selectedCount', { 
+                      selected: selectedEmails.length, 
+                      total: parentEmails.length 
+                    })}
+                  </p>
+                </div>
 
-            <div className="flex justify-end">
-              <button
-                onClick={() => navigate('/teacher')}
-                className="bg-primary text-dark font-medium px-6 py-3 rounded-lg mr-3 hover:opacity-90 transition"
-              >
-                {t('common.cancel')}
-              </button>
-              <button
-                onClick={handleStartMeeting}
-                disabled={isLoading}
-                className="bg-secondary text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition flex items-center"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin h-5 w-5 mr-3 border-2 border-white border-t-transparent rounded-full"></div>
-                    {t('common.processing')}
-                  </>
-                ) : (
-                  <>
-                    <FaVideo className="mr-2" />
-                    {meetingType === "immediate" ? t('teacher.meeting.startMeeting') : t('teacher.meeting.scheduleMeeting')}
-                  </>
-                )}
-              </button>
-            </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => navigate('/teacher')}
+                    className="bg-primary text-dark font-medium px-6 py-3 rounded-lg mr-3 hover:opacity-90 transition"
+                  >
+                    {t('common.cancel')}
+                  </button>
+                  <button
+                    onClick={handleStartMeeting}
+                    disabled={isLoading}
+                    className="bg-secondary text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition flex items-center"
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="animate-spin h-5 w-5 mr-3 border-2 border-white border-t-transparent rounded-full"></div>
+                        {t('common.processing')}
+                      </>
+                    ) : (
+                      <>
+                        <FaVideo className="mr-2" />
+                        {meetingType === "immediate" ? t('teacher.meeting.startMeeting') : t('teacher.meeting.scheduleMeeting')}
+                      </>
+                    )}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>

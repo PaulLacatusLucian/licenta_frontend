@@ -34,7 +34,6 @@ const StudentNavbar = ({ activeView, studentData }) => {
     { icon: FaCalendarTimes, label: t('student.navbar.absences'), view: "absences", path: "/stud/absences" },
     { icon: FaCalendarAlt, label: t('student.navbar.schedule'), view: "calendar", path: "/stud/calendar" },
     { icon: FaUtensils, label: t('student.navbar.food'), view: "food", path: "/stud/food-orders" },
-    { icon: FaRobot, label: t('student.navbar.askSchoolie'), view: "ask", path: "/ask-schoolie" }
   ];
 
   return (

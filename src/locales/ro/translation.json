@@ -91,7 +91,10 @@
       "subjectPlaceholder": "Cum vă putem ajuta?",
       "message": "Mesaj",
       "messagePlaceholder": "Mesajul dumneavoastră...",
-      "send": "Trimite Mesajul"
+      "send": "Trimite Mesajul",
+      "successMessage": "Mesajul dumneavoastră a fost trimis cu succes!",
+      "errorMessage": "Eroare la trimiterea mesajului. Vă rugăm să încercați din nou mai târziu.",
+      "sending": "Se trimite..."
     }
   },
   "login": {

@@ -9,7 +9,6 @@ import {
   FaChalkboardTeacher,
   FaTrophy,
   FaPrint,
-  FaFilePdf,
   FaArrowLeft,
   FaUserCircle,
   FaExclamationTriangle,
@@ -23,7 +22,6 @@ import {
 } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import ParentNavbar from "../ParentNavbar";
-import StructuredPDFButton from "./StructuredPDFExport";
 
 const AcademicReportPage = () => {
   const { t, i18n } = useTranslation();
@@ -772,12 +770,6 @@ const AcademicReportPage = () => {
           <h2 className="text-2xl font-bold text-dark">{t('parent.academicReport.title')}</h2>
           
           <div className="absolute right-0 flex space-x-3 print:hidden">
-            <StructuredPDFButton 
-              studentData={studentData}
-              grades={grades}
-              absences={{ total: absencesTotal }}
-              teachers={teachers}
-            />
           </div>
         </header>
 
@@ -795,12 +787,6 @@ const AcademicReportPage = () => {
           
           <div className="flex space-x-3 print:hidden">
             <div className="flex-1">
-              <StructuredPDFButton 
-                studentData={studentData}
-                grades={grades}
-                absences={{ total: absencesTotal }}
-                teachers={teachers}
-              />
             </div>
           </div>
         </div>

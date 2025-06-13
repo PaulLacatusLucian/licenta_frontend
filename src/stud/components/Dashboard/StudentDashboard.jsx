@@ -360,27 +360,6 @@ const StudentDashboard = () => {
               : t('student.dashboard.grades.noRecorded')}
           </p>
         </div>
-
-        {/* Ask Schoolie */}
-        <div className="col-span-1 md:col-span-3 bg-light p-6 rounded-xl shadow-md border border-gray-200">
-          <div className="flex items-center mb-4">
-            <FaRobot className="text-xl md:text-2xl text-primary mr-3" />
-            <h4 className="text-lg md:text-xl font-semibold text-dark">{t('student.dashboard.askSchoolie.title')}</h4>
-          </div>
-          <div className="flex flex-col md:flex-row">
-            <input
-              type="text"
-              placeholder={t('student.dashboard.askSchoolie.placeholder')}
-              className="w-full md:flex-grow p-3 border rounded-t-lg md:rounded-l-lg md:rounded-tr-none text-dark focus:outline-none focus:ring-2 focus:ring-secondary"
-            />
-            <button 
-              className="w-full md:w-auto bg-secondary text-white px-6 py-3 rounded-b-lg md:rounded-r-lg md:rounded-bl-none hover:opacity-90 transition-opacity duration-200 mt-2 md:mt-0 font-medium"
-              onClick={() => navigate('/ask-schoolie')}
-            >
-              {t('student.dashboard.askSchoolie.askNow')}
-            </button>
-          </div>
-        </div>
       </div>
     );
   };

@@ -91,7 +91,10 @@
       "subjectPlaceholder": "Wie können wir helfen?",
       "message": "Nachricht",
       "messagePlaceholder": "Ihre Nachricht...",
-      "send": "Nachricht senden"
+      "send": "Nachricht senden",
+      "successMessage": "Ihre Nachricht wurde erfolgreich gesendet!",
+      "errorMessage": "Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.",
+      "sending": "Wird gesendet..."
     }
   },
   "login": {

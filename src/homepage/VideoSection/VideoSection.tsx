@@ -2,7 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 
-const videoUrl = "https://www.youtube.com/embed/2mrNqd8n7U8";
+
+const videoUrl = "src/assets/school-presentation.mp4";
 
 const FadeUp = (delay) => {
   return {
@@ -30,7 +31,6 @@ const VideoSection = () => {
   return (
     <section className="bg-white py-16">
       <div className="container grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Text Section */}
         <motion.div
           variants={FadeUp(0.3)}
           initial="initial"
@@ -45,23 +45,24 @@ const VideoSection = () => {
           </p>
         </motion.div>
 
-        {/* Video Section */}
         <motion.div
           variants={FadeUp(0.5)}
           initial="initial"
           animate="animate"
-          className="flex justify-center"
+          className="flex justify-center items-center"
         >
-         <iframe
+          <video
+            controls
             width="560"
             height="315"
-            src={videoUrl}
-            title="School Experience Video"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="rounded-lg shadow-lg"
-          ></iframe>
+            className="rounded-lg shadow-lg w-full max-w-[560px] h-auto"
+            poster="/images/video-thumbnail.jpg"
+            preload="metadata"
+          >
+            <source src={videoUrl} type="video/mp4" />
+            
+            {t('video.notSupported') || 'Your browser does not support the video tag.'}
+          </video>
         </motion.div>
       </div>
     </section>

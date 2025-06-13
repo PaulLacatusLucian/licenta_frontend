@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const FadeUp = (delay) => {
@@ -40,6 +40,58 @@ const ContactInfoCard = ({ icon: Icon, title, content, delay }) => (
 
 const ContactUs = () => {
   const { t } = useTranslation();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch('http://localhost:8080/api/public/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        const errorText = await response.text();
+        console.error('Error:', errorText);
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="bg-light py-16">
@@ -95,7 +147,27 @@ const ContactUs = () => {
             className="bg-white p-8 rounded-xl shadow-lg"
           >
             <h3 className="text-2xl font-semibold mb-6">{t('contactUs.sendMessage')}</h3>
-            <form className="space-y-6">
+            
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                <p className="text-green-800">
+                  {t('contactUs.form.successMessage') || 'Ihre Nachricht wurde erfolgreich gesendet!'}
+                </p>
+              </div>
+            )}
+            
+            {submitStatus === 'error' && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                <p className="text-red-800">
+                  {t('contactUs.form.errorMessage') || 'Fehler beim Senden. Bitte versuchen Sie es später erneut.'}
+                </p>
+              </div>
+            )}
+
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                   {t('contactUs.form.name')}
@@ -103,8 +175,12 @@ const ContactUs = () => {
                 <input
                   type="text"
                   id="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
                   placeholder={t('contactUs.form.namePlaceholder')}
+                  required
+                  disabled={isSubmitting}
                 />
               </div>
               <div>
@@ -114,8 +190,12 @@ const ContactUs = () => {
                 <input
                   type="email"
                   id="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
                   placeholder={t('contactUs.form.emailPlaceholder')}
+                  required
+                  disabled={isSubmitting}
                 />
               </div>
               <div>
@@ -125,8 +205,12 @@ const ContactUs = () => {
                 <input
                   type="text"
                   id="subject"
+                  value={formData.subject}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
                   placeholder={t('contactUs.form.subjectPlaceholder')}
+                  required
+                  disabled={isSubmitting}
                 />
               </div>
               <div>
@@ -136,15 +220,34 @@ const ContactUs = () => {
                 <textarea
                   id="message"
                   rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
                   placeholder={t('contactUs.form.messagePlaceholder')}
+                  required
+                  disabled={isSubmitting}
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-secondary text-white py-3 px-6 rounded-lg hover:bg-secondary/90 transition-colors duration-300"
+                disabled={isSubmitting}
+                className={`w-full py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 ${
+                  isSubmitting 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-secondary text-white hover:bg-secondary/90'
+                }`}
               >
-                {t('contactUs.form.send')}
+                {isSubmitting ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    {t('contactUs.form.sending') || 'Wird gesendet...'}
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5" />
+                    {t('contactUs.form.send')}
+                  </>
+                )}
               </button>
             </form>
           </motion.div>

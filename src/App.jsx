@@ -65,7 +65,7 @@ import AdminCatalog from "./admin/components/Catalog/AdminCatalog";
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/LTG/">
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<MainLayout><Home /></MainLayout>} />

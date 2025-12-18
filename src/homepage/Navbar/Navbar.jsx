@@ -16,27 +16,27 @@ const Navbar = () => {
     {
       id: 1,
       title: t('navbar.home'),
-      path: "/",
+      path: "/LTG/",
     },
     {
       id: 2,
       title: t('navbar.services'),
-      path: "/services",
+      path: "/LTG/services",
     },
     {
       id: 3,
       title: t('navbar.aboutUs'),
-      path: "/about-us",
+      path: "/LTG/about-us",
     },
     {
       id: 4,
       title: t('navbar.ourTeam'),
-      path: "/our-team",
+      path: "/LTG/our-team",
     },
     {
       id: 5,
       title: t('navbar.contactUs'),
-      path: "/contact-us",
+      path: "/LTG/contact-us",
     },
   ];
 
